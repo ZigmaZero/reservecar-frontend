@@ -58,7 +58,7 @@ const Panel: React.FC<PanelProps> = ({ title }) => {
       <div className="pagination">
         <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
         <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Prev</button>
-        <span>Page {currentPage} of {maxPages}</span>
+        <div className="pagination-page">Page {currentPage} of {maxPages}</div>
         <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, maxPages))} disabled={currentPage === maxPages}>Next</button>
         <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
       </div>

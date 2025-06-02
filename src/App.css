@@ -18,7 +18,9 @@ body {
 
 /* Container */
 .container, .admin-container {
-  max-width: 600px;
+  min-width: 90%;
+  max-width: 800px;
+  min-width: 800px;
   background: #ffffff;
   padding: 20px;
   border-radius: 8px;
@@ -164,5 +166,14 @@ th, td {
 }
 
 .pagination {
-  margin-top: 10px;
+  margin: 10px 10px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pagination-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

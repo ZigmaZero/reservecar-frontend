@@ -15,7 +15,8 @@ export type Team = {
 
 export type Car = {
     carId: number,
-    plateNumber: string
+    plateNumber: string,
+    teamId: number
 }
 
 export type Admin = {

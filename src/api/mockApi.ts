@@ -11,8 +11,8 @@ export const teams: Team[] = [
 ];
 
 export const cars: Car[] = [
-    { carId: 101, plateNumber: "ABC-123" },
-    { carId: 102, plateNumber: "XYZ-789" }
+    { carId: 101, plateNumber: "ABC-123", teamId: 1 },
+    { carId: 102, plateNumber: "XYZ-789", teamId: 2 }
 ];
 
 export const admins: Admin[] = [
@@ -28,7 +28,17 @@ export const reservations: Reservation[] = [
 export const listReservations = (pageNumber: number = 1, numRows: number = 10) => {
     const startIndex = (pageNumber - 1) * numRows;
     const endIndex = startIndex + numRows;
-    const pagedReservations = reservations.slice(startIndex, endIndex);
+    const pagedReservations = reservations.slice(startIndex, endIndex).map(reservation => {
+        const user = employees.find(e => e.userId === reservation.userId);
+        const car = cars.find(c => c.carId === reservation.carId);
+        return {
+            ID: reservation.reservationId,
+            User: user ? user.name : "Unknown",
+            Car: car ? car.plateNumber : "Unknown",
+            Checkin: new Date(reservation.checkinTime).toLocaleString(),
+            Checkout: new Date(reservation.checkoutTime).toLocaleString()
+        };
+    });
     return {
         data: pagedReservations,
         total: reservations.length,
@@ -41,7 +51,14 @@ export const listReservations = (pageNumber: number = 1, numRows: number = 10) =
 export const listCars = (pageNumber: number = 1, numRows: number = 10) => {
     const startIndex = (pageNumber - 1) * numRows;
     const endIndex = startIndex + numRows;
-    const pagedCars = cars.slice(startIndex, endIndex);
+    const pagedCars = cars.slice(startIndex, endIndex).map(car => {
+        const team = teams.find(t => t.teamId === car.teamId);
+        return {
+            ID: car.carId,
+            Plate: car.plateNumber,
+            Team: team ? team.name : "---"
+        }
+    });
     return {
         data: pagedCars,
         total: cars.length,
@@ -54,7 +71,16 @@ export const listCars = (pageNumber: number = 1, numRows: number = 10) => {
 export const listEmployees = (pageNumber: number = 1, numRows: number = 10) => {
     const startIndex = (pageNumber - 1) * numRows;
     const endIndex = startIndex + numRows;
-    const pagedCars = employees.slice(startIndex, endIndex);
+    const pagedCars = employees.slice(startIndex, endIndex).map(employee => {
+        const team = teams.find(t => t.teamId === employee.teamId);
+        return {
+            ID: employee.userId,
+            LineID: employee.lineId,
+            Name: employee.name,
+            Verified: employee.verified ? "Yes" : "No",
+            Team: team ? team.name : "---"
+        }
+    });
     return {
         data: pagedCars,
         total: employees.length,
@@ -67,9 +93,14 @@ export const listEmployees = (pageNumber: number = 1, numRows: number = 10) => {
 export const listTeams = (pageNumber: number = 1, numRows: number = 10) => {
     const startIndex = (pageNumber - 1) * numRows;
     const endIndex = startIndex + numRows;
-    const pagedCars = teams.slice(startIndex, endIndex);
+    const pagedTeams = teams.slice(startIndex, endIndex).map(team => {
+        return {
+            ID: team.teamId,
+            Name: team.name
+        }
+    });
     return {
-        data: pagedCars,
+        data: pagedTeams,
         total: teams.length,
         page: pageNumber,
         maxPages: Math.ceil(teams.length / numRows),

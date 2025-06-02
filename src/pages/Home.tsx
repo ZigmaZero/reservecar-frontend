@@ -10,7 +10,7 @@ const Home = () => {
     e.preventDefault();
     // Perform authentication logic here
     console.log(`Admin logged in with Username: ${username}, Password: ${password}`);
-    navigate("/checkin"); // Redirect after login
+    navigate("/dashboard"); // Redirect after login
   };
 
   return (
