@@ -177,3 +177,14 @@ th, td {
   align-items: center;
   justify-content: center;
 }
+
+.action-cell {
+  padding: 0px 6px 0px;
+  width: 60px;
+  min-width: 60px;
+  max-width: 60px;
+}
+
+.action-cell button {
+  padding: 6px 12px;
+}

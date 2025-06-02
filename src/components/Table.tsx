@@ -12,7 +12,7 @@ const Table = <T extends Record<string, any>>({ panelType, data, onEdit }: Table
           {Object.keys(data[0] ?? {}).map((key) => (
             <th key={key}>{key}</th>
           ))}
-          <th>Action</th>
+          {panelType !== "Jobs" && <th className="action-cell">Action</th>}
         </tr>
       </thead>
       <tbody>
@@ -21,9 +21,11 @@ const Table = <T extends Record<string, any>>({ panelType, data, onEdit }: Table
             {Object.values(item).map((value, idx) => (
               <td key={idx}>{String(value)}</td>
             ))}
-            <td>
-              <button onClick={() => onEdit(item)}>Edit</button>
-            </td>
+            {panelType !== "Jobs" && (
+              <td className="action-cell">
+                <button onClick={() => onEdit(item)}>Edit</button>
+              </td>
+            )}
           </tr>
         ))}
       </tbody>
