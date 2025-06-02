@@ -143,6 +143,11 @@ footer {
   background-color: #9e0800;
 }
 
+.admin-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 .filter-modal, .edit-modal {
   position: fixed;
   top: 20%;
@@ -187,4 +192,11 @@ th, td {
 
 .action-cell button {
   padding: 6px 12px;
+}
+
+.panel-buttons {
+  display: flex;
+  justify-content: left;
+  gap: 8px;
+  margin-bottom: 5px;
 }

@@ -7,7 +7,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className="admin-container">
       <h1>Dashboard</h1>
-      <div>
+      <div className="panel-buttons">
         <button onClick={() => setActivePanel("Jobs")}>Jobs</button>
         <button onClick={() => setActivePanel("Cars")}>Cars</button>
         <button onClick={() => setActivePanel("Employees")}>Employees</button>
