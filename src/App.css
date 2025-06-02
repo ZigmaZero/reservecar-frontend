@@ -1,42 +1,120 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Global styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body styling */
+body {
+  background-color: #f3f3f3;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container */
+.container {
+  max-width: 600px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+h1 {
+  font-size: 24px;
+  color: #0078d4;
   text-align: center;
+  margin-bottom: 16px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Buttons */
+button {
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button:hover {
+  background-color: #005a9e;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Navigation links */
+nav {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 16px 0;
 }
 
-.card {
-  padding: 2em;
+nav a {
+  text-decoration: none;
+  color: #0078d4;
+  font-weight: 600;
 }
 
-.read-the-docs {
-  color: #888;
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Form inputs */
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+input:focus, textarea:focus {
+  border-color: #0078d4;
+  outline: none;
+  box-shadow: 0px 0px 4px rgba(0, 120, 212, 0.5);
+}
+
+/* Dropdown styling */
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+select:hover {
+  border-color: #0078d4;
+}
+
+select:focus {
+  border-color: #0078d4;
+  outline: none;
+  box-shadow: 0px 0px 4px rgba(0, 120, 212, 0.5);
+}
+
+/* Option styling */
+option {
+  font-size: 16px;
+}
+
+
+/* Footer */
+footer {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #555;
+  text-align: center;
 }
