@@ -30,5 +30,5 @@ export type Reservation = {
     userId: number,
     carId: number,
     checkinTime: string, // i am NOT gonna keep this as a Date
-    checkoutTime: string // screw you
+    checkoutTime?: string // screw you
 }

@@ -22,7 +22,7 @@ export const admins: Admin[] = [
 
 export const reservations: Reservation[] = [
     { reservationId: 1, userId: 1, carId: 101, checkinTime: "2025-06-02T10:00:00Z", checkoutTime: "2025-06-02T12:00:00Z" },
-    { reservationId: 2, userId: 2, carId: 102, checkinTime: "2025-06-02T14:00:00Z", checkoutTime: "2025-06-02T16:00:00Z" }
+    { reservationId: 2, userId: 2, carId: 102, checkinTime: "2025-06-02T14:00:00Z" }
 ];
 
 export const listReservations = (pageNumber: number = 1, numRows: number = 10) => {
@@ -36,7 +36,7 @@ export const listReservations = (pageNumber: number = 1, numRows: number = 10) =
             User: user ? user.name : "Unknown",
             Car: car ? car.plateNumber : "Unknown",
             Checkin: new Date(reservation.checkinTime).toLocaleString(),
-            Checkout: new Date(reservation.checkoutTime).toLocaleString()
+            Checkout: reservation.checkoutTime ? new Date(reservation.checkoutTime).toLocaleString() : "---"
         };
     });
     return {
