@@ -93,6 +93,8 @@ select {
   background-color: #ffffff;
   cursor: pointer;
   transition: border-color 0.3s, box-shadow 0.3s;
+  margin-top: 8px;
+  margin-bottom: 16px;
 }
 
 select:hover {
