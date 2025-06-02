@@ -17,7 +17,7 @@ body {
 }
 
 /* Container */
-.container {
+.container, .admin-container {
   max-width: 600px;
   background: #ffffff;
   padding: 20px;
@@ -119,4 +119,50 @@ footer {
   font-size: 14px;
   color: #555;
   text-align: center;
+}
+
+/* Admin Styles */
+
+.admin-container h1 {
+  color: #e11111;
+}
+
+.admin-container button {
+  background-color: #e11111;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.admin-container button:hover {
+  background-color: #9e0800;
+}
+
+.filter-modal, .edit-modal {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+  background: white;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.pagination {
+  margin-top: 10px;
 }

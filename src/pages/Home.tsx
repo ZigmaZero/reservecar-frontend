@@ -14,7 +14,7 @@ const Home = () => {
   };
 
   return (
-    <div className="container">
+    <div className="admin-container">
       <h1>Admin Page</h1>
       <form onSubmit={handleLogin}>
         <label htmlFor="username">Username:</label>
