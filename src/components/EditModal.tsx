@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-interface EditModalProps {
-  item: any;
+interface EditModalProps<T extends Record<string, any>> {
+  item: T;
   onClose: () => void;
 }
 
-const EditModal: React.FC<EditModalProps> = ({ item, onClose }) => {
-  const [formData, setFormData] = useState({ ...item });
+const EditModal = <T extends Record<string, any>>({ item, onClose }: EditModalProps<T>) => {
+  const [formData, setFormData] = useState(item);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,17 +15,19 @@ const EditModal: React.FC<EditModalProps> = ({ item, onClose }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Updated item:", formData);
-    onClose(); // Close modal after update
+    onClose();
   };
 
   return (
     <div className="edit-modal">
-      <h3>Edit Item</h3>
+      <h3>Edit {formData.name ?? "Item"}</h3>
       <form onSubmit={handleSubmit}>
-        <label>
-          Name:
-          <input name="name" value={formData.name} onChange={handleChange} />
-        </label>
+        {Object.entries(formData).map(([key, value]) => (
+          <label key={key}>
+            {key}:
+            <input name={key} value={String(value)} onChange={handleChange} />
+          </label>
+        ))}
         <button type="submit">Save</button>
         <button type="button" onClick={onClose}>Cancel</button>
       </form>
