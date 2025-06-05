@@ -9,17 +9,16 @@ const Register = () => {
         const formData = new FormData(event.currentTarget);
         const username = formData.get('username') as string;
 
-        // register, then call login
         axios.post('/register', {
             fullName: username
         })
         .then((response) => {
             if (response.status === 201) {
                 console.log(`User registered successfully.`);
-                // After registration, you can redirect to login or dashboard
                 navigate('/login'); // Redirect to login page
             } else {
                 console.error(`Unexpected response status: ${response.status}`);
+                alert("An error occurred. Please try again later.");
             }
         })
         .catch((error) => {
@@ -28,10 +27,9 @@ const Register = () => {
             } else {
                 console.error('Error during registration:', error.message);
             }
+            alert("An error occurred. Please try again later.");
         });
-        
-        // Redirect or show success message after registration
-    }
+    };
     return (
         <>
         <div className="navbar-blank"></div>
