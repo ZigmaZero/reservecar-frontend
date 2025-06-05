@@ -12,15 +12,9 @@ const Home = () => {
     
     // login API
     adminLogin(username, password)
-      .then((token) => {
-        if (token) {
-          console.log("Login successful, token:", token);
-          console.log(`Welcome ${username}`);
-          navigate("/dashboard"); // Redirect after login
-        }
-        else {
-          alert("System did not return authentication token. Please contact support.");
-        }
+      .then(() => {
+        console.log(`Welcome ${username}`);
+        navigate("/dashboard"); // Redirect after login
       })
       .catch((error) => {
         if (error.response && error.response.status !== 400 && error.response.status !== 401) {
