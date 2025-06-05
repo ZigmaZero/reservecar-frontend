@@ -21,6 +21,7 @@ body {
   min-width: 90%;
   max-width: 800px;
   min-width: 800px;
+  min-height: 300px;
   background: #ffffff;
   padding: 20px;
   border-radius: 8px;
@@ -199,4 +200,11 @@ th, td {
   justify-content: left;
   gap: 8px;
   margin-bottom: 5px;
+}
+
+.container > p {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 16px;
+  color: #555;
 }

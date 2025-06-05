@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../widgets/Navbar";
 
 const Checkin = () => {
   const [fullName, setFullName] = useState("");
@@ -21,6 +22,8 @@ const Checkin = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="container">
       <h1>Checkin</h1>
       <form
@@ -68,6 +71,7 @@ const Checkin = () => {
         <button type="submit">Checkin</button>
       </form>
     </div>
+    </>
   );
 };
 

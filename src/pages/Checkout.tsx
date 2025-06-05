@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../widgets/Navbar";
 
 const Checkout = () => {
   const [fullName, setFullName] = useState("");
@@ -20,6 +21,8 @@ const Checkout = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="container">
       <h1>Checkout</h1>
       <form
@@ -58,6 +61,7 @@ const Checkout = () => {
         <button type="submit">Checkout</button>
       </form>
     </div>
+    </>
   );
 };
 
