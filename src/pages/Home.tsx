@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import adminLogin from "../api/adminLogin";
 import { useAdmin } from "../contexts/AdminContext";
@@ -8,6 +8,13 @@ const Home = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  // if already admin, redirect to dashboard
+  useEffect(() => {
+    if (admin) {
+      navigate("/dashboard");
+    }
+  })
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
