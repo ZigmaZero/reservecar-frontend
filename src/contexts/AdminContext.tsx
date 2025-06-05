@@ -2,16 +2,19 @@ import { createContext, useContext, useState } from "react";
 import type { Admin } from "../api/types";
 
 interface AdminContextType {
-    user: Admin | null;
-    setUser: React.Dispatch<React.SetStateAction<Admin | null>>;
+    admin: Admin | null;
+    setAdmin: (admin: Admin | null) => void;
 }
 
-const AdminContext = createContext<AdminContextType | null>(null);
+const AdminContext = createContext<AdminContextType>({
+    admin: null,
+    setAdmin: () => {}
+});
 
 export const AdminProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-    const [user, setUser] = useState<Admin | null>(null);
+    const [admin, setAdmin] = useState<Admin | null>(null);
     return (
-        <AdminContext.Provider value={{ user, setUser }}>
+        <AdminContext.Provider value={{ admin, setAdmin }}>
             {children}
         </AdminContext.Provider>
     )

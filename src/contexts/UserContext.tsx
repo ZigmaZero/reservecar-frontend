@@ -3,7 +3,7 @@ import type { Employee } from "../api/types";
 
 interface UserContextType {
     user: Employee | null;
-    setUser: React.Dispatch<React.SetStateAction<Employee | null>>;
+    setUser: (user: Employee | null) => void;
 }
 
 const UserContext = createContext<UserContextType | null>(null);

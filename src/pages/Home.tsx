@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import adminLogin from "../api/adminLogin";
+import { useAdmin } from "../contexts/AdminContext";
 
 const Home = () => {
+  const { admin, setAdmin } = useAdmin();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -12,8 +14,9 @@ const Home = () => {
     
     // login API
     adminLogin(username, password)
-      .then(() => {
-        console.log(`Welcome ${username}`);
+      .then((data) => {
+        setAdmin(data);
+        console.log(`Welcome ${admin?.name}`)
         navigate("/dashboard"); // Redirect after login
       })
       .catch((error) => {

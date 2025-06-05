@@ -1,6 +1,7 @@
 import axios from 'axios';
+import type { Admin } from './types';
 
-export default function adminLogin(name: string, password: string): Promise<void> {
+export default function adminLogin(name: string, password: string): Promise<Admin> {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     if (!backendUrl) 
     {
@@ -16,6 +17,7 @@ export default function adminLogin(name: string, password: string): Promise<void
             throw new Error(`Unexpected response status: ${response.status}`);
         } else {
             console.log(`Welcome ${name}`);
+            return response.data.admin as Admin;
         }
     })
     .catch((error) => {
