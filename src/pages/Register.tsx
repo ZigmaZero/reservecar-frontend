@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const Register = () => {
-
+    const [searchParams] = useSearchParams();
+    const action = searchParams.get('action');
     const navigate = useNavigate();
     const registerUser = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -15,7 +16,14 @@ const Register = () => {
         .then((response) => {
             if (response.status === 201) {
                 console.log(`User registered successfully.`);
-                navigate('/login'); // Redirect to login page
+                if(action)
+                {
+                    navigate(`/login?action=${action}`); // Redirect to login page with action
+                }
+                else
+                {
+                    navigate('/login'); // Redirect to login page
+                }
             } else {
                 console.error(`Unexpected response status: ${response.status}`);
                 alert("An error occurred. Please try again later.");

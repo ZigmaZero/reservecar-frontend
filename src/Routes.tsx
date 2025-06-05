@@ -8,12 +8,14 @@ import CheckoutSuccess from './pages/CheckoutSuccess';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import WaitForVerify from './pages/WaitForVerify';
+import Menu from './pages/Menu';
 
 const AppRoutes = () => (
   <Routes>
     <Route path="/register" element={<Register />} />
     <Route path="/login" element={<Login />} />
     <Route path="/verify" element={<WaitForVerify />} />
+    <Route path="/menu" element={<Menu />} />
     <Route path="/checkin" element={<Checkin />} />
     <Route path="/checkin-success" element={<CheckinSuccess />} />
     <Route path="/checkout" element={<Checkout />}/>
