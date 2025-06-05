@@ -2,19 +2,14 @@ import { createContext, useContext, useState } from "react";
 import type { Employee } from "../api/types";
 
 interface UserContextType {
-    user: Employee;
-    setUser: React.Dispatch<React.SetStateAction<Employee>>;
+    user: Employee | null;
+    setUser: React.Dispatch<React.SetStateAction<Employee | null>>;
 }
 
 const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-    const [user, setUser] = useState({
-        userId: 0,
-        lineId: "",
-        name: "",
-        verified: false
-    } as Employee);
+    const [user, setUser] = useState<Employee | null>(null);
     return (
         <UserContext.Provider value={{ user, setUser }}>
             {children}
