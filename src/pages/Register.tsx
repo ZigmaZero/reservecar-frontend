@@ -1,5 +1,3 @@
-import axios from "axios";
-
 const Register = () => {
 
     const registerUser = (event: React.FormEvent<HTMLFormElement>) => {
@@ -7,26 +5,10 @@ const Register = () => {
         const formData = new FormData(event.currentTarget);
         const username = formData.get('username') as string;
 
-        // register, then call login
-        axios.post('/register', {
-            fullName: username
-        })
-        .then((response) => {
-            if (response.status === 201) {
-                console.log(`User registered successfully.`);
-                // After registration, you can redirect to login or dashboard
-                window.location.href = '/login';
-            } else {
-                console.error(`Unexpected response status: ${response.status}`);
-            }
-        })
-        .catch((error) => {
-            if (error.response) {
-                console.error(`Error during registration: ${error.response.status} - ${error.response.data.error}`);
-            } else {
-                console.error('Error during registration:', error.message);
-            }
-        });
+        // Here you would typically send the username to your backend for registration
+        console.log(`Registering user: ${username}`);
+        
+        // Redirect or show success message after registration
     }
     return (
         <>
