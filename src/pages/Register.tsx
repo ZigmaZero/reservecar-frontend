@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
 
+    const navigate = useNavigate();
     const registerUser = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
@@ -15,7 +17,7 @@ const Register = () => {
             if (response.status === 201) {
                 console.log(`User registered successfully.`);
                 // After registration, you can redirect to login or dashboard
-                window.location.href = '/login';
+                navigate('/login'); // Redirect to login page
             } else {
                 console.error(`Unexpected response status: ${response.status}`);
             }
