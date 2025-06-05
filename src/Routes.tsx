@@ -9,20 +9,30 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import WaitForVerify from './pages/WaitForVerify';
 import Menu from './pages/Menu';
+import { UserProvider } from './contexts/UserContext';
+import { AdminProvider } from './contexts/AdminContext';
 
 const AppRoutes = () => (
-  <Routes>
-    <Route path="/register" element={<Register />} />
-    <Route path="/login" element={<Login />} />
-    <Route path="/verify" element={<WaitForVerify />} />
-    <Route path="/menu" element={<Menu />} />
-    <Route path="/checkin" element={<Checkin />} />
-    <Route path="/checkin-success" element={<CheckinSuccess />} />
-    <Route path="/checkout" element={<Checkout />}/>
-    <Route path="/checkout-success" element={<CheckoutSuccess />} />
-    <Route path="/admin" element={<Home />}/>
-    <Route path="/dashboard" element={<Dashboard />}/>
-  </Routes>
+  <>
+    <UserProvider>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/verify" element={<WaitForVerify />} />
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/checkin" element={<Checkin />} />
+        <Route path="/checkin-success" element={<CheckinSuccess />} />
+        <Route path="/checkout" element={<Checkout />}/>
+        <Route path="/checkout-success" element={<CheckoutSuccess />} />
+      </Routes>
+    </UserProvider>
+    <AdminProvider>
+      <Routes>
+        <Route path="/admin" element={<Home />}/>
+        <Route path="/dashboard" element={<Dashboard />}/>
+      </Routes>
+    </AdminProvider>
+  </>
 );
 
 export default AppRoutes;

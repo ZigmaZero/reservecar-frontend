@@ -16,8 +16,8 @@ export const cars: Car[] = [
 ];
 
 export const admins: Admin[] = [
-    { adminId: 1, name: "admin1", password: "hashedpassword1" },
-    { adminId: 2, name: "admin2", password: "hashedpassword2" }
+    { adminId: 1, name: "admin1" },
+    { adminId: 2, name: "admin2" }
 ];
 
 export const reservations: Reservation[] = [

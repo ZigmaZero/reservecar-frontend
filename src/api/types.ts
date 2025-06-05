@@ -21,8 +21,7 @@ export type Car = {
 
 export type Admin = {
     adminId: number,
-    name: string,
-    password: string
+    name: string
 }
 
 export type Reservation = {
