@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Checkin = () => {
   const [fullName, setFullName] = useState("");
   const [car, setCar] = useState("");
   const [description, setDescription] = useState("");
   const [cars, setCars] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   // Initialize car options
   useEffect(() => {
@@ -15,6 +17,7 @@ const Checkin = () => {
   const handleSubmit = () => {
     const timestamp = new Date().toISOString();
     console.log(`${timestamp}: [${fullName} | ${car} | ${description}]`);
+    navigate("/checkin-success");
   };
 
   return (

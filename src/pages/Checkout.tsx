@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const [fullName, setFullName] = useState("");
   const [job, setJob] = useState("");
   const [jobs, setJobs] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   // Initialize job options
   useEffect(() => {
@@ -14,6 +16,7 @@ const Checkout = () => {
   const handleSubmit = () => {
     const timestamp = new Date().toISOString();
     console.log(`${timestamp}: Checkout [${fullName} | ${job}]`);
+    navigate("/checkout-success");
   };
 
   return (
