@@ -7,7 +7,7 @@ export default function adminLogin(name: string, password: string): Promise<void
         throw new Error("Backend URL not found in environment variables");
     }
 
-    return axios.post(`${backendUrl}/admin/login`, {
+    return axios.post(`/admin/login`, {
         name,
         password
     })
