@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import adminLogin from "../api/adminLogin";
 
 const Home = () => {
   const [username, setUsername] = useState("");
@@ -8,9 +9,29 @@ const Home = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Perform authentication logic here
-    console.log(`Admin logged in with Username: ${username}, Password: ${password}`);
-    navigate("/dashboard"); // Redirect after login
+    
+    // login API
+    adminLogin(username, password)
+      .then((token) => {
+        if (token) {
+          console.log("Login successful, token:", token);
+          console.log(`Welcome ${username}`);
+          navigate("/dashboard"); // Redirect after login
+        }
+        else {
+          alert("System did not return authentication token. Please contact support.");
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status !== 400 && error.response.status !== 401) {
+          console.error("Unexpected error status:", error.response.status, error.response.data);
+          alert("An unexpected error occurred. Please try again later.");
+        }
+        else
+        {
+          alert("Username or password is incorrect.");
+        }
+      })
   };
 
   return (
