@@ -4,12 +4,12 @@ import { useAdmin } from "../contexts/AdminContext";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
-  const { admin } = useAdmin();
+  const { admin, token } = useAdmin();
   const [activePanel, setActivePanel] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!admin) {
+    if (!admin || !token) {
       navigate("/admin");
     }
   })
@@ -25,7 +25,7 @@ const Dashboard: React.FC = () => {
         <button onClick={() => setActivePanel("Employees")}>Employees</button>
         <button onClick={() => setActivePanel("Teams")}>Teams</button>
       </div>
-      {activePanel && <Panel title={activePanel} />}
+      {activePanel && token && <Panel title={activePanel} token={token} />}
     </div>
   );
 };

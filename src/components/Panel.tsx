@@ -2,17 +2,20 @@ import React, { useState, useEffect } from "react";
 import Filter from "./Filter";
 import Table from "./Table";
 import EditModal from "./EditModal";
-import { listReservations, listCars, listEmployees, listTeams } from "../api/mockApi";
+import { listCars, listEmployees, listTeams } from "../api/mockApi";
+import listReservations from "../api/listReservations";
 
 interface PanelProps {
   title: string;
+  token: string;
 }
 
-const Panel: React.FC<PanelProps> = ({ title }) => {
+const Panel: React.FC<PanelProps> = ({ title, token }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [maxPages, setMaxPages] = useState(1);
+  const [pageSize, setPageSize] = useState(10); // Default, can be adjusted later
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editItem, setEditItem] = useState<any | null>(null);
 
@@ -22,7 +25,7 @@ const Panel: React.FC<PanelProps> = ({ title }) => {
 
       switch (title) {
         case "Jobs":
-          response = await listReservations(currentPage);
+          response = await listReservations(currentPage, pageSize, token);
           break;
         case "Cars":
           response = await listCars(currentPage);

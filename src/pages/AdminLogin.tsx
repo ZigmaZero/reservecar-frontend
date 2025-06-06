@@ -4,7 +4,7 @@ import adminLogin from "../api/adminLogin";
 import { useAdmin } from "../contexts/AdminContext";
 
 const AdminLogin = () => {
-  const { admin, setAdmin } = useAdmin();
+  const { admin, setAdmin, setToken } = useAdmin();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -22,7 +22,8 @@ const AdminLogin = () => {
     // login API
     adminLogin(username, password)
       .then((data) => {
-        setAdmin(data);
+        setAdmin(data.admin);
+        setToken(data.token);
         console.log(`Welcome ${admin?.name}`)
         navigate("/admin/dashboard"); // Redirect after login
       })
