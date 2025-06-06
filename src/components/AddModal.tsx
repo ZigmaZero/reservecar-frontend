@@ -1,41 +1,38 @@
 import React, { useState } from "react";
+import type { Car, Team } from "../api/types";
 
 interface AddModalProps {
   onClose: () => void;
-  type: "Teams" | "Employees" | "Cars" | "Jobs";
-  onAdd?: (item: any) => void; // Optional callback for adding
+  type: "Teams" | "Cars";
+  onAdd?: (item: Car | Team) => void;
 }
 
-const defaultValues: Record<string, any> = {
-  Employees: {
-    name: "",
-    lineId: "",
-    verified: false,
-    teamId: "",
-  },
-  Teams: {
-    name: "",
-  },
-  Cars: {
+const defaultValues: Record<AddModalProps["type"], Car | Team> = {
+  "Cars": {
     plateNumber: "",
-    teamId: "",
+    teamId: 0
   },
-  Jobs: {
-    userId: "",
-    carId: "",
-    checkinTime: "",
-    checkoutTime: "",
-  },
+  "Teams": {
+    name: ""
+  }
 };
 
 const AddModal: React.FC<AddModalProps> = ({ onClose, type, onAdd }) => {
-  const [formData, setFormData] = useState({ ...defaultValues[type] });
+  const [formData, setFormData] = useState<Car | Team>({ ...defaultValues[type] });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type: inputType, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: inputType === "checkbox" ? checked : value,
+    const { name, value } = e.target;
+    setFormData(prev => {
+      if (type === "Cars") {
+        // For Cars, teamId should be a number
+        if (name === "teamId") {
+          return { ...prev, [name]: Number(value) } as Car;
+        }
+        return { ...prev, [name]: value } as Car;
+      } else {
+        // For Teams, only name
+        return { ...prev, [name]: value } as Team;
+      }
     });
   };
 
@@ -45,38 +42,44 @@ const AddModal: React.FC<AddModalProps> = ({ onClose, type, onAdd }) => {
     onClose();
   };
 
-  // Render fields based on type
   const renderFields = () => {
-    switch (type) {
-      case "Teams":
-        return (
+    if (type === "Teams") {
+      const team = formData as Team;
+      return (
+        <label>
+          <div className="input-label">
+            Name:
+          </div>
+          <input name="name" value={team.name} onChange={handleChange} required />
+        </label>
+      );
+    }
+    if (type === "Cars") {
+      const car = formData as Car;
+      return (
+        <>
           <label>
             <div className="input-label">
-                Name:
+              Plate No.:
             </div>
-            <input name="name" value={formData.name} onChange={handleChange} required />
+            <input name="plateNumber" value={car.plateNumber} onChange={handleChange} required />
           </label>
-        );
-      case "Cars":
-        return (
-          <>
-            <label>
-              <div className="input-label">
-                Plate No.:
-              </div>
-              <input name="plateNumber" value={formData.plateNumber} onChange={handleChange} required />
-            </label>
-            <label>
-              <div className="input-label">
-                Team ID:
-              </div>
-              <input name="teamId" value={formData.teamId} onChange={handleChange} required />
-            </label>
-          </>
-        );
-      default:
-        return null;
+          <label>
+            <div className="input-label">
+              Team ID:
+            </div>
+            <input
+              name="teamId"
+              type="number"
+              value={car.teamId}
+              onChange={handleChange}
+              required
+            />
+          </label>
+        </>
+      );
     }
+    return null;
   };
 
   return (
@@ -84,13 +87,13 @@ const AddModal: React.FC<AddModalProps> = ({ onClose, type, onAdd }) => {
       <div className="modal-backdrop" onClick={onClose}></div>
       <div className="add-modal">
         <h3>Add {type.slice(0, -1)}</h3>
-          <form onSubmit={handleSubmit}>
-              {renderFields()}
-              <button type="submit">Add</button>
-              <button type="button" onClick={onClose}>
-                  Cancel
-              </button>
-          </form>
+        <form onSubmit={handleSubmit}>
+          {renderFields()}
+          <button type="submit">Add</button>
+          <button type="button" onClick={onClose}>
+            Cancel
+          </button>
+        </form>
       </div>
     </>
   );

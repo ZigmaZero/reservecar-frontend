@@ -7,6 +7,8 @@ import listCars from "../api/listCars";
 import listEmployees from "../api/listEmployees";
 import listTeams from "../api/listTeams";
 import AddModal from "./AddModal";
+import addItem from "../api/addItem";
+import type { Team, Car } from "../api/types";
 
 interface PanelProps {
   title: "Teams" | "Employees" | "Cars" | "Jobs";
@@ -49,8 +51,8 @@ const Panel: React.FC<PanelProps> = ({ title, token }) => {
     fetchData();
   }, [title, currentPage]);
 
-  const handleAdd = async (item: any) => {
-    // TODO: add the item to the backend
+  const handleAdd = async (item: Team | Car) => {
+    await addItem(item, token);
     await fetchData();
   }
 
@@ -59,13 +61,19 @@ const Panel: React.FC<PanelProps> = ({ title, token }) => {
     setIsEditOpen(true);
   };
 
+  const resolveEdit = async (item: any, updatedItem: any) => {
+    // TODO: update the item in the backend
+    setIsEditOpen(false);
+    setEditItem(null);
+  }
+
   return (
     <div>
       <h2>{title}</h2>
       {title !== "Jobs" && title !== "Employees" && (
         <button onClick={() => setIsAddOpen(true)}>Add</button>
       )}
-      {isAddOpen && (
+      {isAddOpen && title !== "Jobs" && title !== "Employees" && (
         <AddModal
           onClose={() => setIsAddOpen(false)}
           type={title}
@@ -76,7 +84,6 @@ const Panel: React.FC<PanelProps> = ({ title, token }) => {
       {isFilterOpen && <Filter onClose={() => setIsFilterOpen(false)} />}
       {data.length > 0 ? (
         <>
-          <Table data={data} panelType={title} onEdit={handleEdit} />
           <div className="pagination">
             <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
             <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Prev</button>
@@ -84,11 +91,12 @@ const Panel: React.FC<PanelProps> = ({ title, token }) => {
             <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, maxPages))} disabled={currentPage === maxPages}>Next</button>
             <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
           </div>
+          <Table data={data} panelType={title} onEdit={handleEdit} />
         </>
       ) : (
         <div>No data available</div>
       )}
-      {isEditOpen && <EditModal item={editItem} onClose={() => setIsEditOpen(false)} />}
+      {isEditOpen && title !== "Jobs" && <EditModal type={title} item={editItem} onClose={() => {setIsEditOpen(false)}} onEdit={resolveEdit}/>}
     </div>
   );
 };

@@ -1,0 +1,46 @@
+import axios from "axios";
+import type { Car, Team } from "./types";
+
+export default function addItem(item: Car | Team, token: string): Promise<null> {
+  if ("plateNumber" in item) {
+    // It's a Car
+    return axios.post("/cars", item, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        }}).then((response) => {
+            if (response.status !== 201) {
+                throw new Error(`Unexpected response status: ${response.status}`);
+            }
+            return null;
+        }).catch((error) => {
+            if (error.response && error.response.status !== 400 && error.response.status !== 401) {
+                console.error("Unexpected error status:", error.response.status, error.response.data);
+                throw new Error("An unexpected error occurred. Please try again later.");
+            } else {
+                throw error;
+            }
+        });
+  } else if ("name" in item) {
+    // It's a Team
+    return axios.post("/teams", item, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        }}).then((response) => {
+            if (response.status !== 201) {
+                throw new Error(`Unexpected response status: ${response.status}`);
+            }
+            return null;
+        }).catch((error) => {
+            if (error.response && error.response.status !== 400 && error.response.status !== 401) {
+                console.error("Unexpected error status:", error.response.status, error.response.data);
+                throw new Error("An unexpected error occurred. Please try again later.");
+            } else {
+                throw error;
+            }
+        });
+  } else {
+    return Promise.reject(new Error("Unknown item type"));
+  }
+}

@@ -25,7 +25,20 @@ const Dashboard: React.FC = () => {
         <button onClick={() => setActivePanel("Employees")}>Employees</button>
         <button onClick={() => setActivePanel("Teams")}>Teams</button>
       </div>
-      {activePanel && token && <Panel title={activePanel} token={token} />}
+      <div style={{ display: activePanel ? "block" : "none" }}>
+        <div style={{ display: activePanel === "Jobs" ? "block" : "none" }}>
+          <Panel title="Jobs" token={token!} />
+        </div>
+        <div style={{ display: activePanel === "Cars" ? "block" : "none" }}>
+          <Panel title="Cars" token={token!} />
+        </div>
+        <div style={{ display: activePanel === "Employees" ? "block" : "none" }}>
+          <Panel title="Employees" token={token!} />
+        </div>
+        <div style={{ display: activePanel === "Teams" ? "block" : "none" }}>
+          <Panel title="Teams" token={token!} />
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 // Internal types used for basic data manipulation, response types will be separate
 
 export type Employee = {
-    id: number,
+    id?: number,
     lineId: string,
     name: string,
     verified: boolean,
@@ -9,23 +9,23 @@ export type Employee = {
 }
 
 export type Team = {
-    id: number,
+    id?: number,
     name: string
 }
 
 export type Car = {
-    id: number,
+    id?: number,
     plateNumber: string,
     teamId: number
 }
 
 export type Admin = {
-    id: number,
+    id?: number,
     name: string
 }
 
 export type Reservation = {
-    id: number,
+    id?: number,
     userId: number,
     carId: number,
     checkinTime: string, // i am NOT gonna keep this as a Date
