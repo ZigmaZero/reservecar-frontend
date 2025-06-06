@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
   const { admin, token } = useAdmin();
-  const [activePanel, setActivePanel] = useState<string | null>(null);
+  const [activePanel, setActivePanel] = useState<"Teams" | "Employees" | "Cars" | "Jobs" | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {

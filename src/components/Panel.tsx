@@ -6,13 +6,15 @@ import listReservations from "../api/listReservations";
 import listCars from "../api/listCars";
 import listEmployees from "../api/listEmployees";
 import listTeams from "../api/listTeams";
+import AddModal from "./AddModal";
 
 interface PanelProps {
-  title: string;
+  title: "Teams" | "Employees" | "Cars" | "Jobs";
   token: string;
 }
 
 const Panel: React.FC<PanelProps> = ({ title, token }) => {
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,33 +23,36 @@ const Panel: React.FC<PanelProps> = ({ title, token }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editItem, setEditItem] = useState<any | null>(null);
 
+  const fetchData = async (page = currentPage) => {
+    let response;
+    switch (title) {
+      case "Jobs":
+        response = await listReservations(page, pageSize, token);
+        break;
+      case "Cars":
+        response = await listCars(page, pageSize, token);
+        break;
+      case "Employees":
+        response = await listEmployees(page, pageSize, token);
+        break;
+      case "Teams":
+        response = await listTeams(page, pageSize, token);
+        break;
+      default:
+        return;
+    }
+    setData(response.data);
+    setMaxPages(response.maxPages);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      let response;
-
-      switch (title) {
-        case "Jobs":
-          response = await listReservations(currentPage, pageSize, token);
-          break;
-        case "Cars":
-          response = await listCars(currentPage, pageSize, token);
-          break;
-        case "Employees":
-          response = await listEmployees(currentPage, pageSize, token);
-          break;
-        case "Teams":
-          response = await listTeams(currentPage, pageSize, token);
-          break;
-        default:
-          return;
-      }
-
-      setData(response.data);
-      setMaxPages(response.maxPages);
-    };
-
     fetchData();
   }, [title, currentPage]);
+
+  const handleAdd = async (item: any) => {
+    // TODO: add the item to the backend
+    await fetchData();
+  }
 
   const handleEdit = (item: any) => {
     setEditItem(item);
@@ -57,6 +62,16 @@ const Panel: React.FC<PanelProps> = ({ title, token }) => {
   return (
     <div>
       <h2>{title}</h2>
+      {title !== "Jobs" && title !== "Employees" && (
+        <button onClick={() => setIsAddOpen(true)}>Add</button>
+      )}
+      {isAddOpen && (
+        <AddModal
+          onClose={() => setIsAddOpen(false)}
+          type={title}
+          onAdd={handleAdd}
+        />
+      )}
       <button onClick={() => setIsFilterOpen(true)}>Filter</button>
       {isFilterOpen && <Filter onClose={() => setIsFilterOpen(false)} />}
       {data.length > 0 ? (
@@ -70,7 +85,9 @@ const Panel: React.FC<PanelProps> = ({ title, token }) => {
             <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
           </div>
         </>
-      ) : (<div>No data available</div>)}
+      ) : (
+        <div>No data available</div>
+      )}
       {isEditOpen && <EditModal item={editItem} onClose={() => setIsEditOpen(false)} />}
     </div>
   );

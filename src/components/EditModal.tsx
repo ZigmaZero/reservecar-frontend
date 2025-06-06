@@ -19,19 +19,25 @@ const EditModal = <T extends Record<string, any>>({ item, onClose }: EditModalPr
   };
 
   return (
-    <div className="edit-modal">
-      <h3>Edit {formData.name ?? "Item"}</h3>
-      <form onSubmit={handleSubmit}>
-        {Object.entries(formData).map(([key, value]) => (
-          <label key={key}>
-            {key}:
-            <input name={key} value={String(value)} onChange={handleChange} />
-          </label>
-        ))}
-        <button type="submit">Save</button>
-        <button type="button" onClick={onClose}>Cancel</button>
-      </form>
-    </div>
+    
+    <>
+      <div className="modal-backdrop" onClick={onClose}>
+
+      </div>
+      <div className="edit-modal">
+        <h3>Edit {formData.name ?? "Item"}</h3>
+        <form onSubmit={handleSubmit}>
+          {Object.entries(formData).map(([key, value]) => (
+            <label key={key}>
+              {key}:
+              <input name={key} value={String(value)} onChange={handleChange} />
+            </label>
+          ))}
+          <button type="submit">Save</button>
+          <button type="button" onClick={onClose}>Cancel</button>
+        </form>
+      </div>
+    </>
   );
 };
 
