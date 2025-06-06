@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../widgets/Navbar";
+import { useUser } from "../contexts/UserContext";
 
 const Checkout = () => {
-  const [fullName, setFullName] = useState("");
+  const { user, token } = useUser();
   const [job, setJob] = useState("");
   const [jobs, setJobs] = useState<string[]>([]);
   const navigate = useNavigate();
+
+  if(!user || !user.verified) {
+    navigate("/login");
+    return null;
+  }
 
   // Initialize job options
   useEffect(() => {
@@ -16,7 +22,7 @@ const Checkout = () => {
   // Handle submit
   const handleSubmit = () => {
     const timestamp = new Date().toISOString();
-    console.log(`${timestamp}: Checkout [${fullName} | ${job}]`);
+    console.log(`${timestamp}: Checkout [${user.name} | ${job}]`);
     navigate("/checkout-success");
   };
 
@@ -31,16 +37,7 @@ const Checkout = () => {
           handleSubmit();
         }}
       >
-        {/* Full Name */}
-        <label htmlFor="fullName">ชื่อ-นามสกุล:</label>
-        <input
-          type="text"
-          id="fullName"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          required
-        />
-
+        
         {/* Job Selection */}
         <label htmlFor="job">เลขงาน:</label>
         <select

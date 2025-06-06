@@ -282,3 +282,10 @@ button.delete-button {
 button.delete-button:hover {
   background-color: #000;
 }
+
+.input-warning {
+  color: #e11111;
+  font-size: 14px;
+  margin-top: 1px;
+  margin-bottom: 4px;
+}

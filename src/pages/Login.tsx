@@ -1,7 +1,10 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
+import userLogin from "../api/userLogin";
 
 const Login = () => {
     const [searchParams] = useSearchParams();
+    const { setUser, setToken } = useUser();
     const navigate = useNavigate();
     const action = searchParams.get('action');
 
@@ -10,37 +13,29 @@ const Login = () => {
         const formData = new FormData(event.currentTarget);
         const username = formData.get('username') as string;
 
-        // Send login request to the backend
-        fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ fullName: username }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Login failed');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Handle successful login, e.g., redirect to dashboard
-            console.log('Login successful.');
-            if(!data.verified) {
-                navigate('/verify');
-            }
-            else if(action === 'checkin' || action === 'checkout') {
-                navigate(`/${action}`);
-            }
-            else {
-                navigate('/menu');
-            }
-        })
-        .catch(error => {
-            console.error('Error during login:', error);
-            alert('Login failed. Please try again.');
-        });
+        try {
+            userLogin(username).then((response) => {
+                setUser(response.user);
+                setToken(response.token);
+                if(!response.user.verified) {
+                    navigate('/verify');
+                }
+                else if (action === 'checkin') {
+                    navigate('/checkin');
+                } else if (action === 'checkout') {
+                    navigate('/checkout');
+                } else {
+                    navigate('/menu');
+                }
+            }).catch((error) => {
+                console.error("Login failed:", error);
+                alert("Login failed. Please try again.");
+            });
+        }
+        catch (error) {
+            console.error("Error during login:", error);
+            alert("An error occurred during login. Please try again later.");
+        }
     };
 
     return (

@@ -10,6 +10,8 @@ interface EditEmployeesModalProps {
 const EditEmployeesModal: React.FC<EditEmployeesModalProps> = ({ item, onClose, onEdit }) => {
   const [formData, setFormData] = useState<Employee>({ ...item });
 
+  const originallyVerified = item.verified;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e.target;
     setFormData(prev => {
@@ -48,7 +50,7 @@ const EditEmployeesModal: React.FC<EditEmployeesModalProps> = ({ item, onClose, 
         <div className="input-label">
             Line ID:
         </div>
-        <input name="lineId" value={employee.lineId} onChange={handleChange} />
+        <input name="lineId" value={employee.lineId} onChange={handleChange} disabled />
         </label>
         <label>
         <div className="input-label">
@@ -59,8 +61,12 @@ const EditEmployeesModal: React.FC<EditEmployeesModalProps> = ({ item, onClose, 
             type="checkbox"
             checked={employee.verified}
             onChange={handleChange}
+            disabled={originallyVerified}
         />
         </label>
+        <div className="input-warning">
+          (Once you verify someone, you cannot unverify them.)
+        </div>
         <label>
         <div className="input-label">
             Team ID:
