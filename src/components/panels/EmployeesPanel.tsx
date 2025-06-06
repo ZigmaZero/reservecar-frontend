@@ -6,6 +6,7 @@ import EmployeesTable from "../tables/EmployeesTable";
 import EditEmployeesModal from "../editModals/EditEmployeesModal";
 import deleteEmployee from "../../api/employees/deleteEmployee";
 import editEmployee from "../../api/employees/editEmployees";
+import verifyEmployee from "../../api/employees/verifyEmployee";
 
 
 interface EmployeesPanelProps {
@@ -42,6 +43,9 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({token }) => {
     }
     else {
         await editEmployee(item, updatedItem, token);
+        if(!item.verified && updatedItem.verified) {
+          await verifyEmployee(updatedItem, token);
+        }
     }
     await fetchData();
     setIsEditOpen(false);

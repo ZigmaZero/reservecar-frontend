@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import listReservations from "../../api/listReservations";
+import listReservations from "../../api/reservations/listReservations";
 import Filter from "../Filter";
 import JobsTable from "../tables/JobsTable";
 

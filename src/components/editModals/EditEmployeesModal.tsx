@@ -48,7 +48,7 @@ const EditEmployeesModal: React.FC<EditEmployeesModalProps> = ({ item, onClose, 
         <div className="input-label">
             Line ID:
         </div>
-        <input name="lineId" value={employee.lineId} onChange={handleChange} required />
+        <input name="lineId" value={employee.lineId} onChange={handleChange} />
         </label>
         <label>
         <div className="input-label">

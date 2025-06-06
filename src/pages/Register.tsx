@@ -1,43 +1,33 @@
-import axios from 'axios';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import userRegister from '../api/userRegister';
+import { useState } from 'react';
 
 const Register = () => {
     const [searchParams] = useSearchParams();
     const action = searchParams.get('action');
     const navigate = useNavigate();
-    const registerUser = (event: React.FormEvent<HTMLFormElement>) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         const formData = new FormData(event.currentTarget);
         const username = formData.get('username') as string;
-
-        axios.post('/register', {
-            fullName: username
-        })
-        .then((response) => {
-            if (response.status === 201) {
-                console.log(`User registered successfully.`);
-                if(action)
-                {
-                    navigate(`/login?action=${action}`); // Redirect to login page with action
-                }
-                else
-                {
-                    navigate('/login'); // Redirect to login page
-                }
+        try {
+            await userRegister(username);
+            if(action) {
+                navigate(`/login?action=${action}`);
             } else {
-                console.error(`Unexpected response status: ${response.status}`);
-                alert("An error occurred. Please try again later.");
+                navigate('/login');
             }
-        })
-        .catch((error) => {
-            if (error.response) {
-                console.error(`Error during registration: ${error.response.status} - ${error.response.data.error}`);
-            } else {
-                console.error('Error during registration:', error.message);
-            }
+        } catch (error) {
             alert("An error occurred. Please try again later.");
-        });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
+
     return (
         <>
         <div className="navbar-blank"></div>
@@ -45,7 +35,7 @@ const Register = () => {
             <h1>Register Page</h1>
             <p>You are not registered with the system.</p>
             <p>In the current version, just entering full name is enough.</p>
-            <form onSubmit = {registerUser}>
+            <form onSubmit={handleSubmit}>
                 <label htmlFor="username">Full Name:</label>
                 <input
                     type="text"
@@ -54,7 +44,7 @@ const Register = () => {
                     required
                 />
 
-                <button type="submit">Register</button>
+                <button type="submit" disabled={isSubmitting}>Register</button>
             </form>
         </div>
         </>
