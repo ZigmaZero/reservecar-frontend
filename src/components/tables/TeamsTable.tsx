@@ -1,10 +1,11 @@
-interface TableProps<T> {
-  panelType: string;
-  data: T[];
-  onEdit: (item: T) => void;
+import type { Team } from "../../api/types";
+
+interface TeamsTableProps {
+  data: Team[];
+  onEdit: (item: Team) => void;
 }
 
-const Table = <T extends Record<string, any>>({ panelType, data, onEdit }: TableProps<T>) => {
+const TeamsTable = ({ data, onEdit }: TeamsTableProps) => {
   return (
     <table>
       <thead>
@@ -12,7 +13,7 @@ const Table = <T extends Record<string, any>>({ panelType, data, onEdit }: Table
           {Object.keys(data[0] ?? {}).map((key) => (
             <th key={key}>{key}</th>
           ))}
-          {panelType !== "Jobs" && <th className="action-cell">Action</th>}
+          <th className="action-cell">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -21,11 +22,9 @@ const Table = <T extends Record<string, any>>({ panelType, data, onEdit }: Table
             {Object.values(item).map((value, idx) => (
               <td key={idx}>{String(value)}</td>
             ))}
-            {panelType !== "Jobs" && (
-              <td className="action-cell">
+            <td className="action-cell">
                 <button onClick={() => onEdit(item)}>Edit</button>
-              </td>
-            )}
+            </td>
           </tr>
         ))}
       </tbody>
@@ -33,4 +32,4 @@ const Table = <T extends Record<string, any>>({ panelType, data, onEdit }: Table
   );
 };
 
-export default Table;
+export default TeamsTable;

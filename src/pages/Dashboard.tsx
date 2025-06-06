@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Panel from "../components/Panel";
 import { useAdmin } from "../contexts/AdminContext";
 import { useNavigate } from "react-router-dom";
+import CarsPanel from "../components/panels/CarsPanel";
+import JobsPanel from "../components/panels/JobsPanel";
+import EmployeesPanel from "../components/panels/EmployeesPanel";
+import TeamsPanel from "../components/panels/TeamsPanel";
 
 const Dashboard: React.FC = () => {
   const { admin, token } = useAdmin();
@@ -27,16 +30,16 @@ const Dashboard: React.FC = () => {
       </div>
       <div style={{ display: activePanel ? "block" : "none" }}>
         <div style={{ display: activePanel === "Jobs" ? "block" : "none" }}>
-          <Panel title="Jobs" token={token!} />
+          <JobsPanel token={token!}/>
         </div>
         <div style={{ display: activePanel === "Cars" ? "block" : "none" }}>
-          <Panel title="Cars" token={token!} />
+          <CarsPanel token={token!}/>
         </div>
         <div style={{ display: activePanel === "Employees" ? "block" : "none" }}>
-          <Panel title="Employees" token={token!} />
+          <EmployeesPanel token={token!}/>
         </div>
         <div style={{ display: activePanel === "Teams" ? "block" : "none" }}>
-          <Panel title="Teams" token={token!} />
+          <TeamsPanel token={token!}/>
         </div>
       </div>
     </div>
