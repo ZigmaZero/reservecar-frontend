@@ -1,38 +1,38 @@
 import { type Employee, type Team, type Car, type Admin, type Reservation } from "./types";
 
 export const employees: Employee[] = [
-    { userId: 1, lineId: "line123", name: "Alice", verified: true, teamId: 1 },
-    { userId: 2, lineId: "line456", name: "Bob", verified: false }
+    { id: 1, lineId: "line123", name: "Alice", verified: true, teamId: 1 },
+    { id: 2, lineId: "line456", name: "Bob", verified: false }
 ];
 
 export const teams: Team[] = [
-    { teamId: 1, name: "Engineering" },
-    { teamId: 2, name: "Design" }
+    { id: 1, name: "Engineering" },
+    { id: 2, name: "Design" }
 ];
 
 export const cars: Car[] = [
-    { carId: 101, plateNumber: "ABC-123", teamId: 1 },
-    { carId: 102, plateNumber: "XYZ-789", teamId: 2 }
+    { id: 101, plateNumber: "ABC-123", teamId: 1 },
+    { id: 102, plateNumber: "XYZ-789", teamId: 2 }
 ];
 
 export const admins: Admin[] = [
-    { adminId: 1, name: "admin1" },
-    { adminId: 2, name: "admin2" }
+    { id: 1, name: "admin1" },
+    { id: 2, name: "admin2" }
 ];
 
 export const reservations: Reservation[] = [
-    { reservationId: 1, userId: 1, carId: 101, checkinTime: "2025-06-02T10:00:00Z", checkoutTime: "2025-06-02T12:00:00Z" },
-    { reservationId: 2, userId: 2, carId: 102, checkinTime: "2025-06-02T14:00:00Z" }
+    { id: 1, userId: 1, carId: 101, checkinTime: "2025-06-02T10:00:00Z", checkoutTime: "2025-06-02T12:00:00Z" },
+    { id: 2, userId: 2, carId: 102, checkinTime: "2025-06-02T14:00:00Z" }
 ];
 
 export const listReservations = (pageNumber: number = 1, numRows: number = 10) => {
     const startIndex = (pageNumber - 1) * numRows;
     const endIndex = startIndex + numRows;
     const pagedReservations = reservations.slice(startIndex, endIndex).map(reservation => {
-        const user = employees.find(e => e.userId === reservation.userId);
-        const car = cars.find(c => c.carId === reservation.carId);
+        const user = employees.find(e => e.id === reservation.userId);
+        const car = cars.find(c => c.id === reservation.carId);
         return {
-            ID: reservation.reservationId,
+            ID: reservation.id,
             User: user ? user.name : "Unknown",
             Car: car ? car.plateNumber : "Unknown",
             Checkin: new Date(reservation.checkinTime).toLocaleString(),
@@ -52,9 +52,9 @@ export const listCars = (pageNumber: number = 1, numRows: number = 10) => {
     const startIndex = (pageNumber - 1) * numRows;
     const endIndex = startIndex + numRows;
     const pagedCars = cars.slice(startIndex, endIndex).map(car => {
-        const team = teams.find(t => t.teamId === car.teamId);
+        const team = teams.find(t => t.id === car.teamId);
         return {
-            ID: car.carId,
+            ID: car.id,
             Plate: car.plateNumber,
             Team: team ? team.name : "---"
         }
@@ -72,9 +72,9 @@ export const listEmployees = (pageNumber: number = 1, numRows: number = 10) => {
     const startIndex = (pageNumber - 1) * numRows;
     const endIndex = startIndex + numRows;
     const pagedCars = employees.slice(startIndex, endIndex).map(employee => {
-        const team = teams.find(t => t.teamId === employee.teamId);
+        const team = teams.find(t => t.id === employee.teamId);
         return {
-            ID: employee.userId,
+            ID: employee.id,
             LineID: employee.lineId,
             Name: employee.name,
             Verified: employee.verified ? "Yes" : "No",
@@ -95,7 +95,7 @@ export const listTeams = (pageNumber: number = 1, numRows: number = 10) => {
     const endIndex = startIndex + numRows;
     const pagedTeams = teams.slice(startIndex, endIndex).map(team => {
         return {
-            ID: team.teamId,
+            ID: team.id,
             Name: team.name
         }
     });
