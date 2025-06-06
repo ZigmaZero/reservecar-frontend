@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Panel from "../components/Panel";
+import { useAdmin } from "../contexts/AdminContext";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
+  const { admin } = useAdmin();
   const [activePanel, setActivePanel] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!admin) {
+      navigate("/admin");
+    }
+  })
+
 
   return (
     <div className="admin-container">
       <h1>Dashboard</h1>
+      <p>Welcome {admin?.name}</p>
       <div className="panel-buttons">
         <button onClick={() => setActivePanel("Jobs")}>Jobs</button>
         <button onClick={() => setActivePanel("Cars")}>Cars</button>

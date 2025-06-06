@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import adminLogin from "../api/adminLogin";
 import { useAdmin } from "../contexts/AdminContext";
 
-const Home = () => {
+const AdminLogin = () => {
   const { admin, setAdmin } = useAdmin();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -12,7 +12,7 @@ const Home = () => {
   // if already admin, redirect to dashboard
   useEffect(() => {
     if (admin) {
-      navigate("/dashboard");
+      navigate("/admin/dashboard");
     }
   })
 
@@ -24,7 +24,7 @@ const Home = () => {
       .then((data) => {
         setAdmin(data);
         console.log(`Welcome ${admin?.name}`)
-        navigate("/dashboard"); // Redirect after login
+        navigate("/admin/dashboard"); // Redirect after login
       })
       .catch((error) => {
         if (error.response && error.response.status !== 400 && error.response.status !== 401) {
@@ -66,4 +66,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default AdminLogin;

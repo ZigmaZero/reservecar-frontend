@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import Checkin from './pages/Checkin';
 import Checkout from './pages/Checkout';
-import Home from './pages/Home';
+import AdminLogin from './pages/AdminLogin';
 import Dashboard from './pages/Dashboard';
 import CheckinSuccess from './pages/CheckinSuccess';
 import CheckoutSuccess from './pages/CheckoutSuccess';
@@ -11,6 +11,8 @@ import WaitForVerify from './pages/WaitForVerify';
 import Menu from './pages/Menu';
 import { UserProvider } from './contexts/UserContext';
 import { AdminProvider } from './contexts/AdminContext';
+import NotFound from './pages/errors/NotFound';
+import Forbidden from './pages/errors/Forbidden';
 
 const AppRoutes = () => (
   <>
@@ -28,10 +30,14 @@ const AppRoutes = () => (
     </UserProvider>
     <AdminProvider>
       <Routes>
-        <Route path="/admin" element={<Home />}/>
-        <Route path="/dashboard" element={<Dashboard />}/>
+        <Route path="/admin" element={<AdminLogin />}/>
+        <Route path="/admin/dashboard" element={<Dashboard />}/>
+        <Route path="/admin/*" element={<Forbidden />} />
       </Routes>
     </AdminProvider>
+    <Routes>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   </>
 );
 
