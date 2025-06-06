@@ -38,7 +38,7 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
 
     useEffect(() => {
         fetchData();
-    })
+    }, [currentPage, pageSize])
 
     const handleAdd = async (item: Car) => {
         await addCar(item, token);

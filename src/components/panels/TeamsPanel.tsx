@@ -30,15 +30,18 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
         let response = await listTeams(currentPage, pageSize, token);
         setData(response.data);
         setMaxPages(response.maxPages);
-        if(currentPage > maxPages)
-        {
-            setCurrentPage(maxPages);
-        }
     }
 
     useEffect(() => {
         fetchData();
-    })
+    }, [currentPage, pageSize])
+
+    useEffect(() => {
+        if(currentPage > maxPages)
+        {
+            setCurrentPage(maxPages);
+        }
+    }, [currentPage, maxPages])
 
     const handleAdd = async (item: Team) => {
         await addTeam(item, token);

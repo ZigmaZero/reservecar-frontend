@@ -22,7 +22,7 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
 
   useEffect(() => {
     fetchData();
-  });
+  }, [currentPage, pageSize]);
 
   return (
     <div>

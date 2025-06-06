@@ -9,12 +9,12 @@ const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // if already admin, redirect to dashboard
+  // if is admin, redirect to dashboard
   useEffect(() => {
     if (admin) {
       navigate("/admin/dashboard");
     }
-  })
+  }, [admin])
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +25,6 @@ const AdminLogin = () => {
         setAdmin(data.admin);
         setToken(data.token);
         console.log(`Welcome ${admin?.name}`)
-        navigate("/admin/dashboard"); // Redirect after login
       })
       .catch((error) => {
         if (error.response && error.response.status !== 400 && error.response.status !== 401) {

@@ -2,7 +2,7 @@ import axios from "axios";
 import type { Team } from '../types';
 
 export default function deleteTeam(item: Team, token: string): Promise<null> {
-    return axios.delete(`/teams/${item.id}`, {
+    return axios.delete(`/teams/${item.teamId}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,

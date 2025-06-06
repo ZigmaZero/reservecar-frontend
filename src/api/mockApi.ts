@@ -6,13 +6,13 @@ export const employees: Employee[] = [
 ];
 
 export const teams: Team[] = [
-    { id: 1, name: "Engineering" },
-    { id: 2, name: "Design" }
+    { teamId: 1, name: "Engineering" },
+    { teamId: 2, name: "Design" }
 ];
 
 export const cars: Car[] = [
-    { id: 101, plateNumber: "ABC-123", teamId: 1 },
-    { id: 102, plateNumber: "XYZ-789", teamId: 2 }
+    { carId: 101, plateNumber: "ABC-123", teamId: 1 },
+    { carId: 102, plateNumber: "XYZ-789", teamId: 2 }
 ];
 
 export const admins: Admin[] = [
@@ -30,7 +30,7 @@ export const listReservations = (pageNumber: number = 1, numRows: number = 10) =
     const endIndex = startIndex + numRows;
     const pagedReservations = reservations.slice(startIndex, endIndex).map(reservation => {
         const user = employees.find(e => e.id === reservation.userId);
-        const car = cars.find(c => c.id === reservation.carId);
+        const car = cars.find(c => c.carId === reservation.carId);
         return {
             ID: reservation.id,
             User: user ? user.name : "Unknown",
@@ -52,9 +52,9 @@ export const listCars = (pageNumber: number = 1, numRows: number = 10) => {
     const startIndex = (pageNumber - 1) * numRows;
     const endIndex = startIndex + numRows;
     const pagedCars = cars.slice(startIndex, endIndex).map(car => {
-        const team = teams.find(t => t.id === car.teamId);
+        const team = teams.find(t => t.teamId === car.teamId);
         return {
-            ID: car.id,
+            ID: car.carId,
             Plate: car.plateNumber,
             Team: team ? team.name : "---"
         }
@@ -72,7 +72,7 @@ export const listEmployees = (pageNumber: number = 1, numRows: number = 10) => {
     const startIndex = (pageNumber - 1) * numRows;
     const endIndex = startIndex + numRows;
     const pagedCars = employees.slice(startIndex, endIndex).map(employee => {
-        const team = teams.find(t => t.id === employee.teamId);
+        const team = teams.find(t => t.teamId === employee.teamId);
         return {
             ID: employee.id,
             LineID: employee.lineId,
@@ -95,7 +95,7 @@ export const listTeams = (pageNumber: number = 1, numRows: number = 10) => {
     const endIndex = startIndex + numRows;
     const pagedTeams = teams.slice(startIndex, endIndex).map(team => {
         return {
-            ID: team.id,
+            ID: team.teamId,
             Name: team.name
         }
     });

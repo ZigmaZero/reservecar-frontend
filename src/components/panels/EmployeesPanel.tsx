@@ -29,7 +29,7 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({token }) => {
 
   useEffect(() => {
     fetchData();
-  });
+  }, [currentPage, pageSize]);
 
   const handleEdit = (item: Employee) => {
     setEditItem(item);

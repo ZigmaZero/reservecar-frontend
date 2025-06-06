@@ -9,12 +9,12 @@ export type Employee = {
 }
 
 export type Team = {
-    id?: number,
+    teamId?: number,
     name: string
 }
 
 export type Car = {
-    id?: number,
+    carId?: number,
     plateNumber: string,
     teamId: number
 }

@@ -2,7 +2,7 @@ import axios from "axios";
 import type { Car } from "../types";
 
 export default function editCar(item: Car, updatedItem: Car, token: string): Promise<null> {
-    return axios.put(`/cars/${item.id}`, updatedItem, {
+    return axios.put(`/cars/${item.carId}`, updatedItem, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
