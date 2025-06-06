@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import Filter from "./Filter";
 import Table from "./Table";
 import EditModal from "./EditModal";
-import { listCars, listEmployees, listTeams } from "../api/mockApi";
 import listReservations from "../api/listReservations";
+import listCars from "../api/listCars";
+import listEmployees from "../api/listEmployees";
+import listTeams from "../api/listTeams";
 
 interface PanelProps {
   title: string;
@@ -28,13 +30,13 @@ const Panel: React.FC<PanelProps> = ({ title, token }) => {
           response = await listReservations(currentPage, pageSize, token);
           break;
         case "Cars":
-          response = await listCars(currentPage);
+          response = await listCars(currentPage, pageSize, token);
           break;
         case "Employees":
-          response = await listEmployees(currentPage);
+          response = await listEmployees(currentPage, pageSize, token);
           break;
         case "Teams":
-          response = await listTeams(currentPage);
+          response = await listTeams(currentPage, pageSize, token);
           break;
         default:
           return;
@@ -57,14 +59,18 @@ const Panel: React.FC<PanelProps> = ({ title, token }) => {
       <h2>{title}</h2>
       <button onClick={() => setIsFilterOpen(true)}>Filter</button>
       {isFilterOpen && <Filter onClose={() => setIsFilterOpen(false)} />}
-      <Table data={data} panelType={title} onEdit={handleEdit} />
-      <div className="pagination">
-        <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
-        <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Prev</button>
-        <div className="pagination-page">Page {currentPage} of {maxPages}</div>
-        <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, maxPages))} disabled={currentPage === maxPages}>Next</button>
-        <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
-      </div>
+      {data.length > 0 ? (
+        <>
+          <Table data={data} panelType={title} onEdit={handleEdit} />
+          <div className="pagination">
+            <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
+            <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Prev</button>
+            <div className="pagination-page">Page {currentPage} of {maxPages}</div>
+            <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, maxPages))} disabled={currentPage === maxPages}>Next</button>
+            <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
+          </div>
+        </>
+      ) : (<div>No data available</div>)}
       {isEditOpen && <EditModal item={editItem} onClose={() => setIsEditOpen(false)} />}
     </div>
   );
