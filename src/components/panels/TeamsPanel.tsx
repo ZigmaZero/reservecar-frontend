@@ -1,12 +1,14 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 import type { Team } from "../../api/types";
-import listTeams from "../../api/listTeams";
-import addItem from "../../api/addItem";
+import listTeams from "../../api/teams/listTeams";
 import Filter from "../Filter";
 import TeamsTable from "../tables/TeamsTable";
 import AddTeamsModal from "../addModals/AddTeamsModal";
 import EditTeamsModal from "../editModals/EditTeamsModal";
+import addTeam from "../../api/teams/addTeam";
+import deleteTeam from "../../api/teams/deleteTeam";
+import editTeam from "../../api/teams/editTeam";
 
 interface TeamsPanelProps {
     token: string;
@@ -39,7 +41,7 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
     })
 
     const handleAdd = async (item: Team) => {
-        await addItem(item, token);
+        await addTeam(item, token);
         await fetchData();
     }
 
@@ -49,7 +51,13 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
     };
 
     const resolveEdit = async (item: Team, updatedItem: Team | null) => {
-        // TODO: update the item in the backend
+        if(!updatedItem) {
+            await deleteTeam(item, token);
+        }
+        else {
+            await editTeam(item, updatedItem, token);
+        }
+        await fetchData();
         setIsEditOpen(false);
         setEditItem(null);
     }

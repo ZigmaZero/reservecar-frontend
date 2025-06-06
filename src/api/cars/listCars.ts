@@ -1,14 +1,14 @@
 import axios from 'axios';
-import type { Employee } from './types';
+import type { Car } from '../types';
 
-export default function listEmployees(currentPage: number, pageSize: number, token: string): Promise<{
-    data: Employee[];
+export default function listCars(currentPage: number, pageSize: number, token: string): Promise<{
+    data: Car[];
     total: number;
     page: number;
     pageSize: number;
     maxPages: number;
 }> {
-    return axios.get(`/employees`, {
+    return axios.get(`/cars`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Team } from './types';
+import type { Team } from '../types';
 
 export default function listTeams(currentPage: number, pageSize: number, token: string): Promise<{
     data: Team[];

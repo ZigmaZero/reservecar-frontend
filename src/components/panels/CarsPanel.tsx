@@ -1,12 +1,14 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 import type { Car } from "../../api/types";
-import addItem from "../../api/addItem";
 import Filter from "../Filter";
-import listCars from "../../api/listCars";
+import listCars from "../../api/cars/listCars";
 import CarsTable from "../tables/CarsTable";
 import AddCarsModal from "../addModals/AddCarsModal";
 import EditCarsModal from "../editModals/EditCarsModal";
+import addCar from "../../api/cars/addCar";
+import deleteCar from "../../api/cars/deleteCar";
+import editCar from "../../api/cars/editCar";
 
 interface CarsPanelProps {
     token: string;
@@ -39,7 +41,7 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
     })
 
     const handleAdd = async (item: Car) => {
-        await addItem(item, token);
+        await addCar(item, token);
         await fetchData();
     }
 
@@ -49,7 +51,13 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
     };
 
     const resolveEdit = async (item: Car, updatedItem: Car | null) => {
-        // TODO: update the item in the backend
+        if(!updatedItem) {
+            await deleteCar(item, token);
+        }
+        else {
+            await editCar(item, updatedItem, token);
+        }
+        await fetchData();
         setIsEditOpen(false);
         setEditItem(null);
     }

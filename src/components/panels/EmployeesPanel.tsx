@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import type { Employee } from "../../api/types";
-import listEmployees from "../../api/listEmployees";
+import listEmployees from "../../api/employees/listEmployees";
 import Filter from "../Filter";
 import EmployeesTable from "../tables/EmployeesTable";
 import EditEmployeesModal from "../editModals/EditEmployeesModal";
+import deleteEmployee from "../../api/employees/deleteEmployee";
+import editEmployee from "../../api/employees/editEmployees";
 
 
 interface EmployeesPanelProps {
@@ -35,7 +37,13 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({token }) => {
   };
 
   const resolveEdit = async (item: Employee, updatedItem: Employee | null) => {
-    // TODO: update the item in the backend
+    if(!updatedItem) {
+        await deleteEmployee(item, token);
+    }
+    else {
+        await editEmployee(item, updatedItem, token);
+    }
+    await fetchData();
     setIsEditOpen(false);
     setEditItem(null);
   }
