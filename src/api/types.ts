@@ -28,6 +28,7 @@ export type Reservation = {
     id?: number,
     userId: number,
     carId: number,
+    description: string,
     checkinTime: string, // i am NOT gonna keep this as a Date
     checkoutTime?: string // screw you
 }
