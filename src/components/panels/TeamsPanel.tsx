@@ -1,6 +1,6 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import type { Team } from "../../api/internalTypes";
+import type { TeamExternal } from "../../api/externalTypes";
 import listTeams from "../../api/teams/listTeams";
 import Filter from "../Filter";
 import TeamsTable from "../tables/TeamsTable";
@@ -19,12 +19,12 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
 
-    const [data, setData] = useState<Team[]>([]);
+    const [data, setData] = useState<TeamExternal[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPages, setMaxPages] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
-    const [editItem, setEditItem] = useState<Team | null>(null);
+    const [editItem, setEditItem] = useState<TeamExternal | null>(null);
 
     const fetchData = async () => {
         let response = await listTeams(currentPage, pageSize, token);
@@ -43,17 +43,17 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
         }
     }, [currentPage, maxPages])
 
-    const handleAdd = async (item: Team) => {
+    const handleAdd = async (item: TeamExternal) => {
         await addTeam(item, token);
         await fetchData();
     }
 
-    const handleEdit = (item: Team) => {
+    const handleEdit = (item: TeamExternal) => {
         setEditItem(item);
         setIsEditOpen(true);
     };
 
-    const resolveEdit = async (item: Team, updatedItem: Team | null) => {
+    const resolveEdit = async (item: TeamExternal, updatedItem: TeamExternal | null) => {
         if(!updatedItem) {
             await deleteTeam(item, token);
         }

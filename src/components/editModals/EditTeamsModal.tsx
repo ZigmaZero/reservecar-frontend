@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import type { Team } from "../../api/internalTypes";
+import type { TeamExternal } from "../../api/externalTypes";
 
 interface EditModalProps {
-  item: Team;
+  item: TeamExternal;
   onClose: () => void;
-  onEdit: (originalItem: Team, updatedItem: Team | null) => void;
+  onEdit: (originalItem: TeamExternal, updatedItem: TeamExternal | null) => void;
 }
 
 const EditTeamsModal: React.FC<EditModalProps> = ({ item, onClose, onEdit }) => {
-  const [formData, setFormData] = useState<Team>({ ...item });
+  const [formData, setFormData] = useState<TeamExternal>({ ...item });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => {
-        return { ...prev, [name]: value } as Team;
+        return { ...prev, [name]: value } as TeamExternal;
     });
   };
 
@@ -29,7 +29,7 @@ const EditTeamsModal: React.FC<EditModalProps> = ({ item, onClose, onEdit }) => 
   }
 
   const renderFields = () => {
-    const team = formData as Team;
+    const team = formData as TeamExternal;
     return (
     <label>
         <div className="input-label">

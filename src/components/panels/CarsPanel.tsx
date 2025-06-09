@@ -1,6 +1,5 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import type { Car } from "../../api/internalTypes";
 import Filter from "../Filter";
 import listCars from "../../api/cars/listCars";
 import CarsTable from "../tables/CarsTable";
@@ -9,6 +8,7 @@ import EditCarsModal from "../editModals/EditCarsModal";
 import addCar from "../../api/cars/addCar";
 import deleteCar from "../../api/cars/deleteCar";
 import editCar from "../../api/cars/editCar";
+import type { CarExternal } from "../../api/externalTypes";
 
 interface CarsPanelProps {
     token: string;
@@ -19,12 +19,12 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
 
-    const [data, setData] = useState<Car[]>([]);
+    const [data, setData] = useState<CarExternal[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPages, setMaxPages] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
-    const [editItem, setEditItem] = useState<Car | null>(null);
+    const [editItem, setEditItem] = useState<CarExternal | null>(null);
 
     const fetchData = async () => {
         let response = await listCars(currentPage, pageSize, token);
@@ -40,17 +40,17 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
         fetchData();
     }, [currentPage, pageSize])
 
-    const handleAdd = async (item: Car) => {
+    const handleAdd = async (item: CarExternal) => {
         await addCar(item, token);
         await fetchData();
     }
 
-    const handleEdit = (item: Car) => {
+    const handleEdit = (item: CarExternal) => {
         setEditItem(item);
         setIsEditOpen(true);
     };
 
-    const resolveEdit = async (item: Car, updatedItem: Car | null) => {
+    const resolveEdit = async (item: CarExternal, updatedItem: CarExternal | null) => {
         if(!updatedItem) {
             await deleteCar(item, token);
         }
@@ -84,6 +84,13 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
             <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
           </div>
           <CarsTable data={data} onEdit={handleEdit} />
+          <div className="pagination">
+            <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
+            <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Prev</button>
+            <div className="pagination-page">Page {currentPage} of {maxPages}</div>
+            <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, maxPages))} disabled={currentPage === maxPages}>Next</button>
+            <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
+          </div>
         </>
       ) : (
         <div>No data available</div>

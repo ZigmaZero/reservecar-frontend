@@ -28,7 +28,7 @@ const AddCarsModal: React.FC<AddCarsModalProps> = ({ onClose, onAdd }) => {
         alert("Failed to load teams. Please try again later.");
         onClose();
       });
-  })
+  }, [token]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

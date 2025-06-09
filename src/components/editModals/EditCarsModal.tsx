@@ -1,24 +1,42 @@
-import React, { useState } from "react";
-import type { Car } from "../../api/internalTypes"; 
+import React, { useEffect, useState } from "react";
+import type { CarExternal, TeamExternal } from "../../api/externalTypes";
+import { useUser } from "../../contexts/UserContext";
+import getTeams from "../../api/teams/getTeams";
 
 interface EditCarsModalProps {
-  item: Car;
+  item: CarExternal;
   onClose: () => void;
-  onEdit: (originalItem: Car, updatedItem: Car | null) => void;
+  onEdit: (originalItem: CarExternal, updatedItem: CarExternal | null) => void;
 }
 
 const EditCarsModal: React.FC<EditCarsModalProps> = ({ item, onClose, onEdit }) => {
-  const [formData, setFormData] = useState<Car>({ ...item });
+  const { token } = useUser();
+  const [formData, setFormData] = useState<CarExternal>({ ...item });
+  const [teams, setTeams] = useState<TeamExternal[]>([]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => {
-        if (name === "teamId") {
-            return { ...prev, [name]: Number(value) } as Car;
+  useEffect(() => {
+    if(!token)
+    {
+      onClose();
+      return;
+    }
+    getTeams(token)
+      .then((teamsList: TeamExternal[]) => {
+        setTeams(teamsList);
+        if(formData.teamId) {
+          // Ensure the selected team is still valid
+          const teamExists = teamsList.some(team => team.id === formData.teamId);
+          if (!teamExists) {
+            setFormData(prev => ({ ...prev, teamId: undefined }));
+          }
         }
-        return { ...prev, [name]: value } as Car;
-    });
-  };
+      })
+      .catch((error) => {
+        console.error("Error fetching teams:", error);
+        alert("Failed to load teams. Please try again later.");
+        onClose();
+      });
+  }, [token]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,39 +49,36 @@ const EditCarsModal: React.FC<EditCarsModalProps> = ({ item, onClose, onEdit }) 
     onClose();
   }
 
-  const renderFields = () => {
-    const car = formData as Car;
-    return (
-    <>
-        <label>
-        <div className="input-label">
-            Plate No.:
-        </div>
-        <input name="plateNumber" value={car.plateNumber} onChange={handleChange} required />
-        </label>
-        <label>
-        <div className="input-label">
-            Team ID:
-        </div>
-        <input
-            name="teamId"
-            type="number"
-            value={car.teamId}
-            onChange={handleChange}
-            required
-        />
-        </label>
-    </>
-    );
-  };
-
   return (
     <>
       <div className="modal-backdrop" onClick={onClose}></div>
       <div className="edit-modal">
         <h3>Edit Car</h3>
         <form onSubmit={handleSubmit}>
-          {renderFields()}
+          <label>
+          <div className="input-label">
+              Plate No.:
+          </div>
+          <input name="plateNumber" value={formData.plateNumber} onChange={e => setFormData(prev => ({ ...prev, plateNumber: e.target.value}))} required />
+          </label>
+          <label>
+              <div className="input-label">
+                Team:
+              </div>
+              <select
+                name="teamId"
+                value={formData.teamId ?? ""}
+                onChange={e => setFormData(prev => ({ ...prev, teamId: Number(e.target.value) }))}
+                required
+              >
+                <option value="">Select a team</option>
+                {teams.map(team => (
+                  <option key={team.id} value={team.id}>
+                    {team.name}
+                  </option>
+                ))}
+              </select>
+          </label>
           <button type="submit">Save</button>
           <button type="button" onClick={onClose}>
             Cancel
