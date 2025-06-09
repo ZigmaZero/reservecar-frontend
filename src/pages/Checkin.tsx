@@ -9,7 +9,7 @@ import userCheckin from "../api/userCheckin";
 
 const Checkin = () => {
   const { user, token } = useUser();
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState<string>("");
   const [cars, setCars] = useState<Car[]>([]);
   const [carId, setCarId] = useState<number | "">("");
   const [teams, setTeams] = useState<Team[]>([]);
@@ -68,7 +68,7 @@ const Checkin = () => {
       navigate("/login");
       return;
     }
-    userCheckin(carId as number, token)
+    userCheckin(carId as number, description, token)
       .then(() => {
         console.log(`Checkin successful for car ID: ${carId}`);
         navigate("/checkin-success");

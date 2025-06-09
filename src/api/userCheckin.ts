@@ -2,9 +2,10 @@ import axios from 'axios';
 
 export default function userCheckin(
     carId: number,
+    description: string,
     token: string
 ) : Promise<void> {
-    return axios.post(`/user/checkin`, { carId }, {
+    return axios.post(`/user/checkin`, { carId, description }, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,

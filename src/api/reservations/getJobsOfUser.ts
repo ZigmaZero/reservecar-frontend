@@ -15,6 +15,7 @@ export default function getJobsOfUser(token: string): Promise<Reservation[]> {
             .map((reservation: any) => ({
                 id: reservation.reservationId,
                 carId: reservation.carId,
+                description: reservation.description,
                 checkinTime: reservation.checkinTime,
                 checkoutTime: reservation.checkoutTime,
             })) as Reservation[];
