@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { CarExternal, TeamExternal } from "../../api/externalTypes";
-import { useUser } from "../../contexts/UserContext";
 import getTeams from "../../api/teams/getTeams";
+import { useAdmin } from "../../contexts/AdminContext";
 
 interface EditCarsModalProps {
   item: CarExternal;
@@ -10,7 +10,7 @@ interface EditCarsModalProps {
 }
 
 const EditCarsModal: React.FC<EditCarsModalProps> = ({ item, onClose, onEdit }) => {
-  const { token } = useUser();
+  const { token } = useAdmin();
   const [formData, setFormData] = useState<CarExternal>({ ...item });
   const [teams, setTeams] = useState<TeamExternal[]>([]);
 

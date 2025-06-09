@@ -10,18 +10,18 @@ const CarsTable = ({ data, onEdit }: CarsTableProps) => {
     <table>
       <thead>
         <tr>
-          {Object.keys(data[0] ?? {}).map((key) => (
-            <th key={key}>{key}</th>
-          ))}
+          <th key="id">ID</th>
+          <th key="plate-number">Plate No.</th>
+          <th key="team">Team</th>
           <th className="action-cell">Action</th>
         </tr>
       </thead>
       <tbody>
         {data.map((item, index) => (
           <tr key={index}>
-            {Object.values(item).map((value, idx) => (
-              <td key={idx}>{String(value)}</td>
-            ))}
+            <td key={0}>{item.id}</td>
+            <td key={1}>{item.plateNumber}</td>
+            <td key={2}>{item.teamName || "No Team"}</td>
             <td className="action-cell">
                 <button onClick={() => onEdit(item)}>Edit</button>
             </td>

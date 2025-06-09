@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import type { EmployeeExternal } from "../../api/externalTypes";
-import { useUser } from "../../contexts/UserContext";
 import getTeams from "../../api/teams/getTeams";
 import type { TeamExternal } from "../../api/externalTypes";
 import { useEffect } from "react";
+import { useAdmin } from "../../contexts/AdminContext";
 
 interface EditEmployeesModalProps {
   item: EmployeeExternal;
@@ -13,7 +13,7 @@ interface EditEmployeesModalProps {
 
 const EditEmployeesModal: React.FC<EditEmployeesModalProps> = ({ item, onClose, onEdit }) => {
   const [formData, setFormData] = useState<EmployeeExternal>({ ...item });
-  const { token } = useUser();
+  const { token } = useAdmin();
   const [teams, setTeams] = useState<TeamExternal[]>([]);
   useEffect(() => {
     if (!token) {

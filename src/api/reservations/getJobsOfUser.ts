@@ -11,14 +11,7 @@ export default function getJobsOfUser(token: string): Promise<ReservationExterna
         if (response.status !== 200) {
             throw new Error(`Unexpected response status: ${response.status}`);
         }
-        return response.data.reservations
-            .map((reservation: any) => ({
-                id: reservation.reservationId,
-                carId: reservation.carId,
-                description: reservation.description,
-                checkinTime: reservation.checkinTime,
-                checkoutTime: reservation.checkoutTime,
-            })) as ReservationExternal[];
+        return response.data.reservations as ReservationExternal[];
     }
     ).catch((error) => {
         if (error.response && error.response.status !== 400 && error.response.status !== 401) {
