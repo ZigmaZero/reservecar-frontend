@@ -16,17 +16,10 @@ const Checkin = () => {
   const [teamId, setTeamId] = useState<number | "">("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user || !user.verified) {
-      navigate("/login");
-      return;
-    }
-  }, [user, navigate]);
-
   // Initialize team options and set default selection to user's team
   useEffect(() => {
-    if (!user || !token) {
-      navigate("/login");
+    if (!user || !user.verified || !token) {
+      navigate("/login?action=checkin");
       return;
     }
     getTeams(token).then((teamsList: TeamExternal[]) => {
