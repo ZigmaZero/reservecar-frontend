@@ -1,54 +1,39 @@
-import React, { useState } from "react";
-import type { Car } from "../../api/internalTypes";
+import React, { useEffect, useState } from "react";
+import type { CarExternal, TeamExternal } from "../../api/externalTypes";
+import getTeams from "../../api/teams/getTeams";
+import { useUser } from "../../contexts/UserContext";
 
 interface AddCarsModalProps {
   onClose: () => void;
-  onAdd?: (item: Car) => void;
+  onAdd?: (item: CarExternal) => void;
 }
 
 const AddCarsModal: React.FC<AddCarsModalProps> = ({ onClose, onAdd }) => {
-  const [formData, setFormData] = useState<Car>({ plateNumber: "", teamId: 0 });
+  const { token } = useUser();
+  const [formData, setFormData] = useState<CarExternal>({ plateNumber: "" });
+  const [teams, setTeams] = useState<TeamExternal[]>([]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => {
-        if (name === "teamId") {
-          return { ...prev, [name]: Number(value) } as Car;
-        }
-        return { ...prev, [name]: value } as Car;
-    });
-  };
+  useEffect(() => {
+    if(!token)
+    {
+      onClose();
+      return;
+    }
+    getTeams(token)
+      .then((teamsList: TeamExternal[]) => {
+        setTeams(teamsList);
+      })
+      .catch((error) => {
+        console.error("Error fetching teams:", error);
+        alert("Failed to load teams. Please try again later.");
+        onClose();
+      });
+  })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onAdd) onAdd(formData);
     onClose();
-  };
-
-  const renderFields = () => {
-    const car = formData as Car;
-    return (
-    <>
-        <label>
-        <div className="input-label">
-            Plate No.:
-        </div>
-        <input name="plateNumber" value={car.plateNumber} onChange={handleChange} required />
-        </label>
-        <label>
-        <div className="input-label">
-            Team ID:
-        </div>
-        <input
-            name="teamId"
-            type="number"
-            value={car.teamId}
-            onChange={handleChange}
-            required
-        />
-        </label>
-    </>
-    );
   };
 
   return (
@@ -57,7 +42,35 @@ const AddCarsModal: React.FC<AddCarsModalProps> = ({ onClose, onAdd }) => {
       <div className="add-modal">
         <h3>Add Car</h3>
         <form onSubmit={handleSubmit}>
-          {renderFields()}
+            <label>
+              <div className="input-label">
+                  Plate No.:
+              </div>
+              <input 
+                name="plateNumber" 
+                value={formData.plateNumber} 
+                onChange={e => setFormData(prev => ({ ...prev, plateNumber: e.target.value}))} 
+                required 
+              />
+              </label>
+              <label>
+              <div className="input-label">
+                Team:
+              </div>
+              <select
+                name="teamId"
+                value={formData.teamId ?? ""}
+                onChange={e => setFormData(prev => ({ ...prev, teamId: Number(e.target.value) }))}
+                required
+              >
+                <option value="">Select a team</option>
+                {teams.map(team => (
+                  <option key={team.id} value={team.id}>
+                    {team.name}
+                  </option>
+                ))}
+              </select>
+            </label>
           <button type="submit">Add</button>
           <button type="button" onClick={onClose}>
             Cancel

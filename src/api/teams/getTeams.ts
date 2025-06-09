@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { TeamExternal } from '../externalTypes';
 
-export default function listTeams(token: string): Promise<TeamExternal[]> {
+export default function getTeams(token: string): Promise<TeamExternal[]> {
     return axios.get(`/teams/all`, {
             headers: {
                 'Content-Type': 'application/json',
