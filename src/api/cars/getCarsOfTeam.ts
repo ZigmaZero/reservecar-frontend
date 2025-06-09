@@ -14,7 +14,7 @@ export default function getCarsOfTeam(teamId: number, token: string): Promise<Ca
         if (response.status !== 200) {
             throw new Error(`Unexpected response status: ${response.status}`);
         }
-        return response.data;
+        return response.data.cars as Car[];
     }).catch((error) => {
         if (error.response && error.response.status !== 400 && error.response.status !== 401) {
             console.error("Unexpected error status:", error.response.status, error.response.data);
