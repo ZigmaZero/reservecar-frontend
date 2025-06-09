@@ -5,18 +5,20 @@ export type EmployeeExternal = {
     lineId: string,
     name: string,
     verified: boolean,
-    teamName?: string
+    teamId?: number,
+    teamName?: string // easy lookup for UI
 }
 
 export type TeamExternal = {
-    teamId?: number,
+    id?: number,
     name: string
 }
 
 export type CarExternal = {
-    carId?: number,
+    id?: number,
     plateNumber: string,
-    teamName?: string
+    teamId?: number,
+    teamName?: string // easy lookup for UI
 }
 
 export type AdminExternal = {
@@ -26,9 +28,11 @@ export type AdminExternal = {
 
 export type ReservationExternal = {
     id?: number,
-    user: string,
-    car: string,
+    userId: number,
+    user: string, // easy lookup for UI
+    carId: number,
+    car: string, // easy lookup for UI
     description: string,
-    checkinTime: string, // i am NOT gonna keep this as a Date
-    checkoutTime?: string // screw you
+    checkinTime: string,
+    checkoutTime?: string
 }

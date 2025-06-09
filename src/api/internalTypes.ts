@@ -9,12 +9,12 @@ export type Employee = {
 }
 
 export type Team = {
-    teamId?: number,
+    id?: number,
     name: string
 }
 
 export type Car = {
-    carId?: number,
+    id?: number,
     plateNumber: string,
     teamId?: number
 }
@@ -29,6 +29,6 @@ export type Reservation = {
     userId: number,
     carId: number,
     description: string,
-    checkinTime: string, // i am NOT gonna keep this as a Date
-    checkoutTime?: string // screw you
+    checkinTime: string, // stored as ISO string
+    checkoutTime?: string
 }

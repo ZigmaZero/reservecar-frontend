@@ -2,7 +2,7 @@ import axios from "axios";
 import type { Team } from '../internalTypes';
 
 export default function editTeam(item: Team, updatedItem: Team, token: string): Promise<null> {
-    return axios.put(`/teams/${item.teamId}`, updatedItem, {
+    return axios.put(`/teams/${item.id}`, updatedItem, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,

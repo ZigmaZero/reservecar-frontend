@@ -32,7 +32,7 @@ const Checkin = () => {
     getTeams(token).then((teamsList: Team[]) => {
       setTeams(teamsList);
       // Set default selection to user's teamId if present
-      if (user.teamId && teamsList.some(t => t.teamId === user.teamId)) {
+      if (user.teamId && teamsList.some(t => t.id === user.teamId)) {
         setTeamId(user.teamId);
       } else {
         setTeamId("");
@@ -102,7 +102,7 @@ const Checkin = () => {
           >
             <option value="">Select a team</option>
             {teams.map((t) => (
-              <option key={t.teamId} value={t.teamId}>
+              <option key={t.id} value={t.id}>
                 {t.name}
               </option>
             ))}
@@ -118,7 +118,7 @@ const Checkin = () => {
           >
             <option value="">Select a car</option>
             {cars.map((c) => (
-              <option key={c.carId} value={c.carId}>
+              <option key={c.id} value={c.id}>
                 {c.plateNumber}
               </option>
             ))}
