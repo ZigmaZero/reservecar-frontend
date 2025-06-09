@@ -2,28 +2,44 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../widgets/Navbar";
 import { useUser } from "../contexts/UserContext";
+import getJobsOfUser from "../api/reservations/getJobsOfUser";
+import type { Reservation } from "../api/types";
+import userCheckout from "../api/userCheckout";
 
 const Checkout = () => {
   const { user, token } = useUser();
-  const [job, setJob] = useState("");
-  const [jobs, setJobs] = useState<string[]>([]);
+  const [jobId, setJobId] = useState<number | "">("");
+  const [jobs, setJobs] = useState<Reservation[]>([]);
   const navigate = useNavigate();
-
-  if(!user || !user.verified) {
-    navigate("/login");
-    return null;
-  }
 
   // Initialize job options
   useEffect(() => {
-    setJobs(["Job A", "Job B", "Job C"]);
+    if(!user || !user.verified || !token) {
+      navigate("/login");
+      return;
+    }
+    getJobsOfUser(token)
+      .then((jobsList) => {
+        setJobs(jobsList);
+      })
   }, []);
 
   // Handle submit
   const handleSubmit = () => {
-    const timestamp = new Date().toISOString();
-    console.log(`${timestamp}: Checkout [${user.name} | ${job}]`);
-    navigate("/checkout-success");
+    if (!token) {
+      alert("You must be logged in to checkout.");
+      return;
+    }
+    userCheckout(jobId as number, token)
+      .then(() => {
+        navigate("/checkout-success");
+      }
+      )
+      .catch((error) => {
+        console.error("Checkout error:", error);
+        alert("An error occurred during checkout. Please try again later.");
+      }
+      );
   };
 
   return (
@@ -42,15 +58,15 @@ const Checkout = () => {
         <label htmlFor="job">เลขงาน:</label>
         <select
           id="job"
-          value={job}
-          onChange={(e) => setJob(e.target.value)}
+          value={jobId}
+          onChange={(e) => setJobId(Number(e.target.value))}
           required
         >
           <option value="">Select a job</option>
-          {jobs.map((prod, index) => (
-            <option key={index} value={prod}>
-              {prod}
-            </option>
+          {jobs.map((j) => (
+              <option key={j.id} value={j.id}>
+                {j.carId} @ {j.checkinTime}
+              </option>
           ))}
         </select>
 

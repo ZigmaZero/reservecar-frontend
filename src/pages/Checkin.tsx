@@ -5,6 +5,7 @@ import { useUser } from "../contexts/UserContext";
 import getTeams from "../api/teams/getTeams";
 import type { Car, Team } from "../api/types";
 import getCarsOfTeam from "../api/cars/getCarsOfTeam";
+import userCheckin from "../api/userCheckin";
 
 const Checkin = () => {
   const { user, token } = useUser();
@@ -61,9 +62,22 @@ const Checkin = () => {
 
   // Handle submit
   const handleSubmit = () => {
-    const timestamp = new Date().toISOString();
-    console.log(`${timestamp}: [${user?.name} | carId: ${carId} | teamId: ${teamId} | ${description}]`);
-    navigate("/checkin-success");
+    
+    if(!token) {
+      alert("You have been logged out. Please log in again.");
+      navigate("/login");
+      return;
+    }
+    userCheckin(carId as number, token)
+      .then(() => {
+        console.log(`Checkin successful for car ID: ${carId}`);
+        navigate("/checkin-success");
+      }
+      ).catch((error) => {
+        console.error("Checkin failed:", error);
+        alert("Checkin failed. Please try again later.");
+      }
+    );
   };
 
   return (
