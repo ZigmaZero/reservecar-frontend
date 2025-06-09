@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Team } from '../types';
+import type { Team } from '../internalTypes';
 
 export default function listTeams(token: string): Promise<Team[]> {
     return axios.get(`/teams/all`, {

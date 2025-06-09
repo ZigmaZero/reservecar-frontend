@@ -1,4 +1,4 @@
-import type { Team } from "../../api/types";
+import type { Team } from "../../api/internalTypes";
 
 interface TeamsTableProps {
   data: Team[];

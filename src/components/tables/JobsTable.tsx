@@ -1,4 +1,4 @@
-import type { Reservation } from "../../api/types";
+import type { Reservation } from "../../api/internalTypes";
 
 interface JobsTableProps {
   data: Reservation[];

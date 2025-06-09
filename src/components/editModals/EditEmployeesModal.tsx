@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { Employee } from "../../api/types";
+import type { Employee } from "../../api/internalTypes";
 
 interface EditEmployeesModalProps {
   item: Employee;

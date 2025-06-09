@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Admin } from './types';
+import type { Admin } from './internalTypes';
 
 export default function adminLogin(name: string, password: string): Promise<{
     admin: Admin;

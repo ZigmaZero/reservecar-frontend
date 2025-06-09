@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Reservation } from '../types';
+import type { Reservation } from '../internalTypes';
 
 export default function getJobsOfUser(token: string): Promise<Reservation[]> {
     return axios.get(`/user/reservations`, {

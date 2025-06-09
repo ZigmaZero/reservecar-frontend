@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Employee } from "../types";
+import type { Employee } from "../internalTypes";
 
 export default function deleteEmployee(item: Employee , token: string): Promise<null> {
     return axios.delete(`/employees/${item.id}`, {

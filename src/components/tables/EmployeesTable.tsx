@@ -1,4 +1,4 @@
-import type { Employee } from "../../api/types";
+import type { Employee } from "../../api/internalTypes";
 
 interface EmployeesTableProps {
   panelType: string;

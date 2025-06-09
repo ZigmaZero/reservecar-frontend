@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Team } from '../types';
+import type { Team } from '../internalTypes';
 
 export default function editTeam(item: Team, updatedItem: Team, token: string): Promise<null> {
     return axios.put(`/teams/${item.teamId}`, updatedItem, {

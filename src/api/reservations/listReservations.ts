@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Reservation } from '../types';
+import type { Reservation } from '../internalTypes';
 
 export default function listReservations(currentPage: number, pageSize: number, token: string): Promise<{
     data: Reservation[];

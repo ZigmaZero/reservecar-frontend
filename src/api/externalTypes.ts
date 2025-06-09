@@ -1,33 +1,33 @@
 // Internal types used for basic data manipulation, response types will be separate
 
-export type Employee = {
+export type EmployeeExternal = {
     id?: number,
     lineId: string,
     name: string,
     verified: boolean,
-    teamId?: number
+    teamName?: string
 }
 
-export type Team = {
+export type TeamExternal = {
     teamId?: number,
     name: string
 }
 
-export type Car = {
+export type CarExternal = {
     carId?: number,
     plateNumber: string,
-    teamId: number
+    teamName?: string
 }
 
-export type Admin = {
+export type AdminExternal = {
     id?: number,
     name: string
 }
 
-export type Reservation = {
+export type ReservationExternal = {
     id?: number,
-    userId: number,
-    carId: number,
+    user: string,
+    car: string,
     description: string,
     checkinTime: string, // i am NOT gonna keep this as a Date
     checkoutTime?: string // screw you

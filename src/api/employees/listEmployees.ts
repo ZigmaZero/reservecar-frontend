@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Employee } from '../types';
+import type { Employee } from '../internalTypes';
 
 export default function listEmployees(currentPage: number, pageSize: number, token: string): Promise<{
     data: Employee[];

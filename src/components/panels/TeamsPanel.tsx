@@ -1,6 +1,6 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import type { Team } from "../../api/types";
+import type { Team } from "../../api/internalTypes";
 import listTeams from "../../api/teams/listTeams";
 import Filter from "../Filter";
 import TeamsTable from "../tables/TeamsTable";

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Car } from "../types";
+import type { Car } from "../internalTypes";
 
 export default function deleteCar(item: Car, token: string): Promise<null> {
     return axios.delete(`/cars/${item.carId}`, {

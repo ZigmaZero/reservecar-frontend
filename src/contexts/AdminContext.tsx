@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import type { Admin } from "../api/types";
+import type { Admin } from "../api/internalTypes";
 
 interface AdminContextType {
     admin: Admin | null;

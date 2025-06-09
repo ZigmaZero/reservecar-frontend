@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Employee } from "../types";
+import type { Employee } from "../internalTypes";
 
 export default function verifyEmployee(item: Employee , token: string): Promise<null> {
     return axios.put(`/employees/${item.id}/verify`, {}, {

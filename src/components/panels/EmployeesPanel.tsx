@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import type { Employee } from "../../api/types";
+import type { Employee } from "../../api/internalTypes";
 import listEmployees from "../../api/employees/listEmployees";
 import Filter from "../Filter";
 import EmployeesTable from "../tables/EmployeesTable";

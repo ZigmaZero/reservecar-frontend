@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Employee } from "../types";
+import type { Employee } from "../internalTypes";
 
 export default function editEmployee(item: Employee, updatedItem: Employee , token: string): Promise<null> {
     return axios.put(`/employees/${item.id}`, updatedItem, {

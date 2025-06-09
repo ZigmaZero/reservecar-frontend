@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../widgets/Navbar";
 import { useUser } from "../contexts/UserContext";
 import getTeams from "../api/teams/getTeams";
-import type { Car, Team } from "../api/types";
+import type { Car, Team } from "../api/internalTypes";
 import getCarsOfTeam from "../api/cars/getCarsOfTeam";
 import userCheckin from "../api/userCheckin";
 

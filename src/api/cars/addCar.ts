@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Car } from "../types";
+import type { Car } from "../internalTypes";
 
 export default function addCar(item: Car, token: string): Promise<null> {
     return axios.post("/cars", item, {

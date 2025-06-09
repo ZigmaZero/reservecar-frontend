@@ -1,6 +1,6 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import type { Car } from "../../api/types";
+import type { Car } from "../../api/internalTypes";
 import Filter from "../Filter";
 import listCars from "../../api/cars/listCars";
 import CarsTable from "../tables/CarsTable";

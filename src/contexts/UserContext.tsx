@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import type { Employee } from "../api/types";
+import type { Employee } from "../api/internalTypes";
 
 interface UserContextType {
     user: Employee | null;

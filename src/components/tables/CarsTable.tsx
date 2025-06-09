@@ -1,4 +1,4 @@
-import type { Car } from "../../api/types";
+import type { Car } from "../../api/internalTypes";
 
 interface CarsTableProps {
   data: Car[];

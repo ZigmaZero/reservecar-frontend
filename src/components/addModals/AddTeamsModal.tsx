@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { Team } from "../../api/types";
+import type { Team } from "../../api/internalTypes";
 
 interface AddTeamsModalProps {
   onClose: () => void;

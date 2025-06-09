@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Car } from "../types";
+import type { Car } from "../internalTypes";
 
 export default function getCarsOfTeam(teamId: number, token: string): Promise<Car[]> {
     return axios.get(`/user/cars`, {

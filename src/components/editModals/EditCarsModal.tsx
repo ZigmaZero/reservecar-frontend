@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { Car } from "../../api/types"; 
+import type { Car } from "../../api/internalTypes"; 
 
 interface EditCarsModalProps {
   item: Car;

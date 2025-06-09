@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../widgets/Navbar";
 import { useUser } from "../contexts/UserContext";
 import getJobsOfUser from "../api/reservations/getJobsOfUser";
-import type { Reservation } from "../api/types";
+import type { Reservation } from "../api/internalTypes";
 import userCheckout from "../api/userCheckout";
 
 const Checkout = () => {
