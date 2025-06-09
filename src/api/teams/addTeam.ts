@@ -1,7 +1,7 @@
 import axios from "axios";
-import type { Team } from "../internalTypes";
+import type { TeamExternal } from "../externalTypes";
 
-export default function addTeam(item: Team, token: string): Promise<null> {
+export default function addTeam(item: TeamExternal, token: string): Promise<null> {
     return axios.post("/teams", item, {
         headers: {
             'Content-Type': 'application/json',

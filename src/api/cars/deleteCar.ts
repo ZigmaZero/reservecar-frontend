@@ -1,7 +1,7 @@
 import axios from "axios";
-import type { Car } from "../internalTypes";
+import type { CarExternal } from "../externalTypes";
 
-export default function deleteCar(item: Car, token: string): Promise<null> {
+export default function deleteCar(item: CarExternal, token: string): Promise<null> {
     return axios.delete(`/cars/${item.id}`, {
         headers: {
             'Content-Type': 'application/json',

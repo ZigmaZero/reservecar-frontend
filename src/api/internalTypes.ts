@@ -1,4 +1,5 @@
-// Internal types used for basic data manipulation, response types will be separate
+// Internal types used for frontend data manipulation
+// to call the API providing the necessary data
 
 export type Employee = {
     id?: number,

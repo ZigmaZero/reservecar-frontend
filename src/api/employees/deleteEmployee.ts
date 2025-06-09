@@ -1,7 +1,7 @@
 import axios from "axios";
-import type { Employee } from "../internalTypes";
+import type { EmployeeExternal } from "../externalTypes";
 
-export default function deleteEmployee(item: Employee , token: string): Promise<null> {
+export default function deleteEmployee(item: EmployeeExternal , token: string): Promise<null> {
     return axios.delete(`/employees/${item.id}`, {
         headers: {
             'Content-Type': 'application/json',

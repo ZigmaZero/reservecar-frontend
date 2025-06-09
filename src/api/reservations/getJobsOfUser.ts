@@ -1,7 +1,7 @@
 import axios from 'axios';
-import type { Reservation } from '../internalTypes';
+import type { ReservationExternal } from '../externalTypes';
 
-export default function getJobsOfUser(token: string): Promise<Reservation[]> {
+export default function getJobsOfUser(token: string): Promise<ReservationExternal[]> {
     return axios.get(`/user/reservations`, {
         headers: {
             'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ export default function getJobsOfUser(token: string): Promise<Reservation[]> {
                 description: reservation.description,
                 checkinTime: reservation.checkinTime,
                 checkoutTime: reservation.checkoutTime,
-            })) as Reservation[];
+            })) as ReservationExternal[];
     }
     ).catch((error) => {
         if (error.response && error.response.status !== 400 && error.response.status !== 401) {

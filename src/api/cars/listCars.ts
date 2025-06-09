@@ -1,8 +1,8 @@
 import axios from 'axios';
-import type { Car } from '../internalTypes';
+import type { CarExternal } from '../externalTypes';
 
 export default function listCars(currentPage: number, pageSize: number, token: string): Promise<{
-    data: Car[];
+    data: CarExternal[];
     total: number;
     page: number;
     pageSize: number;

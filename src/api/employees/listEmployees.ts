@@ -1,8 +1,8 @@
 import axios from 'axios';
-import type { Employee } from '../internalTypes';
+import type { EmployeeExternal } from '../externalTypes';
 
 export default function listEmployees(currentPage: number, pageSize: number, token: string): Promise<{
-    data: Employee[];
+    data: EmployeeExternal[];
     total: number;
     page: number;
     pageSize: number;

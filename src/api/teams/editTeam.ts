@@ -1,7 +1,7 @@
 import axios from "axios";
-import type { Team } from '../internalTypes';
+import type { TeamExternal } from "../externalTypes";
 
-export default function editTeam(item: Team, updatedItem: Team, token: string): Promise<null> {
+export default function editTeam(item: TeamExternal, updatedItem: TeamExternal, token: string): Promise<null> {
     return axios.put(`/teams/${item.id}`, updatedItem, {
         headers: {
             'Content-Type': 'application/json',

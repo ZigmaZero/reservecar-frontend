@@ -1,7 +1,7 @@
 import axios from "axios";
-import type { Employee } from "../internalTypes";
+import type { EmployeeExternal } from "../externalTypes";
 
-export default function verifyEmployee(item: Employee , token: string): Promise<null> {
+export default function verifyEmployee(item: EmployeeExternal , token: string): Promise<null> {
     return axios.put(`/employees/${item.id}/verify`, {}, {
         headers: {
             'Content-Type': 'application/json',

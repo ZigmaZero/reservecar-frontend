@@ -1,8 +1,8 @@
 import axios from "axios";
-import type { Employee } from "./internalTypes";
+import type { EmployeeExternal } from "./externalTypes";
 
 export default function userLogin(fullName: string): Promise<{
-    user: Employee;
+    user: EmployeeExternal;
     token: string;
 }> {
     return axios.post(`/user/login`, { fullName }, {

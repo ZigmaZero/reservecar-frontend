@@ -1,8 +1,8 @@
 import axios from 'axios';
-import type { Admin } from './internalTypes';
+import type { AdminExternal } from './externalTypes';
 
 export default function adminLogin(name: string, password: string): Promise<{
-    admin: Admin;
+    admin: AdminExternal;
     token: string;
 }> {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;

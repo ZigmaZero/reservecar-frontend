@@ -1,8 +1,8 @@
 import axios from 'axios';
-import type { Team } from '../internalTypes';
+import type { TeamExternal } from '../externalTypes';
 
 export default function listTeams(currentPage: number, pageSize: number, token: string): Promise<{
-    data: Team[];
+    data: TeamExternal[];
     total: number;
     page: number;
     pageSize: number;

@@ -1,7 +1,7 @@
 import axios from "axios";
-import type { Car } from "../internalTypes";
+import type { CarExternal } from "../externalTypes";
 
-export default function getCarsOfTeam(teamId: number, token: string): Promise<Car[]> {
+export default function getCarsOfTeam(teamId: number, token: string): Promise<CarExternal[]> {
     return axios.get(`/user/cars`, {
         headers: {
             'Content-Type': 'application/json',
@@ -14,7 +14,7 @@ export default function getCarsOfTeam(teamId: number, token: string): Promise<Ca
         if (response.status !== 200) {
             throw new Error(`Unexpected response status: ${response.status}`);
         }
-        return response.data.cars as Car[];
+        return response.data.cars as CarExternal[];
     }).catch((error) => {
         if (error.response && error.response.status !== 400 && error.response.status !== 401) {
             console.error("Unexpected error status:", error.response.status, error.response.data);

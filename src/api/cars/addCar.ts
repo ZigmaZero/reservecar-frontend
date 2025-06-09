@@ -1,7 +1,7 @@
 import axios from "axios";
-import type { Car } from "../internalTypes";
+import type { CarExternal } from "../externalTypes";
 
-export default function addCar(item: Car, token: string): Promise<null> {
+export default function addCar(item: CarExternal, token: string): Promise<null> {
     return axios.post("/cars", item, {
         headers: {
             'Content-Type': 'application/json',
