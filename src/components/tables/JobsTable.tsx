@@ -1,7 +1,7 @@
-import type { Reservation } from "../../api/internalTypes";
+import type { ReservationExternal } from "../../api/externalTypes";
 
 interface JobsTableProps {
-  data: Reservation[];
+  data: ReservationExternal[];
 }
 
 const JobsTable = ({ data }: JobsTableProps) => {

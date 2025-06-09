@@ -1,9 +1,9 @@
-import type { Employee } from "../../api/internalTypes";
+import type { EmployeeExternal } from "../../api/externalTypes";
 
 interface EmployeesTableProps {
   panelType: string;
-  data: Employee[];
-  onEdit: (item: Employee) => void;
+  data: EmployeeExternal[];
+  onEdit: (item: EmployeeExternal) => void;
 }
 
 const EmployeesTable = ({ data, onEdit }: EmployeesTableProps) => {

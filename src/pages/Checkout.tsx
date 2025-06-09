@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../widgets/Navbar";
 import { useUser } from "../contexts/UserContext";
 import getJobsOfUser from "../api/reservations/getJobsOfUser";
-import type { Reservation } from "../api/internalTypes";
+import type { ReservationExternal } from "../api/externalTypes";
 import userCheckout from "../api/userCheckout";
 
 const Checkout = () => {
   const { user, token } = useUser();
   const [jobId, setJobId] = useState<number | "">("");
-  const [jobs, setJobs] = useState<Reservation[]>([]);
+  const [jobs, setJobs] = useState<ReservationExternal[]>([]);
   const navigate = useNavigate();
 
   // Initialize job options

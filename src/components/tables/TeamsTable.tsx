@@ -1,8 +1,8 @@
-import type { Team } from "../../api/internalTypes";
+import type { TeamExternal } from "../../api/externalTypes";
 
 interface TeamsTableProps {
-  data: Team[];
-  onEdit: (item: Team) => void;
+  data: TeamExternal[];
+  onEdit: (item: TeamExternal) => void;
 }
 
 const TeamsTable = ({ data, onEdit }: TeamsTableProps) => {

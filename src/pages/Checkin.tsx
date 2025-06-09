@@ -3,16 +3,16 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../widgets/Navbar";
 import { useUser } from "../contexts/UserContext";
 import getTeams from "../api/teams/getTeams";
-import type { Car, Team } from "../api/internalTypes";
+import type { CarExternal, TeamExternal } from "../api/externalTypes";
 import getCarsOfTeam from "../api/cars/getCarsOfTeam";
 import userCheckin from "../api/userCheckin";
 
 const Checkin = () => {
   const { user, token } = useUser();
   const [description, setDescription] = useState<string>("");
-  const [cars, setCars] = useState<Car[]>([]);
+  const [cars, setCars] = useState<CarExternal[]>([]);
   const [carId, setCarId] = useState<number | "">("");
-  const [teams, setTeams] = useState<Team[]>([]);
+  const [teams, setTeams] = useState<TeamExternal[]>([]);
   const [teamId, setTeamId] = useState<number | "">("");
   const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ const Checkin = () => {
       navigate("/login");
       return;
     }
-    getTeams(token).then((teamsList: Team[]) => {
+    getTeams(token).then((teamsList: TeamExternal[]) => {
       setTeams(teamsList);
       // Set default selection to user's teamId if present
       if (user.teamId && teamsList.some(t => t.id === user.teamId)) {

@@ -1,8 +1,8 @@
-import type { Car } from "../../api/internalTypes";
+import type { CarExternal } from "../../api/externalTypes";
 
 interface CarsTableProps {
-  data: Car[];
-  onEdit: (item: Car) => void;
+  data: CarExternal[];
+  onEdit: (item: CarExternal) => void;
 }
 
 const CarsTable = ({ data, onEdit }: CarsTableProps) => {

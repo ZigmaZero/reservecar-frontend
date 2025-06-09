@@ -1,9 +1,9 @@
 import { createContext, useContext, useState } from "react";
-import type { Admin } from "../api/internalTypes";
+import type { AdminExternal } from "../api/externalTypes";
 
 interface AdminContextType {
-    admin: Admin | null;
-    setAdmin: (admin: Admin | null) => void;
+    admin: AdminExternal | null;
+    setAdmin: (admin: AdminExternal | null) => void;
     token: string | null;
     setToken: (token: string | null) => void;
 }
@@ -16,7 +16,7 @@ const AdminContext = createContext<AdminContextType>({
 });
 
 export const AdminProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-    const [admin, setAdmin] = useState<Admin | null>(null);
+    const [admin, setAdmin] = useState<AdminExternal | null>(null);
     const [token, setToken] = useState<string | null>(null);
     return (
         <AdminContext.Provider value={{ admin, setAdmin, token, setToken }}>

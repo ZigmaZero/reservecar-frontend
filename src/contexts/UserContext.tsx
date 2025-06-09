@@ -1,9 +1,9 @@
 import { createContext, useContext, useState } from "react";
-import type { Employee } from "../api/internalTypes";
+import type { EmployeeExternal } from "../api/externalTypes";
 
 interface UserContextType {
-    user: Employee | null;
-    setUser: (user: Employee | null) => void;
+    user: EmployeeExternal | null;
+    setUser: (user: EmployeeExternal | null) => void;
     token: string | null;
     setToken: (token: string | null) => void;
 }
@@ -16,7 +16,7 @@ const UserContext = createContext<UserContextType>({
 });
 
 export const UserProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-    const [user, setUser] = useState<Employee | null>(null);
+    const [user, setUser] = useState<EmployeeExternal | null>(null);
     const [token, setToken] = useState<string | null>(null);
     return (
         <UserContext.Provider value={{ user, setUser, token, setToken }}>
