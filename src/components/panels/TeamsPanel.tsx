@@ -22,7 +22,7 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
     const [data, setData] = useState<TeamExternal[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPages, setMaxPages] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const pageSize = 10;
 
     const [editItem, setEditItem] = useState<TeamExternal | null>(null);
 

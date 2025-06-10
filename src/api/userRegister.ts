@@ -15,7 +15,7 @@ export default function userRegister(fullName: string): Promise<null> {
             else throw new Error("Registration failed. Please try again later.");
         }
     }).catch((error) => {
-        if (error.response && error.response.status !== 400 && error.response.status !== 401) {
+        if (error.response && error.response.status !== 400 && error.response.status !== 401 && error.response.status !== 409) {
             console.error("Unexpected error status:", error.response.status, error.response.data);
             throw new Error("An unexpected error occurred. Please try again later.");
         } else {

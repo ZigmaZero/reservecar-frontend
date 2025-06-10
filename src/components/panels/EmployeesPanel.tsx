@@ -18,7 +18,7 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({token }) => {
   const [data, setData] = useState<EmployeeExternal[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [maxPages, setMaxPages] = useState(1);
-  const [pageSize, setPageSize] = useState(10); // Default, can be adjusted later
+  const pageSize = 10;
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editItem, setEditItem] = useState<EmployeeExternal | null>(null);
 

@@ -12,7 +12,7 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
   const [data, setData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [maxPages, setMaxPages] = useState(1);
-  const [pageSize, setPageSize] = useState(10); // Default, can be adjusted later
+  const pageSize = 10;
 
   const fetchData = async () => {
     let response = await listReservations(currentPage, pageSize, token);
