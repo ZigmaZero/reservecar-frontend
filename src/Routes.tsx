@@ -13,6 +13,8 @@ import { UserProvider } from './contexts/UserContext';
 import { AdminProvider } from './contexts/AdminContext';
 import NotFound from './pages/errors/NotFound';
 import Forbidden from './pages/errors/Forbidden';
+import LineLogin from './pages/LineLogin';
+import LineLoginBegin from './pages/LineLoginBegin';
 
 // Layouts for providers
 const UserLayout = () => (
@@ -31,6 +33,9 @@ const AppRoutes = () => (
   <Routes>
     {/* User routes */}
     <Route element={<UserLayout />}>
+      <Route path="/line/access" element={<LineLogin/>} />
+      <Route path="/line/begin" element={<LineLoginBegin />}/>
+      
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/verify" element={<WaitForVerify />} />
