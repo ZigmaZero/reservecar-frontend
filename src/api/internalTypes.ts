@@ -33,3 +33,11 @@ export type Reservation = {
     checkinTime: string, // stored as ISO string
     checkoutTime?: string
 }
+
+export type LineAuthCodeResponse = {
+    access_token: string,
+    expires_in: number,
+    refresh_token: string, 
+    scope: string,
+    token_type: string
+}
