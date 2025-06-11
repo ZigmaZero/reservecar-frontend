@@ -41,3 +41,10 @@ export type LineAuthCodeResponse = {
     scope: string,
     token_type: string
 }
+
+export type LineProfile = {
+    userId: string,
+    displayName: string,
+    pictureUrl: string,
+    statusMessage?: string
+}

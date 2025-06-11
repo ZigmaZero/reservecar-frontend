@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import checkState from "../api/line/checkState";
 import exchangeAccessToken from "../api/line/exchangeAccessToken";
+import getProfile from "../api/line/getProfile";
 
 const LineLoginCallback: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -18,27 +19,27 @@ const LineLoginCallback: React.FC = () => {
     const [expiresIn, setExpiresIn] = useState(0);
     const [scope, setScope] = useState("");
     const [refreshToken, setRefreshToken] = useState("");
+    const [lineId, setLineId] = useState("");
+    const [displayName, setDisplayName] = useState("");
+    const [pictureUrl, setPictureUrl] = useState("");
+    const [statusMessage, setStatusMessage] = useState("");
 
     useEffect(() => {
         if(!state)
         {
-            // did not get accessed via LINE: redirect to LineLogin
             navigate("/line/access");
             return;
         }
         checkState(state).then((success) => {
             if(!success)
             {
-                // LINE login did not return a valid state
                 alert("LINE Login processing failed. Please try again.");
                 navigate("/line/access");
                 return;
             }
         })
-        // state is guaranteed to be valid
         if(error)
         {
-            // LINE Login returned an auth error
             alert(`
                 LINE Login authorization failed: ${error}
                 ${error_description}
@@ -46,51 +47,56 @@ const LineLoginCallback: React.FC = () => {
             navigate("/line/access");
             return;
         }
-        //did not error
         if(!authorizationCode)
         {
-            alert(`Did not obtain authorization code from LINE Login. Contact developer/maintainer.`);
+            alert(`Did not obtain authorization code from LINE Login.`);
             navigate("/line/access");
             return;
         }
 
-        //stop to validate the process by showing auth code
         setAuthCode(authorizationCode);
-        const thisUrl = `https://splendid-sheep-wrongly.ngrok-free.app/line/callback`
-        //auth code is received and valid, send the auth code back to backend
-        //to have them query line for access token
+        const thisUrl = `https://splendid-sheep-wrongly.ngrok-free.app/line/callback`;
+
+        // Chain exchangeAccessToken and getProfile
         exchangeAccessToken(authorizationCode, thisUrl).then((data) => {
-            if(data)
-            {
+            if(data) {
                 setAccessToken(data.access_token);
                 setExpiresIn(data.expires_in);
                 setScope(data.scope);
                 setRefreshToken(data.refresh_token);
-            }
-            else
-            {
-                alert("Token exchange failed.")
-            }
-        })
 
-        //then user information,
-        //then EITHER fetches old user information or just returns line id,
-        //at which point this either enters /menu with old user information 
-        //or opens a register page with the line id.
+                // Now fetch profile with the access token
+                return getProfile(data.access_token);
+            } else {
+                alert("Token exchange failed.");
+                return undefined;
+            }
+        }).then((profile) => {
+            if(profile) {
+                setLineId(profile.userId);
+                setDisplayName(profile.displayName);
+                setPictureUrl(profile.pictureUrl);
+                setStatusMessage(profile.statusMessage ?? "None");
+            }
+        });
 
-        //since i don't want to send line id on search params,
-        //i have to implement the register page again on this page
-        //and then deprecate /register and /login
-    }, [])
+    }, []);
 
     return (
         <>
             <div className="container">
+                <h1>Auth</h1>
                 <p>Auth Code: {authCode}</p>
+                <h1>Access</h1>
                 <p>Access Token: {accessToken}</p>
                 <p>Expires In: {expiresIn}</p>
                 <p>Refresh Token: {refreshToken}</p>
                 <p>Scope: {scope}</p>
+                <h1>Profile</h1>
+                <p>Line ID: {lineId}</p>
+                <p>Display Name: {displayName}</p>
+                <p>Picture URL: {pictureUrl}</p>
+                <p>Status Message: {statusMessage}</p>
             </div>
         </>
     )
