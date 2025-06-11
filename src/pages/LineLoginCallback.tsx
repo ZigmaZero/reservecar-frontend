@@ -2,8 +2,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import checkState from "../api/line/checkState";
-import exchangeAccessToken from "../api/line/exchangeAccessToken";
-import getProfile from "../api/line/getProfile";
+import authToProfile from "../api/line/exchangeAccessToken";
 
 const LineLoginCallback: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -15,10 +14,6 @@ const LineLoginCallback: React.FC = () => {
 
     // debug LINE things
     const [authCode, setAuthCode] = useState("");
-    const [accessToken, setAccessToken] = useState("");
-    const [expiresIn, setExpiresIn] = useState(0);
-    const [scope, setScope] = useState("");
-    const [refreshToken, setRefreshToken] = useState("");
     const [lineId, setLineId] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [pictureUrl, setPictureUrl] = useState("");
@@ -58,20 +53,7 @@ const LineLoginCallback: React.FC = () => {
         const thisUrl = `https://splendid-sheep-wrongly.ngrok-free.app/line/callback`;
 
         // Chain exchangeAccessToken and getProfile
-        exchangeAccessToken(authorizationCode, thisUrl).then((data) => {
-            if(data) {
-                setAccessToken(data.access_token);
-                setExpiresIn(data.expires_in);
-                setScope(data.scope);
-                setRefreshToken(data.refresh_token);
-
-                // Now fetch profile with the access token
-                return getProfile(data.access_token);
-            } else {
-                alert("Token exchange failed.");
-                return undefined;
-            }
-        }).then((profile) => {
+        authToProfile(authorizationCode, thisUrl).then((profile) => {
             if(profile) {
                 setLineId(profile.userId);
                 setDisplayName(profile.displayName);
@@ -88,10 +70,7 @@ const LineLoginCallback: React.FC = () => {
                 <h1>Auth</h1>
                 <p>Auth Code: {authCode}</p>
                 <h1>Access</h1>
-                <p>Access Token: {accessToken}</p>
-                <p>Expires In: {expiresIn}</p>
-                <p>Refresh Token: {refreshToken}</p>
-                <p>Scope: {scope}</p>
+                <p>(Omitted)</p>
                 <h1>Profile</h1>
                 <p>Line ID: {lineId}</p>
                 <p>Display Name: {displayName}</p>
