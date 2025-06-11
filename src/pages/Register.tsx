@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import userRegister from '../api/userRegister';
+import userRegister from '../api/user/userRegister';
 import { useState } from 'react';
 
 const Register = () => {

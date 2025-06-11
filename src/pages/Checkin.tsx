@@ -5,7 +5,7 @@ import { useUser } from "../contexts/UserContext";
 import getTeams from "../api/teams/getTeams";
 import type { CarExternal, TeamExternal } from "../api/externalTypes";
 import getCarsOfTeam from "../api/cars/getCarsOfTeam";
-import userCheckin from "../api/userCheckin";
+import userCheckin from "../api/user/userCheckin";
 
 const Checkin = () => {
   const { user, token } = useUser();

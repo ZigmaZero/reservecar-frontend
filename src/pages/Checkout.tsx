@@ -4,7 +4,7 @@ import Navbar from "../widgets/Navbar";
 import { useUser } from "../contexts/UserContext";
 import getJobsOfUser from "../api/reservations/getJobsOfUser";
 import type { ReservationExternal } from "../api/externalTypes";
-import userCheckout from "../api/userCheckout";
+import userCheckout from "../api/user/userCheckout";
 
 const Checkout = () => {
   const { user, token } = useUser();

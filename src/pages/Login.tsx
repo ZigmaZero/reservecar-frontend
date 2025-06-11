@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
-import userLogin from "../api/userLogin";
+import userLogin from "../api/user/userLogin";
 
 const Login = () => {
     const [searchParams] = useSearchParams();
