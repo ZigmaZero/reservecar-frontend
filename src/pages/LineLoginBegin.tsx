@@ -1,4 +1,5 @@
 import React, { useEffect } from "react"
+import getState from "../api/line/getState";
 
 const LineLoginBegin: React.FC = () => {
 
@@ -8,9 +9,11 @@ const LineLoginBegin: React.FC = () => {
     const SCOPE = "profile%20openid";
 
     useEffect(() => {
-        const STATE = "idunno";
-        const loginUrl = `${URI}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=${STATE}&scope=${SCOPE}`;
-        window.location.href = loginUrl;
+        getState().then((state) => {
+            const loginUrl = `${URI}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=${state}&scope=${SCOPE}`;
+            window.location.href = loginUrl;
+        });
+        
     }, [])
 
     return (

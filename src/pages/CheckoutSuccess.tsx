@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 
 const CheckoutSuccess = () => {
-    const { user } = useUser();
+    const { user, token } = useUser();
     const navigate = useNavigate();
     useEffect(() => {
-        if (!user) 
+        if (!user || !token) 
         {
             navigate("/login");
             return; // Prevent rendering if user is not logged in

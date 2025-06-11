@@ -3,10 +3,10 @@ import { useUser } from "../contexts/UserContext";
 import { useEffect } from "react";
 
 const CheckinSuccess = () => {
-    const { user } = useUser();
+    const { user, token } = useUser();
     const navigate = useNavigate();
     useEffect(() => {
-        if (!user) 
+        if (!user || !token) 
         {
             navigate("/login");
             return; // Prevent rendering if user is not logged in

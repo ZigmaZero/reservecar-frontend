@@ -15,6 +15,7 @@ import NotFound from './pages/errors/NotFound';
 import Forbidden from './pages/errors/Forbidden';
 import LineLogin from './pages/LineLogin';
 import LineLoginBegin from './pages/LineLoginBegin';
+import LineLoginCallback from './pages/LineLoginCallback';
 
 // Layouts for providers
 const UserLayout = () => (
@@ -35,7 +36,7 @@ const AppRoutes = () => (
     <Route element={<UserLayout />}>
       <Route path="/line/access" element={<LineLogin/>} />
       <Route path="/line/begin" element={<LineLoginBegin />}/>
-      
+      <Route path="/line/callback" element={<LineLoginCallback />}/>
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/verify" element={<WaitForVerify />} />
