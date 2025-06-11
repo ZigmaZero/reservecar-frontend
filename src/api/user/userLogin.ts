@@ -1,11 +1,11 @@
 import axios from "axios";
 import type { EmployeeExternal } from "../externalTypes";
 
-export default function userLogin(fullName: string): Promise<{
+export default function userLogin(lineId: string): Promise<{
     user: EmployeeExternal;
     token: string;
 }> {
-    return axios.post(`/user/login`, { fullName }, {
+    return axios.post(`/user/login`, { lineId }, {
         headers: {
             "Content-Type": "application/json",
         }

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export default function userRegister(fullName: string): Promise<null> {
-    return axios.post(`/user/register`, {fullName}, {
+export default function userRegister(fullName: string, lineId: string): Promise<null> {
+    return axios.post(`/user/register`, {fullName, lineId}, {
         headers: {
             "Content-Type": "application/json",
         }
