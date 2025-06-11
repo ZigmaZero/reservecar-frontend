@@ -19,7 +19,7 @@ const Checkin = () => {
   // Initialize team options and set default selection to user's team
   useEffect(() => {
     if (!user || !user.verified || !token) {
-      navigate("/login?action=checkin");
+      navigate("/line/access");
       return;
     }
     getTeams(token).then((teamsList: TeamExternal[]) => {

@@ -8,7 +8,7 @@ const CheckinSuccess = () => {
     useEffect(() => {
         if (!user || !token) 
         {
-            navigate("/login");
+            navigate("/line/access");
             return; // Prevent rendering if user is not logged in
         }
         else if (!user.verified) {

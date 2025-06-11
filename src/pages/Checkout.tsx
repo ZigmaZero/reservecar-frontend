@@ -15,7 +15,7 @@ const Checkout = () => {
   // Initialize job options
   useEffect(() => {
     if(!user || !user.verified || !token) {
-      navigate("/login?action=checkout");
+      navigate("/line/access");
       return;
     }
     getJobsOfUser(token)
