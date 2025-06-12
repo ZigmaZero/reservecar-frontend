@@ -11,7 +11,7 @@ export default function getTeams(token: string): Promise<TeamExternal[]> {
             if (response.status !== 200) {
                 throw new Error(`Unexpected response status: ${response.status}`);
             }
-            return response.data;
+            return response.data.teams as TeamExternal[];
         })
         .catch((error) => {
             if(error.response && error.response.status !== 400 && error.response.status !== 401) {
