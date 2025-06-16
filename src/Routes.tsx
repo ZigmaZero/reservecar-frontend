@@ -1,4 +1,4 @@
-import { Outlet, Route, Routes } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Checkin from './pages/Checkin';
 import Checkout from './pages/Checkout';
 import AdminLogin from './pages/AdminLogin';
@@ -34,6 +34,7 @@ const AppRoutes = () => (
   <Routes>
     {/* User routes */}
     <Route element={<UserLayout />}>
+      <Route path="/" element={<Navigate to="/line/access" replace />} />
       <Route path="/line/access" element={<LineLogin/>} />
       <Route path="/line/begin" element={<LineLoginBegin />}/>
       <Route path="/line/callback" element={<LineLoginCallback />}/>
