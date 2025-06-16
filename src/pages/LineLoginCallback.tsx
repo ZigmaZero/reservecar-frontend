@@ -10,6 +10,7 @@ import userLogin from "../api/user/userLogin";
 const LineLoginCallback: React.FC = () => {
     const [searchParams] = useSearchParams();
     const { setUser, setToken } = useUser();
+    const action = searchParams.get('action');
     const authorizationCode = searchParams.get('code');
     const state = searchParams.get('state');
     const error = searchParams.get('error');
@@ -51,7 +52,9 @@ const LineLoginCallback: React.FC = () => {
             return;
         }
         
-        const thisUrl = `https://splendid-sheep-wrongly.ngrok-free.app/line/callback`;
+        const thisUrl = (action === "checkin" || action === "checkout") ? 
+        `https://splendid-sheep-wrongly.ngrok-free.app/line/callback?action=${action}` :
+        `https://splendid-sheep-wrongly.ngrok-free.app/line/callback`;
         // Chain authToProfile and userLogin
         authToProfile(authorizationCode, thisUrl)
             .then((profile) => {
@@ -67,7 +70,15 @@ const LineLoginCallback: React.FC = () => {
                 setUser(user);
                 setToken(token);
                 if (user.verified) {
-                    navigate('/menu');
+                    if(action === 'checkin')
+                    {
+                        navigate('/checkin');
+                    }
+                    else if (action === 'checkout')
+                    {
+                        navigate('/checkout');
+                    }
+                    else navigate('/menu');
                 } else {
                     navigate('/verify');
                 }

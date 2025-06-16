@@ -1,7 +1,9 @@
 import type React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const LineLogin: React.FC = () => {
+    const [searchParams] = useSearchParams();
+    const action = searchParams.get('action');
     const navigate = useNavigate();
     return (
         <>
@@ -9,7 +11,10 @@ const LineLogin: React.FC = () => {
                 <p>Welcome to Jastel ReserveCar Service!</p>
                 <button
                     id="line-login"
-                    onClick={() => { navigate("/line/begin"); }}
+                    onClick={() => { 
+                        if(action === "checkin" || action === "checkout") navigate(`/line/begin?action=${action}`); 
+                        else navigate("/line/begin");
+                    }}
                     style={{
                         display: "flex",
                         alignItems: "center",

@@ -1,8 +1,12 @@
 import React, { useEffect } from "react"
 import getState from "../api/line/getState";
+import { useSearchParams } from "react-router-dom";
 
 const LineLoginBegin: React.FC = () => {
 
+    const [searchParams] = useSearchParams();
+    const action = searchParams.get('action');
+    
     const URI = "https://access.line.me/oauth2/v2.1/authorize"
     const CLIENT_ID = import.meta.env.VITE_LINE_CLIENT_ID as string;
     const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI as string;
@@ -10,11 +14,16 @@ const LineLoginBegin: React.FC = () => {
 
     useEffect(() => {
         getState().then((state) => {
-            const loginUrl = `${URI}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=${state}&scope=${SCOPE}`;
+            let redirectUriWithAction = REDIRECT_URI;
+            if (action === "checkin" || action === "checkout") {
+                // Append ?action=checkin or ?action=checkout
+                const separator = '?';
+                redirectUriWithAction = `${REDIRECT_URI}${separator}action=${action}`;
+            }
+            const loginUrl = `${URI}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUriWithAction)}&state=${state}&scope=${SCOPE}`;
             window.location.href = loginUrl;
         });
-        
-    }, [])
+    }, [action, REDIRECT_URI, CLIENT_ID, URI, SCOPE])
 
     return (
         <>
