@@ -85,7 +85,7 @@ const Checkin = () => {
           }}
         >
           {/* Team Selection */}
-          <label htmlFor="team">ทีม:</label>
+          <label htmlFor="team">รถประจำส่วนงาน:</label>
           <select
             id="team"
             className="mini-select"
