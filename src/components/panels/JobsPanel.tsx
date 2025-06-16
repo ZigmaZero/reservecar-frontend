@@ -3,6 +3,8 @@ import listReservations from "../../api/reservations/listReservations";
 import Filter from "../Filter";
 import JobsTable from "../tables/JobsTable";
 import type { ReservationExternal } from "../../api/externalTypes";
+import exportReservations from "../../api/reservations/exportReservations";
+import ExportJobsModal from "../ExportJobsModal";
 
 interface JobsPanelProps {
   token: string;
@@ -10,6 +12,7 @@ interface JobsPanelProps {
 
 const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isExportOpen, setIsExportOpen] = useState(false);
   const [data, setData] = useState<ReservationExternal[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [maxPages, setMaxPages] = useState(1);
@@ -21,8 +24,12 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
     setMaxPages(response.maxPages);
   };
 
-  const handleExport = () => {
-    if (data.length === 0) return;
+  const handleExport = async (startTime: string, endTime: string) => {
+    const exportData = await exportReservations(startTime, endTime, token);
+    if (exportData.length === 0) {
+      alert("No job data in that range.");
+      return
+    };
 
     // Define CSV headers
     const headers = [
@@ -35,7 +42,7 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
     ];
 
     // Create CSV rows
-    const rows = data.map(reservation =>
+    const rows = exportData.map(reservation =>
       headers.map(header => {
         // Escape quotes and commas in values
         const value = reservation[header as keyof ReservationExternal];
@@ -68,8 +75,9 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
     <div>
       <h2>{"Jobs"}</h2>
       <button onClick={() => setIsFilterOpen(true)}>Filter</button>
-      <button disabled={data.length === 0} onClick={() => handleExport()}>Export</button>
+      <button disabled={data.length === 0} onClick={() => setIsExportOpen(true)}>Export</button>
       {isFilterOpen && <Filter onClose={() => setIsFilterOpen(false)} />}
+      {isExportOpen && <ExportJobsModal onClose={() => setIsExportOpen(false)} onExport={handleExport}/>}
       {data.length > 0 ? (
         <>
           <div className="pagination">
