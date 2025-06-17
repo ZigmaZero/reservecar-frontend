@@ -1,48 +1,107 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import type { EmployeeExternal } from "../../api/externalTypes";
 import listEmployees from "../../api/employees/listEmployees";
-import Filter from "../Filter";
-import EmployeesTable from "../tables/EmployeesTable";
 import EditEmployeesModal from "../editModals/EditEmployeesModal";
 import deleteEmployee from "../../api/employees/deleteEmployee";
 import editEmployee from "../../api/employees/editEmployees";
 import verifyEmployee from "../../api/employees/verifyEmployee";
 import {
-  Box,
-  Button,
   Typography,
-  Stack,
-  Pagination,
-  Paper
+  Paper,
+  Box
 } from "@mui/material";
+import { DataGrid, GridActionsCellItem, type GridColDef } from "@mui/x-data-grid";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface EmployeesPanelProps {
   token: string;
 }
 
 const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [data, setData] = useState<EmployeeExternal[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [maxPages, setMaxPages] = useState(1);
-  const pageSize = 10;
+  const [rowCount, setRowCount] = useState(0);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10
+  });
+  const [loading, setLoading] = useState(false);
+
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editItem, setEditItem] = useState<EmployeeExternal | null>(null);
 
-  const fetchData = async () => {
-    let response = await listEmployees(currentPage, pageSize, token);
-    setData(response.data);
-    setMaxPages(response.maxPages);
-  };
+  // Data fetching function
+  const fetchData = React.useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await listEmployees(paginationModel.page + 1, paginationModel.pageSize, token);
+      setData(
+        res.data.map(emp => ({
+          ...emp,
+          teamName: emp.teamName || "No Team",
+          lineId: emp.lineId || "Not bound"
+        }))
+      );
+      setRowCount(res.total);
+    } catch {
+      setData([]);
+      setRowCount(0);
+    } finally {
+      setLoading(false);
+    }
+  }, [paginationModel, token]);
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line
-  }, [currentPage, pageSize]);
+  }, [fetchData]);
 
-  const handleEdit = (item: EmployeeExternal) => {
-    setEditItem(item);
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", width: 90 },
+    { field: "name", headerName: "Name", flex: 1, minWidth: 120 },
+    { 
+      field: "verified", 
+      headerName: "Verified", 
+      width: 100,
+      renderCell: (params) => (
+        <Box display="flex" alignItems="center" justifyContent="center" width="100%" height="100%">
+          {params.value ? <CheckIcon color="success" /> : <CloseIcon color="disabled" />}
+        </Box>
+      )
+    },
+    { field: "teamName", headerName: "Team", flex: 1, minWidth: 120 },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 100,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Edit"
+          onClick={() => handleEdit(params.row)}
+          showInMenu={false}
+        />,
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={() => quickDelete(params.row)}
+          showInMenu={false}
+        />
+      ]
+    }
+  ];
+
+  const handleEdit = (row: any) => {
+    setEditItem(row as EmployeeExternal);
     setIsEditOpen(true);
+  };
+
+  const quickDelete = async (row: any) => {
+    const item = row as EmployeeExternal;
+    await deleteEmployee(item, token);
+    await fetchData();
   };
 
   const resolveEdit = async (item: EmployeeExternal, updatedItem: EmployeeExternal | null) => {
@@ -59,40 +118,26 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
     setEditItem(null);
   };
 
-  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
-    setCurrentPage(value);
-  };
-
   return (
     <Paper sx={{ p: 3, mt: 2 }} variant="outlined">
       <Typography variant="h5" gutterBottom>
         Employees
       </Typography>
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <Button variant="outlined" color="primary" onClick={() => setIsFilterOpen(true)}>
-          Filter
-        </Button>
-      </Stack>
-      {isFilterOpen && <Filter onClose={() => setIsFilterOpen(false)} />}
-      {data.length > 0 ? (
-        <>
-          <EmployeesTable data={data} panelType={"Employees"} onEdit={handleEdit} />
-          <Box display="flex" justifyContent="center" mt={2}>
-            <Pagination
-              count={maxPages}
-              page={currentPage}
-              onChange={handlePageChange}
-              color="primary"
-              showFirstButton
-              showLastButton
-            />
-          </Box>
-        </>
-      ) : (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-          No data available
-        </Typography>
-      )}
+      <Box sx={{ height: 500, width: "100%" }}>
+        <DataGrid
+          rows={data}
+          columns={columns}
+          pagination
+          pageSizeOptions={[10, 25, 50]}
+          paginationMode="server"
+          paginationModel={paginationModel}
+          rowCount={rowCount}
+          onPaginationModelChange={setPaginationModel}
+          loading={loading}
+          getRowId={(row) => row.id ?? Math.random()}
+          disableRowSelectionOnClick
+        />
+      </Box>
       {isEditOpen && editItem && (
         <EditEmployeesModal
           item={editItem}
