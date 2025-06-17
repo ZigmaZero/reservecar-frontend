@@ -1,4 +1,14 @@
 import React from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  FormGroup,
+  FormControlLabel,
+  Checkbox
+} from "@mui/material";
 
 interface FilterProps {
   onClose: () => void;
@@ -6,22 +16,21 @@ interface FilterProps {
 
 const Filter: React.FC<FilterProps> = ({ onClose }) => {
   return (
-    <>
-      <div className="modal-backdrop" onClick={onClose}></div>
-      <div className="filter-modal">
-        <h3>Filter Options</h3>
-        <label>
-          <input type="checkbox" /> Checkbox A
-        </label>
-        <label>
-          <input type="checkbox" /> Checkbox B
-        </label>
-        <label>
-          <input type="checkbox" /> Checkbox C
-        </label>
-        <button onClick={onClose}>Close</button>
-      </div>
-    </>
+    <Dialog open onClose={onClose}>
+      <DialogTitle>Filter Options</DialogTitle>
+      <DialogContent>
+        <FormGroup>
+          <FormControlLabel control={<Checkbox />} label="Checkbox A" />
+          <FormControlLabel control={<Checkbox />} label="Checkbox B" />
+          <FormControlLabel control={<Checkbox />} label="Checkbox C" />
+        </FormGroup>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="primary" variant="contained">
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

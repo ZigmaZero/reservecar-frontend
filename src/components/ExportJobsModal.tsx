@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
+    Drawer,
+    Typography,
+    Divider,
     Button,
-    TextField,
-    Stack
+    Stack,
+    Box
 } from "@mui/material";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { Dayjs } from "dayjs";
 
 interface ExportJobsModalProps {
     onClose: () => void;
@@ -15,61 +16,63 @@ interface ExportJobsModalProps {
 }
 
 const ExportJobsModal: React.FC<ExportJobsModalProps> = ({ onClose, onExport }) => {
-    const [formData, setFormData] = useState<{ startTime: string; endTime: string }>({
-        startTime: "",
-        endTime: "",
+    const [formData, setFormData] = useState<{ startTime: Dayjs | null; endTime: Dayjs | null }>({
+        startTime: null,
+        endTime: null,
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onExport(formData.startTime, formData.endTime);
+        onExport(
+            formData.startTime ? formData.startTime.toISOString() : "",
+            formData.endTime ? formData.endTime.toISOString() : ""
+        );
         onClose();
     };
 
     return (
-        <Dialog open onClose={onClose}>
-            <DialogTitle>Export Reservations</DialogTitle>
-            <form onSubmit={handleSubmit}>
-                <DialogContent>
-                    <Stack spacing={2}>
-                        <TextField
+        <Drawer anchor="top" open onClose={onClose}>
+            <Box sx={{ width: "100%", maxWidth: 500, mx: "auto", p: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                    Export Reservations
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <form onSubmit={handleSubmit}>
+                    <Stack direction={"row"} spacing={2}>
+                        <DateTimePicker
                             label="Start Time"
-                            type="datetime-local"
-                            name="startTime"
                             value={formData.startTime}
-                            onChange={e => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                            onChange={value => setFormData(prev => ({ ...prev, startTime: value }))}
                             slotProps={{
-                                inputLabel: {
-                                    shrink: true
+                                textField: {
+                                    fullWidth: true,
+                                    required: true
                                 }
                             }}
-                            fullWidth
                         />
-                        <TextField
+                        <DateTimePicker
                             label="End Time"
-                            type="datetime-local"
-                            name="endTime"
                             value={formData.endTime}
-                            onChange={e => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+                            onChange={value => setFormData(prev => ({ ...prev, endTime: value }))}
                             slotProps={{
-                                inputLabel: {
-                                    shrink: true
+                                textField: {
+                                    fullWidth: true,
+                                    required: true
                                 }
                             }}
-                            fullWidth
                         />
+                        <Stack direction="row" spacing={2} justifyContent="flex-end">
+                            <Button onClick={onClose} color="secondary" variant="outlined">
+                                Cancel
+                            </Button>
+                            <Button type="submit" variant="contained" color="primary">
+                                Export
+                            </Button>
+                        </Stack>
                     </Stack>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={onClose} color="secondary">
-                        Cancel
-                    </Button>
-                    <Button type="submit" variant="contained" color="primary">
-                        Export
-                    </Button>
-                </DialogActions>
-            </form>
-        </Dialog>
+                </form>
+            </Box>
+        </Drawer>
     );
 };
 
