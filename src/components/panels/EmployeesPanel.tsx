@@ -7,13 +7,20 @@ import EditEmployeesModal from "../editModals/EditEmployeesModal";
 import deleteEmployee from "../../api/employees/deleteEmployee";
 import editEmployee from "../../api/employees/editEmployees";
 import verifyEmployee from "../../api/employees/verifyEmployee";
-
+import {
+  Box,
+  Button,
+  Typography,
+  Stack,
+  Pagination,
+  Paper
+} from "@mui/material";
 
 interface EmployeesPanelProps {
   token: string;
 }
 
-const EmployeesPanel: React.FC<EmployeesPanelProps> = ({token }) => {
+const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [data, setData] = useState<EmployeeExternal[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,6 +37,7 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({token }) => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, [currentPage, pageSize]);
 
   const handleEdit = (item: EmployeeExternal) => {
@@ -38,48 +46,61 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({token }) => {
   };
 
   const resolveEdit = async (item: EmployeeExternal, updatedItem: EmployeeExternal | null) => {
-    if(!updatedItem) {
-        await deleteEmployee(item, token);
-    }
-    else {
-        await editEmployee(item, updatedItem, token);
-        if(!item.verified && updatedItem.verified) {
-          await verifyEmployee(updatedItem, token);
-        }
+    if (!updatedItem) {
+      await deleteEmployee(item, token);
+    } else {
+      await editEmployee(item, updatedItem, token);
+      if (!item.verified && updatedItem.verified) {
+        await verifyEmployee(updatedItem, token);
+      }
     }
     await fetchData();
     setIsEditOpen(false);
     setEditItem(null);
-  }
+  };
+
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value);
+  };
 
   return (
-    <div>
-      <h2>{"Employees"}</h2>
-      <button onClick={() => setIsFilterOpen(true)}>Filter</button>
+    <Paper sx={{ p: 3, mt: 2 }} variant="outlined">
+      <Typography variant="h5" gutterBottom>
+        Employees
+      </Typography>
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <Button variant="outlined" color="primary" onClick={() => setIsFilterOpen(true)}>
+          Filter
+        </Button>
+      </Stack>
       {isFilterOpen && <Filter onClose={() => setIsFilterOpen(false)} />}
       {data.length > 0 ? (
         <>
-          <div className="pagination">
-            <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
-            <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Prev</button>
-            <div className="pagination-page">Page {currentPage} of {maxPages}</div>
-            <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, maxPages))} disabled={currentPage === maxPages}>Next</button>
-            <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
-          </div>
           <EmployeesTable data={data} panelType={"Employees"} onEdit={handleEdit} />
-          <div className="pagination">
-            <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
-            <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Prev</button>
-            <div className="pagination-page">Page {currentPage} of {maxPages}</div>
-            <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, maxPages))} disabled={currentPage === maxPages}>Next</button>
-            <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
-          </div>
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Pagination
+              count={maxPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+              showFirstButton
+              showLastButton
+            />
+          </Box>
         </>
       ) : (
-        <div>No data available</div>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          No data available
+        </Typography>
       )}
-      {isEditOpen && editItem && <EditEmployeesModal item={editItem} onClose={() => {setIsEditOpen(false)}} onEdit={resolveEdit}/>}
-    </div>
+      {isEditOpen && editItem && (
+        <EditEmployeesModal
+          item={editItem}
+          onClose={() => setIsEditOpen(false)}
+          onEdit={resolveEdit}
+        />
+      )}
+    </Paper>
   );
 };
 

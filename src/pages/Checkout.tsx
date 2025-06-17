@@ -5,6 +5,17 @@ import { useUser } from "../contexts/UserContext";
 import getJobsOfUser from "../api/reservations/getJobsOfUser";
 import type { ReservationExternal } from "../api/externalTypes";
 import userCheckout from "../api/user/userCheckout";
+import {
+  Container,
+  Typography,
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Paper
+} from "@mui/material";
 
 const Checkout = () => {
   const { user, token } = useUser();
@@ -12,20 +23,18 @@ const Checkout = () => {
   const [jobs, setJobs] = useState<ReservationExternal[]>([]);
   const navigate = useNavigate();
 
-  // Initialize job options
   useEffect(() => {
-    if(!user || !user.verified || !token) {
+    if (!user || !user.verified || !token) {
       navigate("/line/access");
       return;
     }
-    getJobsOfUser(token)
-      .then((jobsList) => {
-        setJobs(jobsList);
-      })
+    getJobsOfUser(token).then((jobsList) => {
+      setJobs(jobsList);
+    });
   }, []);
 
-  // Handle submit
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!token) {
       alert("You must be logged in to checkout.");
       return;
@@ -33,47 +42,59 @@ const Checkout = () => {
     userCheckout(jobId as number, token)
       .then(() => {
         navigate("/checkout-success");
-      }
-      )
+      })
       .catch((error) => {
         console.error("Checkout error:", error);
         alert("An error occurred during checkout. Please try again later.");
-      }
-      );
+      });
   };
 
   return (
     <>
-    <Navbar />
-    <div className="container">
-      <h1>Checkout</h1>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-      >
-        
-        {/* Job Selection */}
-        <label htmlFor="job">เลขงาน:</label>
-        <select
-          id="job"
-          value={jobId}
-          onChange={(e) => setJobId(Number(e.target.value))}
-          required
-        >
-          <option value="">Select a job</option>
-          {jobs.map((j) => (
-            <option key={j.id} value={j.id}>
-              [{j.car} @ {new Date(j.checkinTime).toLocaleString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })} | {j.description}]
-            </option>
-          ))}
-        </select>
-
-        {/* Submit Button */}
-        <button type="submit">Checkout</button>
-      </form>
-    </div>
+      <Navbar showButtons={user !== null} />
+      <Container maxWidth="sm" sx={{ mt: 8 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+          <Typography variant="h4" gutterBottom>
+            Checkout
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit}>
+            <FormControl fullWidth required sx={{ mb: 3 }}>
+              <InputLabel id="job-label">เลขงาน</InputLabel>
+              <Select
+                labelId="job-label"
+                id="job"
+                value={jobId}
+                label="เลขงาน"
+                onChange={(e) => setJobId(Number(e.target.value))}
+              >
+                {jobs.map((j) => (
+                  <MenuItem key={j.id} value={j.id}>
+                    [{j.car} @{" "}
+                    {new Date(j.checkinTime).toLocaleString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    })}{" "}
+                    | {j.description}]
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={!jobId}
+            >
+              Checkout
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
     </>
   );
 };

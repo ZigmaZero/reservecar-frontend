@@ -1,4 +1,12 @@
 import type { EmployeeExternal } from "../../api/externalTypes";
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button
+} from "@mui/material";
 
 interface EmployeesTableProps {
   panelType: string;
@@ -8,32 +16,39 @@ interface EmployeesTableProps {
 
 const EmployeesTable = ({ data, onEdit }: EmployeesTableProps) => {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th key="id">ID</th>
-          <th key="line">LINE ID</th>
-          <th key="name">Name</th>
-          <th key="verified">Verified</th>
-          <th key="team">Team</th>
-          <th className="action-cell">Action</th>
-        </tr>
-      </thead>
-      <tbody>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>ID</TableCell>
+          <TableCell>LINE ID</TableCell>
+          <TableCell>Name</TableCell>
+          <TableCell>Verified</TableCell>
+          <TableCell>Team</TableCell>
+          <TableCell align="center">Action</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
         {data.map((item, index) => (
-          <tr key={index}>
-            <td key={1}>{item.id || "?"}</td>
-            <td key={2}>{item.lineId || "Not bound"}</td>
-            <td key={3}>{item.name}</td>
-            <td key={4}>{item.verified ? "Yes" : "No"}</td>
-            <td key={5}>{item.teamName || "No Team"}</td>
-            <td className="action-cell">
-            <button onClick={() => onEdit(item)}>Edit</button>
-            </td>
-          </tr>
+          <TableRow key={index}>
+            <TableCell>{item.id || "?"}</TableCell>
+            <TableCell>{item.lineId || "Not bound"}</TableCell>
+            <TableCell>{item.name}</TableCell>
+            <TableCell>{item.verified ? "Yes" : "No"}</TableCell>
+            <TableCell>{item.teamName || "No Team"}</TableCell>
+            <TableCell align="center">
+              <Button
+                variant="outlined"
+                color="primary"
+                size="small"
+                onClick={() => onEdit(item)}
+              >
+                Edit
+              </Button>
+            </TableCell>
+          </TableRow>
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 };
 

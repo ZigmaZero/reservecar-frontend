@@ -5,6 +5,14 @@ import JobsTable from "../tables/JobsTable";
 import type { ReservationExternal } from "../../api/externalTypes";
 import exportReservations from "../../api/reservations/exportReservations";
 import ExportJobsModal from "../ExportJobsModal";
+import {
+  Box,
+  Button,
+  Typography,
+  Stack,
+  Pagination,
+  Paper
+} from "@mui/material";
 
 interface JobsPanelProps {
   token: string;
@@ -28,8 +36,8 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
     const exportData = await exportReservations(startTime, endTime, token);
     if (exportData.length === 0) {
       alert("No job data in that range.");
-      return
-    };
+      return;
+    }
 
     // Define CSV headers
     const headers = [
@@ -69,30 +77,58 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, [currentPage, pageSize]);
 
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value);
+  };
+
   return (
-    <div>
-      <h2>{"Jobs"}</h2>
-      <button onClick={() => setIsFilterOpen(true)}>Filter</button>
-      <button disabled={data.length === 0} onClick={() => setIsExportOpen(true)}>Export</button>
+    <Paper sx={{ p: 3, mt: 2 }} variant="outlined">
+      <Typography variant="h5" gutterBottom>
+        Jobs
+      </Typography>
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <Button variant="outlined" color="primary" onClick={() => setIsFilterOpen(true)}>
+          Filter
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={data.length === 0}
+          onClick={() => setIsExportOpen(true)}
+        >
+          Export
+        </Button>
+      </Stack>
       {isFilterOpen && <Filter onClose={() => setIsFilterOpen(false)} />}
-      {isExportOpen && <ExportJobsModal onClose={() => setIsExportOpen(false)} onExport={handleExport}/>}
+      {isExportOpen && (
+        <ExportJobsModal
+          onClose={() => setIsExportOpen(false)}
+          onExport={handleExport}
+        />
+      )}
       {data.length > 0 ? (
         <>
-          <div className="pagination">
-            <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
-            <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Prev</button>
-            <div className="pagination-page">Page {currentPage} of {maxPages}</div>
-            <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, maxPages))} disabled={currentPage === maxPages}>Next</button>
-            <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
-          </div>
           <JobsTable data={data} />
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Pagination
+              count={maxPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+              showFirstButton
+              showLastButton
+            />
+          </Box>
         </>
       ) : (
-        <div>No data available</div>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          No data available
+        </Typography>
       )}
-    </div>
+    </Paper>
   );
 };
 

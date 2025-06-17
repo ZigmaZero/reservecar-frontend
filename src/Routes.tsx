@@ -5,8 +5,6 @@ import AdminLogin from './pages/AdminLogin';
 import Dashboard from './pages/Dashboard';
 import CheckinSuccess from './pages/CheckinSuccess';
 import CheckoutSuccess from './pages/CheckoutSuccess';
-import Register from './pages/Register';
-import Login from './pages/Login';
 import WaitForVerify from './pages/WaitForVerify';
 import Menu from './pages/Menu';
 import { UserProvider } from './contexts/UserContext';
@@ -35,11 +33,11 @@ const AppRoutes = () => (
     {/* User routes */}
     <Route element={<UserLayout />}>
       <Route path="/" element={<Navigate to="/line/access" replace />} />
+      <Route path="/register" element={<Navigate to="/line/access" replace />} />
+      <Route path="/login" element={<Navigate to="/line/access" replace />} />
       <Route path="/line/access" element={<LineLogin/>} />
       <Route path="/line/begin" element={<LineLoginBegin />}/>
       <Route path="/line/callback" element={<LineLoginCallback />}/>
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
       <Route path="/verify" element={<WaitForVerify />} />
       <Route path="/menu" element={<Menu />} />
       <Route path="/checkin" element={<Checkin />} />

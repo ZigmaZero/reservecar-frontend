@@ -1,12 +1,12 @@
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import AppRoutes from './Routes';
-import './App.css'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const App = () => {
   return (
-    <>
-      <h1>Jastel Car Reservation Form</h1>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <AppRoutes />
-    </>
+    </LocalizationProvider>
   );
 };
 

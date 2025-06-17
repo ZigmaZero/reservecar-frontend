@@ -1,6 +1,8 @@
 import React, { useEffect } from "react"
 import getState from "../api/line/getState";
 import { useSearchParams } from "react-router-dom";
+import { Container, Box, Typography } from "@mui/material";
+import Navbar from "../widgets/Navbar";
 
 const LineLoginBegin: React.FC = () => {
 
@@ -27,9 +29,14 @@ const LineLoginBegin: React.FC = () => {
 
     return (
         <>
-            <div className="container">
-                <p>Redirecting to LINE Login...</p>
-            </div>
+            <Navbar showButtons={false} />
+            <Container maxWidth="sm" sx={{ mt: 8 }}>
+                <Box textAlign="center">
+                    <Typography variant="body1">
+                        Redirecting to LINE Login...
+                    </Typography>
+                </Box>
+            </Container>
         </>
     )
 }

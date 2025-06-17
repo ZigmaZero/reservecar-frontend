@@ -2,6 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import adminLogin from "../api/adminLogin";
 import { useAdmin } from "../contexts/AdminContext";
+import {
+  Container,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Box
+} from "@mui/material";
 
 const AdminLogin = () => {
   const { admin, setAdmin, setToken } = useAdmin();
@@ -14,55 +22,67 @@ const AdminLogin = () => {
     if (admin) {
       navigate("/admin/dashboard");
     }
-  }, [admin])
+  }, [admin, navigate]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // login API
     adminLogin(username, password)
       .then((data) => {
         setAdmin(data.admin);
         setToken(data.token);
-        console.log(`Welcome ${admin?.name}`)
+        console.log(`Welcome ${data.admin?.name}`);
       })
       .catch((error) => {
         if (error.response && error.response.status !== 400 && error.response.status !== 401) {
           console.error("Unexpected error status:", error.response.status, error.response.data);
           alert("An unexpected error occurred. Please try again later.");
-        }
-        else
-        {
+        } else {
           alert("Username or password is incorrect.");
         }
-      })
+      });
   };
 
   return (
-    <div className="admin-container">
-      <h1>Admin Page</h1>
-      <form onSubmit={handleLogin}>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <Container maxWidth="xs" sx={{ mt: 10 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h5" align="center" gutterBottom>
+          Admin Page
+        </Typography>
+        <Box component="form" onSubmit={handleLogin}>
+          <TextField
+            label="Username"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            fullWidth
+            margin="normal"
+            autoFocus
+          />
+          <TextField
+            label="Password"
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            fullWidth
+            margin="normal"
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 2 }}
+          >
+            Login
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 

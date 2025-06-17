@@ -6,6 +6,18 @@ import getTeams from "../api/teams/getTeams";
 import type { CarExternal, TeamExternal } from "../api/externalTypes";
 import getCarsOfTeam from "../api/cars/getCarsOfTeam";
 import userCheckin from "../api/user/userCheckin";
+import {
+  Container,
+  Typography,
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Paper,
+  TextField
+} from "@mui/material";
 
 const Checkin = () => {
   const { user, token } = useUser();
@@ -44,92 +56,102 @@ const Checkin = () => {
           setCars([]); // Clear car options on error
           alert("Failed to load cars. Please try again later.");
         });
-      
       setCarId(""); // Reset car selection
     } else {
       setCars([]); // Clear car options if no team is selected
       setCarId(""); // Reset car selection
     }
-  }
-  , [token, teamId]);
+  }, [token, teamId]);
 
   // Handle submit
-  const handleSubmit = () => {
-    
-    if(!token) {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!token) {
       alert("You have been logged out. Please log in again.");
       navigate("/login");
       return;
     }
     userCheckin(carId as number, description, token)
       .then(() => {
-        console.log(`Checkin successful for car ID: ${carId}`);
         navigate("/checkin-success");
-      }
-      ).catch((error) => {
+      })
+      .catch((error) => {
         console.error("Checkin failed:", error);
         alert("Checkin failed. Please try again later.");
-      }
-    );
+      });
   };
 
   return (
     <>
-      <Navbar />
-      <div className="container">
-        <h1>Checkin</h1>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-        >
-          {/* Team Selection */}
-          <label htmlFor="team">รถประจำส่วนงาน:</label>
-          <select
-            id="team"
-            className="mini-select"
-            value={teamId}
-            onChange={(e) => setTeamId(Number(e.target.value))}
-            required
-          >
-            <option value="">Select a team</option>
-            {teams.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
+      <Navbar showButtons={user !== null} />
+      <Container maxWidth="sm" sx={{ mt: 8 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+          <Typography variant="h4" gutterBottom>
+            Checkin
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit}>
+            {/* Team Selection */}
+            <FormControl fullWidth required sx={{ mb: 3 }}>
+              <InputLabel id="team-label">รถประจำส่วนงาน</InputLabel>
+              <Select
+                labelId="team-label"
+                id="team"
+                value={teamId}
+                label="รถประจำส่วนงาน"
+                onChange={(e) => setTeamId(Number(e.target.value))}
+              >
+                {teams.map((t) => (
+                  <MenuItem key={t.id} value={t.id}>
+                    {t.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-          {/* Car Selection */}
-          <label htmlFor="car">เลขทะเบียนรถ:</label>
-          <select
-            id="car"
-            value={carId}
-            onChange={(e) => setCarId(Number(e.target.value))}
-            required
-          >
-            <option value="">Select a car</option>
-            {cars.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.plateNumber}
-              </option>
-            ))}
-          </select>
+            {/* Car Selection */}
+            <FormControl fullWidth required sx={{ mb: 3 }}>
+              <InputLabel id="car-label">เลขทะเบียนรถ</InputLabel>
+              <Select
+                labelId="car-label"
+                id="car"
+                value={carId}
+                label="เลขทะเบียนรถ"
+                onChange={(e) => setCarId(Number(e.target.value))}
+              >
+                {cars.map((c) => (
+                  <MenuItem key={c.id} value={c.id}>
+                    {c.plateNumber}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-          {/* Description */}
-          <label htmlFor="description">รายละเอียดงาน:</label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
+            {/* Description */}
+            <TextField
+              id="description"
+              label="รายละเอียดงาน"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              fullWidth
+              multiline
+              minRows={2}
+              sx={{ mb: 3 }}
+            />
 
-          {/* Submit Button */}
-          <button type="submit">Checkin</button>
-        </form>
-      </div>
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={!teamId || !carId || !description}
+            >
+              Checkin
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
     </>
   );
 };

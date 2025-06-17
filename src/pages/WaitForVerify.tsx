@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 import { useEffect } from "react";
+import Navbar from "../widgets/Navbar";
+import { Container, Typography, Box } from "@mui/material";
 
 const WaitForVerify = () => {
     const { user } = useUser();
@@ -16,11 +18,17 @@ const WaitForVerify = () => {
 
     return (
         <>
-        <div className="navbar-blank"></div>
-        <div className = "container">
-            <h1>Wait for Verification</h1>
-            <p>Your registration request is being processed. Please wait for verification.</p>
-        </div>
+            <Navbar showButtons={false} />
+            <Container maxWidth="sm" sx={{ mt: 8 }}>
+                <Box textAlign="center">
+                    <Typography variant="h4" gutterBottom>
+                        Wait for Verification
+                    </Typography>
+                    <Typography variant="body1">
+                        Your registration request is being processed. Please wait for verification.
+                    </Typography>
+                </Box>
+            </Container>
         </>
     )
 }

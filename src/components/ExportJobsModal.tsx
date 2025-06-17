@@ -1,4 +1,14 @@
 import React, { useState } from "react";
+import {
+    Drawer,
+    Typography,
+    Divider,
+    Button,
+    Stack,
+    Box
+} from "@mui/material";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { Dayjs } from "dayjs";
 
 interface ExportJobsModalProps {
     onClose: () => void;
@@ -6,48 +16,63 @@ interface ExportJobsModalProps {
 }
 
 const ExportJobsModal: React.FC<ExportJobsModalProps> = ({ onClose, onExport }) => {
-    const [formData, setFormData] = useState<{ startTime: string; endTime: string }>({
-        startTime: "",
-        endTime: "",
+    const [formData, setFormData] = useState<{ startTime: Dayjs | null; endTime: Dayjs | null }>({
+        startTime: null,
+        endTime: null,
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onExport(formData.startTime, formData.endTime);
+        onExport(
+            formData.startTime ? formData.startTime.toISOString() : "",
+            formData.endTime ? formData.endTime.toISOString() : ""
+        );
         onClose();
     };
 
     return (
-        <>
-            <div className="modal-backdrop" onClick={onClose}></div>
-            <div className="add-modal">
-                <h3>Export Reservations</h3>
+        <Drawer anchor="top" open onClose={onClose}>
+            <Box sx={{ width: "100%", maxWidth: 500, mx: "auto", p: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                    Export Reservations
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
                 <form onSubmit={handleSubmit}>
-                    <label>
-                        <div className="input-label">Start Time:</div>
-                        <input
-                            type="datetime-local"
-                            name="startTime"
+                    <Stack direction={"row"} spacing={2}>
+                        <DateTimePicker
+                            label="Start Time"
                             value={formData.startTime}
-                            onChange={e => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                            onChange={value => setFormData(prev => ({ ...prev, startTime: value }))}
+                            slotProps={{
+                                textField: {
+                                    fullWidth: true,
+                                    required: true
+                                }
+                            }}
                         />
-                    </label>
-                    <label>
-                        <div className="input-label">End Time:</div>
-                        <input
-                            type="datetime-local"
-                            name="endTime"
+                        <DateTimePicker
+                            label="End Time"
                             value={formData.endTime}
-                            onChange={e => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+                            onChange={value => setFormData(prev => ({ ...prev, endTime: value }))}
+                            slotProps={{
+                                textField: {
+                                    fullWidth: true,
+                                    required: true
+                                }
+                            }}
                         />
-                    </label>
-                    <button type="submit">Export</button>
-                    <button type="button" onClick={onClose}>
-                        Cancel
-                    </button>
+                        <Stack direction="row" spacing={2} justifyContent="flex-end">
+                            <Button onClick={onClose} color="secondary" variant="outlined">
+                                Cancel
+                            </Button>
+                            <Button type="submit" variant="contained" color="primary">
+                                Export
+                            </Button>
+                        </Stack>
+                    </Stack>
                 </form>
-            </div>
-        </>
+            </Box>
+        </Drawer>
     );
 };
 

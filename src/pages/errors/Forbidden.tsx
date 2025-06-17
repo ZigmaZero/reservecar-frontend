@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useAdmin } from "../../contexts/AdminContext";
 import { useNavigate } from "react-router-dom";
+import { Container, Box, Typography } from "@mui/material";
+import Navbar from "../../widgets/Navbar";
 
 const Forbidden = () => {
     const { admin } = useAdmin();
@@ -13,9 +15,16 @@ const Forbidden = () => {
     })
 
     return (
-        <div className="container forbidden">
-            <h1>403 - Forbidden</h1>
-        </div>
+        <>
+            <Navbar showButtons={false} />
+            <Container maxWidth="sm" sx={{ mt: 8 }}>
+                <Box textAlign="center">
+                    <Typography variant="h4" gutterBottom>
+                        403 - Forbidden
+                    </Typography>
+                </Box>
+            </Container>
+        </>
     )
 }
 export default Forbidden;
