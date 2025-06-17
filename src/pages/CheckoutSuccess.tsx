@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
+import { Box, Container, Typography } from "@mui/material";
+import Navbar from "../widgets/Navbar";
 
 const CheckoutSuccess = () => {
     const { user, token } = useUser();
@@ -16,11 +18,22 @@ const CheckoutSuccess = () => {
             return; // Prevent rendering if user is not verified
     }}, []);
     return (
-        <div className="container">
-            <h1>Checkout Success!</h1>
-            <p>Thank you for using the system.</p>
-            <p>Please come again.</p>
-        </div>
+        <>
+        <Navbar showButtons={user !== null} />
+        <Container maxWidth="sm" sx={{ mt: 8 }}>
+            <Box textAlign="center">
+                <Typography variant="h4" gutterBottom>
+                    Checkout Success!
+                </Typography>
+                <Typography variant="body1">
+                    Thank you for using the system.
+                </Typography>
+                <Typography variant="body2" gutterBottom>
+                    Please come again.
+                </Typography>
+            </Box>
+        </Container>
+        </>
     )
 }
 

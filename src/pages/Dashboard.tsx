@@ -5,6 +5,16 @@ import CarsPanel from "../components/panels/CarsPanel";
 import JobsPanel from "../components/panels/JobsPanel";
 import EmployeesPanel from "../components/panels/EmployeesPanel";
 import TeamsPanel from "../components/panels/TeamsPanel";
+import {
+  Container,
+  Typography,
+  Box,
+  Button,
+  ButtonGroup,
+  Paper,
+  AppBar,
+  Toolbar
+} from "@mui/material";
 
 const Dashboard: React.FC = () => {
   const { admin, token } = useAdmin();
@@ -15,34 +25,59 @@ const Dashboard: React.FC = () => {
     if (!admin || !token) {
       navigate("/admin");
     }
-  })
-
+  });
 
   return (
-    <div className="admin-container">
-      <h1>Dashboard</h1>
-      <p>Welcome {admin?.name}</p>
-      <div className="panel-buttons">
-        <button onClick={() => setActivePanel("Jobs")}>Jobs</button>
-        <button onClick={() => setActivePanel("Cars")}>Cars</button>
-        <button onClick={() => setActivePanel("Employees")}>Employees</button>
-        <button onClick={() => setActivePanel("Teams")}>Teams</button>
-      </div>
-      <div style={{ display: activePanel ? "block" : "none" }}>
-        <div style={{ display: activePanel === "Jobs" ? "block" : "none" }}>
-          <JobsPanel token={token!}/>
-        </div>
-        <div style={{ display: activePanel === "Cars" ? "block" : "none" }}>
-          <CarsPanel token={token!}/>
-        </div>
-        <div style={{ display: activePanel === "Employees" ? "block" : "none" }}>
-          <EmployeesPanel token={token!}/>
-        </div>
-        <div style={{ display: activePanel === "Teams" ? "block" : "none" }}>
-          <TeamsPanel token={token!}/>
-        </div>
-      </div>
-    </div>
+    <>
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          Dashboard
+        </Typography>
+      </Toolbar>
+    </AppBar>
+    <Container maxWidth="md" sx={{ mt: 6 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="subtitle1" gutterBottom>
+          Welcome {admin?.name}
+        </Typography>
+        <Box display="flex" justifyContent="center" mb={3}>
+          <ButtonGroup variant="contained" color="primary">
+            <Button
+              onClick={() => setActivePanel("Jobs")}
+              variant={activePanel === "Jobs" ? "contained" : "outlined"}
+            >
+              Jobs
+            </Button>
+            <Button
+              onClick={() => setActivePanel("Cars")}
+              variant={activePanel === "Cars" ? "contained" : "outlined"}
+            >
+              Cars
+            </Button>
+            <Button
+              onClick={() => setActivePanel("Employees")}
+              variant={activePanel === "Employees" ? "contained" : "outlined"}
+            >
+              Employees
+            </Button>
+            <Button
+              onClick={() => setActivePanel("Teams")}
+              variant={activePanel === "Teams" ? "contained" : "outlined"}
+            >
+              Teams
+            </Button>
+          </ButtonGroup>
+        </Box>
+        <Box>
+          {activePanel === "Jobs" && <JobsPanel token={token!} />}
+          {activePanel === "Cars" && <CarsPanel token={token!} />}
+          {activePanel === "Employees" && <EmployeesPanel token={token!} />}
+          {activePanel === "Teams" && <TeamsPanel token={token!} />}
+        </Box>
+      </Paper>
+    </Container>
+    </>
   );
 };
 
