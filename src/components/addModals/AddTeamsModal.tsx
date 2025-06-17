@@ -1,5 +1,14 @@
 import React, { useState } from "react";
 import type { TeamExternal } from "../../api/externalTypes";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Stack
+} from "@mui/material";
 
 interface AddTeamsModalProps {
   onClose: () => void;
@@ -11,9 +20,10 @@ const AddTeamsModal: React.FC<AddTeamsModalProps> = ({ onClose, onAdd }) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => {
-        return { ...prev, [name]: value } as TeamExternal;
-    });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }) as TeamExternal);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,32 +32,32 @@ const AddTeamsModal: React.FC<AddTeamsModalProps> = ({ onClose, onAdd }) => {
     onClose();
   };
 
-  const renderFields = () => {
-    const team = formData as TeamExternal;
-    return (
-    <label>
-        <div className="input-label">
-        Name:
-        </div>
-        <input name="name" value={team.name} onChange={handleChange} required />
-    </label>
-    );
-  };
-
   return (
-    <>
-      <div className="modal-backdrop" onClick={onClose}></div>
-      <div className="add-modal">
-        <h3>Add Car</h3>
-        <form onSubmit={handleSubmit}>
-          {renderFields()}
-          <button type="submit">Add</button>
-          <button type="button" onClick={onClose}>
+    <Dialog open onClose={onClose}>
+      <DialogTitle>Add Team</DialogTitle>
+      <form onSubmit={handleSubmit}>
+        <DialogContent>
+          <Stack spacing={2}>
+            <TextField
+              label="Name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              fullWidth
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" variant="contained" color="primary">
+            Add
+          </Button>
+          <Button type="button" onClick={onClose} color="secondary">
             Cancel
-          </button>
-        </form>
-      </div>
-    </>
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
 

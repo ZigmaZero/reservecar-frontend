@@ -1,4 +1,12 @@
 import type { TeamExternal } from "../../api/externalTypes";
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button
+} from "@mui/material";
 
 interface TeamsTableProps {
   data: TeamExternal[];
@@ -7,26 +15,33 @@ interface TeamsTableProps {
 
 const TeamsTable = ({ data, onEdit }: TeamsTableProps) => {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th key="id">ID</th>
-          <th key="name">Name</th>
-          <th className="action-cell">Action</th>
-        </tr>
-      </thead>
-      <tbody>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>ID</TableCell>
+          <TableCell>Name</TableCell>
+          <TableCell align="center">Action</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
         {data.map((item, index) => (
-          <tr key={index}>
-            <td key={1}>{item.id || "?"}</td>
-            <td key={2}>{item.name}</td>
-            <td className="action-cell">
-                <button onClick={() => onEdit(item)}>Edit</button>
-            </td>
-          </tr>
+          <TableRow key={index}>
+            <TableCell>{item.id || "?"}</TableCell>
+            <TableCell>{item.name}</TableCell>
+            <TableCell align="center">
+              <Button
+                variant="outlined"
+                color="primary"
+                size="small"
+                onClick={() => onEdit(item)}
+              >
+                Edit
+              </Button>
+            </TableCell>
+          </TableRow>
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 };
 

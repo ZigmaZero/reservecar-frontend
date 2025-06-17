@@ -1,4 +1,11 @@
 import type { ReservationExternal } from "../../api/externalTypes";
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody
+} from "@mui/material";
 
 interface JobsTableProps {
   data: ReservationExternal[];
@@ -6,30 +13,34 @@ interface JobsTableProps {
 
 const JobsTable = ({ data }: JobsTableProps) => {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th key="id">ID</th>
-          <th key="user">User</th>
-          <th key="car">Car</th>
-          <th key="description">Description</th>
-          <th key="checkin">Check-in</th>
-          <th key="checkout">Check-out</th>
-        </tr>
-      </thead>
-      <tbody>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>ID</TableCell>
+          <TableCell>User</TableCell>
+          <TableCell>Car</TableCell>
+          <TableCell>Description</TableCell>
+          <TableCell>Check-in</TableCell>
+          <TableCell>Check-out</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
         {data.map((item, index) => (
-          <tr key={index}>
-            <td key={1}>{item.id}</td>
-            <td key={2}>{item.user}</td>
-            <td key={3}>{item.car}</td>
-            <td key={4}>{item.description}</td>
-            <td key={5}>{item.checkinTime ? new Date(item.checkinTime).toLocaleString() : "Not Checked In"}</td>
-            <td key={6}>{item.checkoutTime ? new Date(item.checkoutTime).toLocaleString() : "Not Checked Out"}</td>
-          </tr>
+          <TableRow key={index}>
+            <TableCell>{item.id}</TableCell>
+            <TableCell>{item.user}</TableCell>
+            <TableCell>{item.car}</TableCell>
+            <TableCell>{item.description}</TableCell>
+            <TableCell>
+              {item.checkinTime ? new Date(item.checkinTime).toLocaleString() : "Not Checked In"}
+            </TableCell>
+            <TableCell>
+              {item.checkoutTime ? new Date(item.checkoutTime).toLocaleString() : "Not Checked Out"}
+            </TableCell>
+          </TableRow>
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 };
 

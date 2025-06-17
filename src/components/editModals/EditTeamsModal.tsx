@@ -1,5 +1,14 @@
 import React, { useState } from "react";
 import type { TeamExternal } from "../../api/externalTypes";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Stack
+} from "@mui/material";
 
 interface EditModalProps {
   item: TeamExternal;
@@ -12,9 +21,10 @@ const EditTeamsModal: React.FC<EditModalProps> = ({ item, onClose, onEdit }) => 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => {
-        return { ...prev, [name]: value } as TeamExternal;
-    });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }) as TeamExternal);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -26,37 +36,37 @@ const EditTeamsModal: React.FC<EditModalProps> = ({ item, onClose, onEdit }) => 
   const handleDelete = () => {
     onEdit(item, null);
     onClose();
-  }
-
-  const renderFields = () => {
-    const team = formData as TeamExternal;
-    return (
-    <label>
-        <div className="input-label">
-        Name:
-        </div>
-        <input name="name" value={team.name} onChange={handleChange} required />
-    </label>
-    );
   };
 
   return (
-    <>
-      <div className="modal-backdrop" onClick={onClose}></div>
-      <div className="edit-modal">
-        <h3>Edit Team</h3>
-        <form onSubmit={handleSubmit}>
-          {renderFields()}
-          <button type="submit">Save</button>
-          <button type="button" onClick={onClose}>
+    <Dialog open onClose={onClose}>
+      <DialogTitle>Edit Team</DialogTitle>
+      <form onSubmit={handleSubmit}>
+        <DialogContent>
+          <Stack spacing={2}>
+            <TextField
+              label="Name"
+              name="name"
+              value={formData.name || ""}
+              onChange={handleChange}
+              required
+              fullWidth
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" variant="contained" color="primary">
+            Save
+          </Button>
+          <Button onClick={onClose} color="secondary">
             Cancel
-          </button>
-          <button type="button" onClick={handleDelete} className="delete-button">
+          </Button>
+          <Button onClick={handleDelete} color="error">
             Delete
-          </button>
-        </form>
-      </div>
-    </>
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
 

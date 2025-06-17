@@ -1,5 +1,4 @@
-import type React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Filter from "../Filter";
 import listCars from "../../api/cars/listCars";
 import CarsTable from "../tables/CarsTable";
@@ -9,95 +8,118 @@ import addCar from "../../api/cars/addCar";
 import deleteCar from "../../api/cars/deleteCar";
 import editCar from "../../api/cars/editCar";
 import type { CarExternal } from "../../api/externalTypes";
+import {
+  Box,
+  Button,
+  Typography,
+  Stack,
+  Pagination,
+  Paper
+} from "@mui/material";
 
 interface CarsPanelProps {
-    token: string;
+  token: string;
 }
 
 const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
-    const [isAddOpen, setIsAddOpen] = useState(false);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
-    const [data, setData] = useState<CarExternal[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [maxPages, setMaxPages] = useState(1);
-    const pageSize = 10;
+  const [data, setData] = useState<CarExternal[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [maxPages, setMaxPages] = useState(1);
+  const pageSize = 10;
 
-    const [editItem, setEditItem] = useState<CarExternal | null>(null);
+  const [editItem, setEditItem] = useState<CarExternal | null>(null);
 
-    const fetchData = async () => {
-        let response = await listCars(currentPage, pageSize, token);
-        setData(response.data);
-        setMaxPages(response.maxPages);
-        if(currentPage > maxPages)
-        {
-            setCurrentPage(maxPages);
-        }
+  const fetchData = async () => {
+    let response = await listCars(currentPage, pageSize, token);
+    setData(response.data);
+    setMaxPages(response.maxPages);
+    if (currentPage > response.maxPages) {
+      setCurrentPage(response.maxPages);
     }
+  };
 
-    useEffect(() => {
-        fetchData();
-    }, [currentPage, pageSize])
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line
+  }, [currentPage, pageSize]);
 
-    const handleAdd = async (item: CarExternal) => {
-        await addCar(item, token);
-        await fetchData();
+  const handleAdd = async (item: CarExternal) => {
+    await addCar(item, token);
+    await fetchData();
+  };
+
+  const handleEdit = (item: CarExternal) => {
+    setEditItem(item);
+    setIsEditOpen(true);
+  };
+
+  const resolveEdit = async (item: CarExternal, updatedItem: CarExternal | null) => {
+    if (!updatedItem) {
+      await deleteCar(item, token);
+    } else {
+      await editCar(item, updatedItem, token);
     }
+    await fetchData();
+    setIsEditOpen(false);
+    setEditItem(null);
+  };
 
-    const handleEdit = (item: CarExternal) => {
-        setEditItem(item);
-        setIsEditOpen(true);
-    };
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value);
+  };
 
-    const resolveEdit = async (item: CarExternal, updatedItem: CarExternal | null) => {
-        if(!updatedItem) {
-            await deleteCar(item, token);
-        }
-        else {
-            await editCar(item, updatedItem, token);
-        }
-        await fetchData();
-        setIsEditOpen(false);
-        setEditItem(null);
-    }
-
-    return (
-    <div>
-      <h2>{"Cars"}</h2>
-      <button onClick={() => setIsAddOpen(true)}>Add</button>
+  return (
+    <Paper sx={{ p: 3, mt: 2 }} variant="outlined">
+      <Typography variant="h5" gutterBottom>
+        Cars
+      </Typography>
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <Button variant="contained" color="primary" onClick={() => setIsAddOpen(true)}>
+          Add
+        </Button>
+        <Button variant="outlined" color="primary" onClick={() => setIsFilterOpen(true)}>
+          Filter
+        </Button>
+      </Stack>
       {isAddOpen && (
         <AddCarsModal
           onClose={() => setIsAddOpen(false)}
           onAdd={handleAdd}
         />
       )}
-      <button onClick={() => setIsFilterOpen(true)}>Filter</button>
       {isFilterOpen && <Filter onClose={() => setIsFilterOpen(false)} />}
       {data.length > 0 ? (
         <>
-          <div className="pagination">
-            <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
-            <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Prev</button>
-            <div className="pagination-page">Page {currentPage} of {maxPages}</div>
-            <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, maxPages))} disabled={currentPage === maxPages}>Next</button>
-            <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
-          </div>
           <CarsTable data={data} onEdit={handleEdit} />
-          <div className="pagination">
-            <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>First</button>
-            <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Prev</button>
-            <div className="pagination-page">Page {currentPage} of {maxPages}</div>
-            <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, maxPages))} disabled={currentPage === maxPages}>Next</button>
-            <button onClick={() => setCurrentPage(maxPages)} disabled={currentPage === maxPages}>Last</button>
-          </div>
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Pagination
+              count={maxPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+              showFirstButton
+              showLastButton
+            />
+          </Box>
         </>
       ) : (
-        <div>No data available</div>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          No data available
+        </Typography>
       )}
-      {isEditOpen && editItem && <EditCarsModal item={editItem} onClose={() => {setIsEditOpen(false)}} onEdit={resolveEdit}/>}
-    </div>
-    );
-}
+      {isEditOpen && editItem && (
+        <EditCarsModal
+          item={editItem}
+          onClose={() => setIsEditOpen(false)}
+          onEdit={resolveEdit}
+        />
+      )}
+    </Paper>
+  );
+};
 
 export default CarsPanel;

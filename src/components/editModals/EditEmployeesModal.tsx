@@ -1,9 +1,24 @@
-import React, { useState } from "react";
-import type { EmployeeExternal } from "../../api/externalTypes";
+import React, { useState, useEffect } from "react";
+import type { EmployeeExternal, TeamExternal } from "../../api/externalTypes";
 import getTeams from "../../api/teams/getTeams";
-import type { TeamExternal } from "../../api/externalTypes";
-import { useEffect } from "react";
 import { useAdmin } from "../../contexts/AdminContext";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Stack,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  FormControlLabel,
+  Typography
+} from "@mui/material";
+import type { SelectChangeEvent } from "@mui/material";
 
 interface EditEmployeesModalProps {
   item: EmployeeExternal;
@@ -15,6 +30,7 @@ const EditEmployeesModal: React.FC<EditEmployeesModalProps> = ({ item, onClose, 
   const [formData, setFormData] = useState<EmployeeExternal>({ ...item });
   const { token } = useAdmin();
   const [teams, setTeams] = useState<TeamExternal[]>([]);
+
   useEffect(() => {
     if (!token) {
       onClose();
@@ -36,21 +52,31 @@ const EditEmployeesModal: React.FC<EditEmployeesModalProps> = ({ item, onClose, 
         alert("Failed to load teams. Please try again later.");
         onClose();
       });
+    // eslint-disable-next-line
   }, [token]);
 
   const originallyVerified = item.verified;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, checked } = e.target;
-    setFormData(prev => {
-        if (name === "verified") {
-            return { ...prev, [name]: checked } as EmployeeExternal;
-        }
-        if (name === "teamId") {
-            return { ...prev, [name]: value === "" ? undefined : Number(value) } as EmployeeExternal;
-        }
-        return { ...prev, [name]: value } as EmployeeExternal;
-    });
+  const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      name: e.target.value
+    }));
+  };
+
+  const handleChangeVerified = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      verified: e.target.checked
+    }));
+  };
+
+  const handleChangeTeam = (event: SelectChangeEvent) => {
+    const value = event.target.value;
+    setFormData(prev => ({
+      ...prev,
+      teamId: value === "" ? undefined : Number(value)
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -62,78 +88,77 @@ const EditEmployeesModal: React.FC<EditEmployeesModalProps> = ({ item, onClose, 
   const handleDelete = () => {
     onEdit(item, null);
     onClose();
-  }
-
-  const renderFields = () => {
-    const employee = formData as EmployeeExternal;
-    return (
-    <>
-        <label>
-        <div className="input-label">
-            Name:
-        </div>
-        <input name="name" value={employee.name} onChange={handleChange} required />
-        </label>
-        <label>
-        <div className="input-label">
-            Line ID:
-        </div>
-        <input name="lineId" value={employee.lineId} onChange={handleChange} disabled />
-        </label>
-        <label>
-        <div className="input-label">
-            Verified:
-        </div>
-        <input
-            name="verified"
-            type="checkbox"
-            checked={employee.verified}
-            onChange={handleChange}
-            disabled={originallyVerified}
-        />
-        </label>
-        <div className="input-warning">
-          (Once you verify someone, you cannot unverify them.)
-        </div>
-        <label>
-        <div className="input-label">
-            Team:
-        </div>
-        <select
-          name="teamId"
-          value={employee.teamId ?? ""}
-          onChange={e => setFormData(prev => ({ ...prev, teamId: Number(e.target.value) }))}
-          required
-        >
-          <option value="">Select a team</option>
-          {teams.map(team => (
-            <option key={team.id} value={team.id}>
-              {team.name}
-            </option>
-          ))}
-        </select>
-        </label>
-    </>
-    );
   };
 
   return (
-    <>
-      <div className="modal-backdrop" onClick={onClose}></div>
-      <div className="edit-modal">
-        <h3>Edit Employee</h3>
-        <form onSubmit={handleSubmit}>
-          {renderFields()}
-          <button type="submit">Save</button>
-          <button type="button" onClick={onClose}>
+    <Dialog open onClose={onClose}>
+      <DialogTitle>Edit Employee</DialogTitle>
+      <form onSubmit={handleSubmit}>
+        <DialogContent>
+          <Stack spacing={2}>
+            <TextField
+              label="Name"
+              name="name"
+              value={formData.name}
+              onChange={handleChangeName}
+              required
+              fullWidth
+            />
+            <TextField
+              label="Line ID"
+              name="lineId"
+              value={formData.lineId}
+              disabled
+              fullWidth
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="verified"
+                  checked={formData.verified}
+                  onChange={handleChangeVerified}
+                  disabled={originallyVerified}
+                />
+              }
+              label="Verified"
+            />
+            <Typography variant="caption" color="text.secondary">
+              (Once you verify someone, you cannot unverify them.)
+            </Typography>
+            <FormControl fullWidth required>
+              <InputLabel id="team-label">Team</InputLabel>
+              <Select
+                labelId="team-label"
+                name="teamId"
+                value={formData.teamId?.toString() ?? ""}
+                label="Team"
+                onChange={handleChangeTeam}
+              >
+                <MenuItem value="">
+                  <em>Select a team</em>
+                </MenuItem>
+                {teams.map(team => (
+                  <MenuItem key={team.id?.toString()} value={team.id?.toString()}>
+                    {team.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" variant="contained" color="primary">
+            Save
+          </Button>
+          <Button onClick={onClose} color="secondary">
             Cancel
-          </button>
-          <button type="button" onClick={handleDelete} className="delete-button">
+          </Button>
+          <Button onClick={handleDelete} color="error">
             Delete
-          </button>
-        </form>
-      </div>
-    </>
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
 

@@ -42,28 +42,28 @@ const Dashboard: React.FC = () => {
           Welcome {admin?.name}
         </Typography>
         <Box display="flex" justifyContent="center" mb={3}>
-          <ButtonGroup variant="contained" color="primary">
+          <ButtonGroup variant="outlined" color="primary">
             <Button
+              color={activePanel === "Jobs" ? "primary" : "secondary"}
               onClick={() => setActivePanel("Jobs")}
-              variant={activePanel === "Jobs" ? "contained" : "outlined"}
             >
               Jobs
             </Button>
             <Button
+              color={activePanel === "Cars" ? "primary" : "secondary"}
               onClick={() => setActivePanel("Cars")}
-              variant={activePanel === "Cars" ? "contained" : "outlined"}
             >
               Cars
             </Button>
             <Button
+              color={activePanel === "Employees" ? "primary" : "secondary"}
               onClick={() => setActivePanel("Employees")}
-              variant={activePanel === "Employees" ? "contained" : "outlined"}
             >
               Employees
             </Button>
             <Button
+              color={activePanel === "Teams" ? "primary" : "secondary"}
               onClick={() => setActivePanel("Teams")}
-              variant={activePanel === "Teams" ? "contained" : "outlined"}
             >
               Teams
             </Button>

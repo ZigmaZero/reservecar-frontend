@@ -2,15 +2,18 @@ import { Container, Box, Typography, Button, Stack } from "@mui/material";
 import Navbar from "../widgets/Navbar";
 import { useUser } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Menu = () => {
     const { user, token } = useUser();
     const navigate = useNavigate();
-    if (!user || !user.verified || !token) {
-      navigate("/line/access");
-      return;
-    }
-
+    useEffect(() => {
+        if (!user || !user.verified || !token) {
+        navigate("/line/access");
+        return;
+        }
+    })
+    
     return (
         <>
         <Navbar showButtons={user !== null} />

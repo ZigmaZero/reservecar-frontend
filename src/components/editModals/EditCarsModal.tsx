@@ -2,6 +2,20 @@ import React, { useEffect, useState } from "react";
 import type { CarExternal, TeamExternal } from "../../api/externalTypes";
 import getTeams from "../../api/teams/getTeams";
 import { useAdmin } from "../../contexts/AdminContext";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Stack,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
+} from "@mui/material";
+import type { SelectChangeEvent } from "@mui/material/Select";
 
 interface EditCarsModalProps {
   item: CarExternal;
@@ -15,15 +29,14 @@ const EditCarsModal: React.FC<EditCarsModalProps> = ({ item, onClose, onEdit }) 
   const [teams, setTeams] = useState<TeamExternal[]>([]);
 
   useEffect(() => {
-    if(!token)
-    {
+    if (!token) {
       onClose();
       return;
     }
     getTeams(token)
       .then((teamsList: TeamExternal[]) => {
         setTeams(teamsList);
-        if(formData.teamId) {
+        if (formData.teamId) {
           // Ensure the selected team is still valid
           const teamExists = teamsList.some(team => team.id === formData.teamId);
           if (!teamExists) {
@@ -36,7 +49,23 @@ const EditCarsModal: React.FC<EditCarsModalProps> = ({ item, onClose, onEdit }) 
         alert("Failed to load teams. Please try again later.");
         onClose();
       });
+    // eslint-disable-next-line
   }, [token]);
+
+  const handleChangePlate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      plateNumber: e.target.value
+    }));
+  };
+
+  const handleChangeTeam = (event: SelectChangeEvent) => {
+    const value = event.target.value;
+    setFormData(prev => ({
+      ...prev,
+      teamId: value === "" ? undefined : Number(value)
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,48 +76,56 @@ const EditCarsModal: React.FC<EditCarsModalProps> = ({ item, onClose, onEdit }) 
   const handleDelete = () => {
     onEdit(item, null);
     onClose();
-  }
+  };
 
   return (
-    <>
-      <div className="modal-backdrop" onClick={onClose}></div>
-      <div className="edit-modal">
-        <h3>Edit Car</h3>
-        <form onSubmit={handleSubmit}>
-          <label>
-          <div className="input-label">
-              Plate No.:
-          </div>
-          <input name="plateNumber" value={formData.plateNumber} onChange={e => setFormData(prev => ({ ...prev, plateNumber: e.target.value}))} required />
-          </label>
-          <label>
-              <div className="input-label">
-                Team:
-              </div>
-              <select
+    <Dialog open onClose={onClose}>
+      <DialogTitle>Edit Car</DialogTitle>
+      <form onSubmit={handleSubmit}>
+        <DialogContent>
+          <Stack spacing={2}>
+            <TextField
+              label="Plate No."
+              name="plateNumber"
+              value={formData.plateNumber}
+              onChange={handleChangePlate}
+              required
+              fullWidth
+            />
+            <FormControl fullWidth required>
+              <InputLabel id="team-label">Team</InputLabel>
+              <Select
+                labelId="team-label"
                 name="teamId"
-                value={formData.teamId ?? ""}
-                onChange={e => setFormData(prev => ({ ...prev, teamId: Number(e.target.value) }))}
-                required
+                value={formData.teamId?.toString() ?? ""}
+                label="Team"
+                onChange={handleChangeTeam}
               >
-                <option value="">Select a team</option>
+                <MenuItem value="">
+                  <em>Select a team</em>
+                </MenuItem>
                 {teams.map(team => (
-                  <option key={team.id} value={team.id}>
+                  <MenuItem key={team.id?.toString()} value={team.id?.toString()}>
                     {team.name}
-                  </option>
+                  </MenuItem>
                 ))}
-              </select>
-          </label>
-          <button type="submit">Save</button>
-          <button type="button" onClick={onClose}>
+              </Select>
+            </FormControl>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" variant="contained" color="primary">
+            Save
+          </Button>
+          <Button onClick={onClose} color="secondary">
             Cancel
-          </button>
-          <button type="button" onClick={handleDelete} className="delete-button">
+          </Button>
+          <Button onClick={handleDelete} color="error">
             Delete
-          </button>
-        </form>
-      </div>
-    </>
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
 

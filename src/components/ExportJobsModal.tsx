@@ -1,4 +1,13 @@
 import React, { useState } from "react";
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    TextField,
+    Stack
+} from "@mui/material";
 
 interface ExportJobsModalProps {
     onClose: () => void;
@@ -18,36 +27,49 @@ const ExportJobsModal: React.FC<ExportJobsModalProps> = ({ onClose, onExport }) 
     };
 
     return (
-        <>
-            <div className="modal-backdrop" onClick={onClose}></div>
-            <div className="add-modal">
-                <h3>Export Reservations</h3>
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        <div className="input-label">Start Time:</div>
-                        <input
+        <Dialog open onClose={onClose}>
+            <DialogTitle>Export Reservations</DialogTitle>
+            <form onSubmit={handleSubmit}>
+                <DialogContent>
+                    <Stack spacing={2}>
+                        <TextField
+                            label="Start Time"
                             type="datetime-local"
                             name="startTime"
                             value={formData.startTime}
                             onChange={e => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                            slotProps={{
+                                inputLabel: {
+                                    shrink: true
+                                }
+                            }}
+                            fullWidth
                         />
-                    </label>
-                    <label>
-                        <div className="input-label">End Time:</div>
-                        <input
+                        <TextField
+                            label="End Time"
                             type="datetime-local"
                             name="endTime"
                             value={formData.endTime}
                             onChange={e => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+                            slotProps={{
+                                inputLabel: {
+                                    shrink: true
+                                }
+                            }}
+                            fullWidth
                         />
-                    </label>
-                    <button type="submit">Export</button>
-                    <button type="button" onClick={onClose}>
+                    </Stack>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onClose} color="secondary">
                         Cancel
-                    </button>
-                </form>
-            </div>
-        </>
+                    </Button>
+                    <Button type="submit" variant="contained" color="primary">
+                        Export
+                    </Button>
+                </DialogActions>
+            </form>
+        </Dialog>
     );
 };
 

@@ -1,4 +1,12 @@
 import type { CarExternal } from "../../api/externalTypes";
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button
+} from "@mui/material";
 
 interface CarsTableProps {
   data: CarExternal[];
@@ -7,28 +15,35 @@ interface CarsTableProps {
 
 const CarsTable = ({ data, onEdit }: CarsTableProps) => {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th key="id">ID</th>
-          <th key="plate-number">Plate No.</th>
-          <th key="team">Team</th>
-          <th className="action-cell">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((item, index) => (
-          <tr key={index}>
-            <td key={0}>{item.id}</td>
-            <td key={1}>{item.plateNumber}</td>
-            <td key={2}>{item.teamName || "No Team"}</td>
-            <td className="action-cell">
-                <button onClick={() => onEdit(item)}>Edit</button>
-            </td>
-          </tr>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>ID</TableCell>
+          <TableCell>Plate No.</TableCell>
+          <TableCell>Team</TableCell>
+          <TableCell align="center">Action</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {data.map((item) => (
+          <TableRow key={item.id}>
+            <TableCell>{item.id}</TableCell>
+            <TableCell>{item.plateNumber}</TableCell>
+            <TableCell>{item.teamName || "No Team"}</TableCell>
+            <TableCell align="center">
+              <Button
+                variant="outlined"
+                color="primary"
+                size="small"
+                onClick={() => onEdit(item)}
+              >
+                Edit
+              </Button>
+            </TableCell>
+          </TableRow>
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 };
 
