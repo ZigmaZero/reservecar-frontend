@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import listReservations from "../../api/reservations/listReservations";
 import Filter from "../Filter";
-import JobsTable from "../tables/JobsTable";
 import type { ReservationExternal } from "../../api/externalTypes";
 import exportReservations from "../../api/reservations/exportReservations";
 import ExportJobsModal from "../ExportJobsModal";
@@ -10,27 +9,48 @@ import {
   Button,
   Typography,
   Stack,
-  Pagination,
   Paper
 } from "@mui/material";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 
 interface JobsPanelProps {
   token: string;
 }
 
+const pageSizeOptions = [10, 25, 50];
+
 const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [data, setData] = useState<ReservationExternal[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [maxPages, setMaxPages] = useState(1);
-  const pageSize = 10;
+  const [rowCount, setRowCount] = useState(0);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10
+  });
+  const [loading, setLoading] = useState(false);
 
-  const fetchData = async () => {
-    let response = await listReservations(currentPage, pageSize, token);
-    setData(response.data);
-    setMaxPages(response.maxPages);
-  };
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await listReservations(
+        paginationModel.page + 1,
+        paginationModel.pageSize,
+        token
+      );
+      setData(response.data);
+      setRowCount(response.total ?? response.data.length);
+    } catch {
+      setData([]);
+      setRowCount(0);
+    } finally {
+      setLoading(false);
+    }
+  }, [paginationModel, token]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleExport = async (startTime: string, endTime: string) => {
     const exportData = await exportReservations(startTime, endTime, token);
@@ -75,14 +95,28 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
     URL.revokeObjectURL(url);
   };
 
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line
-  }, [currentPage, pageSize]);
-
-  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
-    setCurrentPage(value);
-  };
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", minWidth: 50 },
+    { field: "user", headerName: "User", flex: 1, minWidth: 120 },
+    { field: "car", headerName: "Car", flex: 1, minWidth: 90 },
+    { field: "description", headerName: "Description", flex: 1, minWidth: 150 },
+    {
+      field: "checkinTime",
+      headerName: "Check-in",
+      flex: 1,
+      minWidth: 220,
+      valueFormatter: (value) =>
+        value ? new Date(value).toLocaleString() : "Not checked in"
+    },
+    {
+      field: "checkoutTime",
+      headerName: "Check-out",
+      flex: 1,
+      minWidth: 220,
+      valueFormatter: (value) =>
+        value ? new Date(value).toLocaleString() : "Not checked out"
+    }
+  ];
 
   return (
     <Paper sx={{ p: 3, mt: 2 }} variant="outlined">
@@ -109,21 +143,22 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
           onExport={handleExport}
         />
       )}
-      {data.length > 0 ? (
-        <>
-          <JobsTable data={data} />
-          <Box display="flex" justifyContent="center" mt={2}>
-            <Pagination
-              count={maxPages}
-              page={currentPage}
-              onChange={handlePageChange}
-              color="primary"
-              showFirstButton
-              showLastButton
-            />
-          </Box>
-        </>
-      ) : (
+      <Box sx={{ height: 500, width: "100%" }}>
+        <DataGrid
+          rows={data}
+          columns={columns}
+          pagination
+          pageSizeOptions={pageSizeOptions}
+          paginationMode="server"
+          paginationModel={paginationModel}
+          rowCount={rowCount}
+          onPaginationModelChange={setPaginationModel}
+          loading={loading}
+          getRowId={(row) => row.id ?? Math.random()}
+          disableRowSelectionOnClick
+        />
+      </Box>
+      {data.length === 0 && (
         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
           No data available
         </Typography>
