@@ -99,15 +99,18 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
   };
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", minWidth: 50 },
-    { field: "user", headerName: "User", flex: 1, minWidth: 120 },
-    { field: "car", headerName: "Car", flex: 1, minWidth: 90 },
-    { field: "description", headerName: "Description", flex: 1, minWidth: 150 },
+    { field: "id", headerName: "ID", width: 50, type: "number" },
+    { field: "user", headerName: "User", flex: 1, width: 120 },
+    { field: "car", headerName: "Car", flex: 1, width: 90 },
+    { field: "description", headerName: "Description", flex: 1, width: 150 },
     {
       field: "checkinTime",
       headerName: "Check-in",
       flex: 1,
-      minWidth: 220,
+      width: 220,
+      type: "dateTime",
+      valueGetter: (value) =>
+        value ? new Date(value) : null,
       valueFormatter: (value) =>
         value ? new Date(value).toLocaleString() : "Not checked in"
     },
@@ -115,7 +118,10 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
       field: "checkoutTime",
       headerName: "Check-out",
       flex: 1,
-      minWidth: 220,
+      width: 220,
+      type: "dateTime",
+      valueGetter: (value) =>
+        value ? new Date(value) : null,
       valueFormatter: (value) =>
         value ? new Date(value).toLocaleString() : "Not checked out"
     }

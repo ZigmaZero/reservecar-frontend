@@ -13,8 +13,6 @@ import {
 import { DataGrid, GridActionsCellItem, type GridColDef, type GridFilterModel, type GridPaginationModel, type GridSortModel } from "@mui/x-data-grid";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
 
 interface EmployeesPanelProps {
   token: string;
@@ -60,17 +58,13 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
   }, [fetchData]);
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "id", headerName: "ID", width: 90, type: "number" },
     { field: "name", headerName: "Name", flex: 1, minWidth: 120 },
     { 
       field: "verified", 
       headerName: "Verified", 
-      width: 100,
-      renderCell: (params) => (
-        <Box display="flex" alignItems="center" justifyContent="center" width="100%" height="100%">
-          {params.value ? <CheckIcon color="success" /> : <CloseIcon color="disabled" />}
-        </Box>
-      )
+      type: "boolean",
+      width: 100
     },
     { field: "teamName", headerName: "Team", flex: 1, minWidth: 120 },
     {

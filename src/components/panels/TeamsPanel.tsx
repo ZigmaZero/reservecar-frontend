@@ -57,7 +57,7 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
   }, [fetchData]);
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "id", headerName: "ID", width: 90, type: "number" },
     { field: "name", headerName: "Name", flex: 1, minWidth: 120 },
     {
       field: "actions",

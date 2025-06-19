@@ -9,6 +9,7 @@ import {
   Typography,
   Paper,
   Box,
+  Stack,
   Button
 } from "@mui/material";
 import { DataGrid, GridActionsCellItem, type GridColDef, type GridFilterModel, type GridPaginationModel, type GridSortModel } from "@mui/x-data-grid";
@@ -62,7 +63,7 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
   }, [fetchData]);
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "id", headerName: "ID", width: 90, type: "number" },
     { field: "plateNumber", headerName: "Plate No.", flex: 1, minWidth: 120 },
     {
       field: "teamName",
@@ -124,9 +125,11 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
       <Typography variant="h5" gutterBottom>
         Cars
       </Typography>
-      <Button variant="contained" color="primary" onClick={() => setIsAddOpen(true)}>
-        Add
-      </Button>
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <Button variant="contained" color="primary" onClick={() => setIsAddOpen(true)}>
+          Add
+        </Button>
+      </Stack>
       {isAddOpen && (
         <AddCarsModal
           onClose={() => setIsAddOpen(false)}
