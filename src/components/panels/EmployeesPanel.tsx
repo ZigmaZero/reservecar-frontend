@@ -10,7 +10,7 @@ import {
   Paper,
   Box
 } from "@mui/material";
-import { DataGrid, GridActionsCellItem, type GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, type GridColDef, type GridFilterModel, type GridPaginationModel, type GridSortModel } from "@mui/x-data-grid";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
@@ -23,10 +23,12 @@ interface EmployeesPanelProps {
 const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
   const [data, setData] = useState<EmployeeExternal[]>([]);
   const [rowCount, setRowCount] = useState(0);
-  const [paginationModel, setPaginationModel] = useState({
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10
   });
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
   const [loading, setLoading] = useState(false);
 
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -36,7 +38,7 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
   const fetchData = React.useCallback(async () => {
     setLoading(true);
     try {
-      const res = await listEmployees(paginationModel.page + 1, paginationModel.pageSize, token);
+      const res = await listEmployees(paginationModel, sortModel, filterModel, token);
       setData(
         res.data.map(emp => ({
           ...emp,
@@ -51,7 +53,7 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, token]);
+  }, [paginationModel, sortModel, filterModel, token]);
 
   useEffect(() => {
     fetchData();
@@ -133,6 +135,8 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
           paginationModel={paginationModel}
           rowCount={rowCount}
           onPaginationModelChange={setPaginationModel}
+          onSortModelChange={setSortModel}
+          onFilterModelChange={setFilterModel}
           loading={loading}
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick

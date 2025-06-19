@@ -11,7 +11,7 @@ import {
   Box,
   Button
 } from "@mui/material";
-import { DataGrid, GridActionsCellItem, type GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, type GridColDef, type GridFilterModel, type GridPaginationModel, type GridSortModel } from "@mui/x-data-grid";
 import AddCarsModal from "../addModals/AddCarsModal";
 import addCar from "../../api/cars/addCar";
 import deleteCar from "../../api/cars/deleteCar";
@@ -25,10 +25,12 @@ interface CarsPanelProps {
 const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
   const [data, setData] = useState<CarExternal[]>([]);
   const [rowCount, setRowCount] = useState(0);
-  const [paginationModel, setPaginationModel] = useState({
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10
   });
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
   const [loading, setLoading] = useState(false);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -39,7 +41,7 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
   const fetchData = React.useCallback(async () => {
     setLoading(true);
     try {
-      const res = await listCars(paginationModel.page + 1, paginationModel.pageSize, token);
+      const res = await listCars(paginationModel, sortModel, filterModel, token);
       setData(
         res.data.map(car => ({
           ...car,
@@ -53,7 +55,7 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, token]);
+  }, [paginationModel, sortModel, filterModel, token]);
 
   useEffect(() => {
     fetchData();
@@ -139,8 +141,10 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
           pageSizeOptions={[10, 25, 50]}
           paginationMode="server"
           paginationModel={paginationModel}
-          rowCount={rowCount+1}
+          rowCount={rowCount}
           onPaginationModelChange={setPaginationModel}
+          onSortModelChange={setSortModel}
+          onFilterModelChange={setFilterModel}
           loading={loading}
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick

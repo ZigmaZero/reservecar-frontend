@@ -1,7 +1,13 @@
 import axios from 'axios';
 import type { ReservationExternal } from '../externalTypes';
+import type { GridFilterModel, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
 
-export default function listReservations(currentPage: number, pageSize: number, token: string): Promise<{
+export default function listReservations(
+    paginationModel: GridPaginationModel, 
+    sortModel: GridSortModel,
+    filterModel: GridFilterModel,
+    token: string
+): Promise<{
     data: ReservationExternal[];
     total: number;
     page: number;
@@ -14,8 +20,13 @@ export default function listReservations(currentPage: number, pageSize: number, 
                 'Authorization': `Bearer ${token}`,
             },
             params: {
-                page: currentPage,
-                pageSize: pageSize,
+                page: paginationModel.page,
+                pageSize: paginationModel.pageSize,
+                sortField: sortModel.at(0)?.field,
+                sortOrder: sortModel.at(0)?.sort,
+                filterField: filterModel.items.at(0)?.field,
+                filterOp: filterModel.items.at(0)?.operator,
+                filterValue: filterModel.items.at(0)?.value
             },
         }).then((response) => {
             if (response.status !== 200) {

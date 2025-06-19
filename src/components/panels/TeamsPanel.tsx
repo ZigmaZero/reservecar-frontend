@@ -13,7 +13,7 @@ import {
   Button,
   Stack
 } from "@mui/material";
-import { DataGrid, GridActionsCellItem, type GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, type GridColDef, type GridSortModel, type GridPaginationModel, type GridFilterModel } from "@mui/x-data-grid";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -24,10 +24,12 @@ interface TeamsPanelProps {
 const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
   const [data, setData] = useState<TeamExternal[]>([]);
   const [rowCount, setRowCount] = useState(0);
-  const [paginationModel, setPaginationModel] = useState({
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10
   });
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
   const [loading, setLoading] = useState(false);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -36,9 +38,10 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
 
   // Data fetching function
   const fetchData = useCallback(async () => {
+    console.log({paginationModel, sortModel, filterModel});
     setLoading(true);
     try {
-      const res = await listTeams(paginationModel.page + 1, paginationModel.pageSize, token);
+      const res = await listTeams(paginationModel, sortModel, filterModel, token);
       setData(res.data);
       setRowCount(res.total ?? res.data.length);
     } catch {
@@ -47,7 +50,7 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, token]);
+  }, [paginationModel, sortModel, filterModel, token]);
 
   useEffect(() => {
     fetchData();
@@ -131,6 +134,8 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
           paginationModel={paginationModel}
           rowCount={rowCount}
           onPaginationModelChange={setPaginationModel}
+          onSortModelChange={setSortModel}
+          onFilterModelChange={setFilterModel}
           loading={loading}
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick

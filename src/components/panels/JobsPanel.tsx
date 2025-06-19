@@ -11,7 +11,7 @@ import {
   Stack,
   Paper
 } from "@mui/material";
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import { DataGrid, type GridColDef, type GridFilterModel, type GridPaginationModel, type GridSortModel } from "@mui/x-data-grid";
 
 interface JobsPanelProps {
   token: string;
@@ -24,18 +24,21 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [data, setData] = useState<ReservationExternal[]>([]);
   const [rowCount, setRowCount] = useState(0);
-  const [paginationModel, setPaginationModel] = useState({
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10
   });
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
   const [loading, setLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const response = await listReservations(
-        paginationModel.page + 1,
-        paginationModel.pageSize,
+        paginationModel,
+        sortModel,
+        filterModel,
         token
       );
       setData(response.data);
@@ -46,7 +49,7 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, token]);
+  }, [paginationModel, sortModel, filterModel, token]);
 
   useEffect(() => {
     fetchData();
@@ -153,6 +156,8 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
           paginationModel={paginationModel}
           rowCount={rowCount}
           onPaginationModelChange={setPaginationModel}
+          onSortModelChange={setSortModel}
+          onFilterModelChange={setFilterModel}
           loading={loading}
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick
