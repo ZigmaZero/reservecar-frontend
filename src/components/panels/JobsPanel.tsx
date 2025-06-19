@@ -154,6 +154,8 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
           pageSizeOptions={pageSizeOptions}
           paginationMode="server"
           paginationModel={paginationModel}
+          sortingMode="server"
+          sortModel={sortModel}
           rowCount={rowCount}
           onPaginationModelChange={setPaginationModel}
           onSortModelChange={setSortModel}

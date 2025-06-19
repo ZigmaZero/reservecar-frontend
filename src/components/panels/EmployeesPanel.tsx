@@ -133,6 +133,8 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
           pageSizeOptions={[10, 25, 50]}
           paginationMode="server"
           paginationModel={paginationModel}
+          sortingMode="server"
+          sortModel={sortModel}
           rowCount={rowCount}
           onPaginationModelChange={setPaginationModel}
           onSortModelChange={setSortModel}

@@ -141,6 +141,8 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
           pageSizeOptions={[10, 25, 50]}
           paginationMode="server"
           paginationModel={paginationModel}
+          sortingMode="server"
+          sortModel={sortModel}
           rowCount={rowCount}
           onPaginationModelChange={setPaginationModel}
           onSortModelChange={setSortModel}
