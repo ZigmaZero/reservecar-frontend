@@ -8,11 +8,28 @@ import verifyEmployee from "../../api/employees/verifyEmployee";
 import {
   Typography,
   Paper,
-  Box
+  Box,
+  Tooltip
 } from "@mui/material";
-import { DataGrid, GridActionsCellItem, type GridColDef, type GridFilterModel, type GridPaginationModel, type GridSortModel } from "@mui/x-data-grid";
+import { 
+  ColumnsPanelTrigger, 
+  DataGrid,
+  FilterPanelTrigger, 
+  GridActionsCellItem, 
+  Toolbar, 
+  ToolbarButton, 
+  type GridColDef, 
+  type GridColumnVisibilityModel,
+  type GridFilterModel, 
+  type GridPaginationModel, 
+  type GridSortModel 
+} from "@mui/x-data-grid";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ViewColumnIcon from '@mui/icons-material/ViewColumn';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import Badge from '@mui/material/Badge';
 
 interface EmployeesPanelProps {
   token: string;
@@ -66,6 +83,12 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
       type: "boolean",
       width: 100
     },
+    {
+      field: "teamId",
+      headerName: "Team ID",
+      type: "number",
+      width: 90
+    },
     { field: "teamName", headerName: "Team", flex: 1, minWidth: 120 },
     {
       field: "actions",
@@ -88,6 +111,11 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
       ]
     }
   ];
+
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>({
+    id: false,
+    teamId: false
+  });
 
   const handleEdit = (row: any) => {
     setEditItem(row as EmployeeExternal);
@@ -114,6 +142,34 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
     setEditItem(null);
   };
 
+  const EmployeesPanelToolbar = () => (
+    <Toolbar>
+      <Tooltip title="Columns">
+        <ColumnsPanelTrigger>
+          <ToolbarButton>
+            <ViewColumnIcon fontSize="small" />
+          </ToolbarButton>
+        </ColumnsPanelTrigger>
+      </Tooltip>
+      <Tooltip title="Filters">
+        <FilterPanelTrigger
+          render={(props, state) => (
+            <ToolbarButton {...props} color="default">
+              <Badge badgeContent={state.filterCount} color="primary" variant="dot">
+                <FilterListIcon fontSize="small" />
+              </Badge>
+            </ToolbarButton>
+          )}
+        />
+      </Tooltip>
+      <Tooltip title="Export">
+        <ToolbarButton>
+          <FileDownloadIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
+    </Toolbar>
+  );
+
   return (
     <Paper sx={{ p: 3, mt: 2 }} variant="outlined">
       <Typography variant="h5" gutterBottom>
@@ -123,6 +179,10 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
         <DataGrid
           rows={data}
           columns={columns}
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={(newModel) =>
+            setColumnVisibilityModel(newModel)
+          }
           pagination
           pageSizeOptions={[10, 25, 50]}
           paginationMode="server"
@@ -136,6 +196,8 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
           loading={loading}
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick
+          showToolbar
+          slots={{toolbar: EmployeesPanelToolbar}}
         />
       </Box>
       {isEditOpen && editItem && (

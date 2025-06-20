@@ -10,12 +10,28 @@ import {
   Typography,
   Paper,
   Box,
-  Button,
-  Stack
+  Tooltip
 } from "@mui/material";
-import { DataGrid, GridActionsCellItem, type GridColDef, type GridSortModel, type GridPaginationModel, type GridFilterModel } from "@mui/x-data-grid";
+import { 
+  DataGrid, 
+  GridActionsCellItem, 
+  type GridColDef, 
+  type GridSortModel, 
+  type GridPaginationModel, 
+  type GridFilterModel, 
+  type GridColumnVisibilityModel, 
+  ColumnsPanelTrigger,
+  FilterPanelTrigger,
+  ToolbarButton,
+  Toolbar,
+} from "@mui/x-data-grid";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import ViewColumnIcon from '@mui/icons-material/ViewColumn';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import Badge from '@mui/material/Badge';
 
 interface TeamsPanelProps {
   token: string;
@@ -81,6 +97,10 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
     }
   ];
 
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>({
+    id: false
+  })
+
   const handleAdd = async (item: TeamExternal) => {
     await addTeam(item, token);
     await fetchData();
@@ -108,16 +128,44 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
     setEditItem(null);
   };
 
+  const TeamsPanelToolbar = () => (
+      <Toolbar>
+        <Tooltip title="Add">
+          <ToolbarButton onClick={() => setIsAddOpen(true)}>
+            <AddIcon fontSize="small" />
+          </ToolbarButton>
+        </Tooltip>
+        <Tooltip title="Columns">
+          <ColumnsPanelTrigger>
+            <ToolbarButton>
+              <ViewColumnIcon fontSize="small" />
+            </ToolbarButton>
+          </ColumnsPanelTrigger>
+        </Tooltip>
+        <Tooltip title="Filters">
+          <FilterPanelTrigger
+            render={(props, state) => (
+              <ToolbarButton {...props} color="default">
+                <Badge badgeContent={state.filterCount} color="primary" variant="dot">
+                  <FilterListIcon fontSize="small" />
+                </Badge>
+              </ToolbarButton>
+            )}
+          />
+        </Tooltip>
+        <Tooltip title="Export">
+          <ToolbarButton>
+            <FileDownloadIcon fontSize="small" />
+          </ToolbarButton>
+        </Tooltip>
+      </Toolbar>
+  )
+
   return (
     <Paper sx={{ p: 3, mt: 2 }} variant="outlined">
       <Typography variant="h5" gutterBottom>
         Teams
       </Typography>
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <Button variant="contained" color="primary" onClick={() => setIsAddOpen(true)}>
-          Add
-        </Button>
-      </Stack>
       {isAddOpen && (
         <AddTeamsModal
           onClose={() => setIsAddOpen(false)}
@@ -128,6 +176,10 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
         <DataGrid
           rows={data}
           columns={columns}
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={(newModel) =>
+            setColumnVisibilityModel(newModel)
+          }
           pagination
           pageSizeOptions={[10, 25, 50]}
           paginationMode="server"
@@ -141,6 +193,8 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
           loading={loading}
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick
+          showToolbar
+          slots={{toolbar: TeamsPanelToolbar}}
         />
       </Box>
       {isEditOpen && editItem && (

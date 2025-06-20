@@ -9,15 +9,31 @@ import {
   Typography,
   Paper,
   Box,
-  Stack,
-  Button
+  Tooltip
 } from "@mui/material";
-import { DataGrid, GridActionsCellItem, type GridColDef, type GridFilterModel, type GridPaginationModel, type GridSortModel } from "@mui/x-data-grid";
+import { 
+  DataGrid, 
+  GridActionsCellItem, 
+  type GridColumnVisibilityModel, 
+  type GridColDef, 
+  type GridFilterModel, 
+  type GridPaginationModel, 
+  type GridSortModel, 
+  Toolbar, 
+  ColumnsPanelTrigger, 
+  FilterPanelTrigger, 
+  ToolbarButton 
+} from "@mui/x-data-grid";
 import AddCarsModal from "../addModals/AddCarsModal";
 import addCar from "../../api/cars/addCar";
 import deleteCar from "../../api/cars/deleteCar";
 import editCar from "../../api/cars/editCar";
 import EditCarsModal from "../editModals/EditCarsModal";
+import AddIcon from '@mui/icons-material/Add';
+import ViewColumnIcon from '@mui/icons-material/ViewColumn';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import Badge from '@mui/material/Badge';
 
 interface CarsPanelProps {
   token: string;
@@ -66,10 +82,16 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
     { field: "id", headerName: "ID", width: 90, type: "number" },
     { field: "plateNumber", headerName: "Plate No.", flex: 1, minWidth: 120 },
     {
+      field: "teamId",
+      headerName: "Team ID",
+      type: "number",
+      width: 90
+    },
+    {
       field: "teamName",
       headerName: "Team",
       flex: 1,
-      minWidth: 120
+      width: 120
     },
     {
       field: "actions",
@@ -92,6 +114,11 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
       ]
     }
   ];
+
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>({
+    id: false,
+    teamId: false
+  })
 
   const handleAdd = async (item: CarExternal) => {
     await addCar(item, token);
@@ -120,16 +147,44 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
     setEditItem(null);
   };
 
+  const CarsPanelToolbar = () => (
+    <Toolbar>
+      <Tooltip title="Add">
+        <ToolbarButton onClick={() => setIsAddOpen(true)}>
+          <AddIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
+      <Tooltip title="Columns">
+        <ColumnsPanelTrigger>
+          <ToolbarButton>
+            <ViewColumnIcon fontSize="small" />
+          </ToolbarButton>
+        </ColumnsPanelTrigger>
+      </Tooltip>
+      <Tooltip title="Filters">
+        <FilterPanelTrigger
+          render={(props, state) => (
+            <ToolbarButton {...props} color="default">
+              <Badge badgeContent={state.filterCount} color="primary" variant="dot">
+                <FilterListIcon fontSize="small" />
+              </Badge>
+            </ToolbarButton>
+          )}
+        />
+      </Tooltip>
+      <Tooltip title="Export">
+        <ToolbarButton>
+          <FileDownloadIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
+    </Toolbar>
+  );
+
   return (
     <Paper sx={{ p: 3, mt: 2 }} variant="outlined">
       <Typography variant="h5" gutterBottom>
         Cars
       </Typography>
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <Button variant="contained" color="primary" onClick={() => setIsAddOpen(true)}>
-          Add
-        </Button>
-      </Stack>
       {isAddOpen && (
         <AddCarsModal
           onClose={() => setIsAddOpen(false)}
@@ -140,6 +195,10 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
         <DataGrid
           rows={data}
           columns={columns}
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={(newModel) =>
+            setColumnVisibilityModel(newModel)
+          }
           pagination
           pageSizeOptions={[10, 25, 50]}
           paginationMode="server"
@@ -153,6 +212,8 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
           loading={loading}
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick
+          showToolbar
+          slots={{toolbar: CarsPanelToolbar}}
         />
       </Box>
       {isEditOpen && editItem && (

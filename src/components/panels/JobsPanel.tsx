@@ -1,17 +1,30 @@
 import { useEffect, useState, useCallback } from "react";
 import listReservations from "../../api/reservations/listReservations";
-import Filter from "../Filter";
 import type { ReservationExternal } from "../../api/externalTypes";
 import exportReservations from "../../api/reservations/exportReservations";
 import ExportJobsModal from "../ExportJobsModal";
 import {
   Box,
-  Button,
   Typography,
-  Stack,
-  Paper
+  Paper,
+  Tooltip
 } from "@mui/material";
-import { DataGrid, type GridColDef, type GridFilterModel, type GridPaginationModel, type GridSortModel } from "@mui/x-data-grid";
+import { 
+  DataGrid, 
+  type GridColumnVisibilityModel, 
+  type GridColDef, 
+  type GridFilterModel, 
+  type GridPaginationModel, 
+  type GridSortModel, 
+  ToolbarButton, 
+  ColumnsPanelTrigger, 
+  FilterPanelTrigger, 
+  Toolbar 
+} from "@mui/x-data-grid";
+import ViewColumnIcon from '@mui/icons-material/ViewColumn';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import Badge from '@mui/material/Badge';
 
 interface JobsPanelProps {
   token: string;
@@ -20,7 +33,7 @@ interface JobsPanelProps {
 const pageSizeOptions = [10, 25, 50];
 
 const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [data, setData] = useState<ReservationExternal[]>([]);
   const [rowCount, setRowCount] = useState(0);
@@ -100,7 +113,9 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 50, type: "number" },
+    { field: "userId", headerName: "User ID", width: 50, type: "number"},
     { field: "user", headerName: "User", flex: 1, width: 120 },
+    { field: "carId", headerName: "Car ID", width: 50, type: "number"},
     { field: "car", headerName: "Car", flex: 1, width: 90 },
     { field: "description", headerName: "Description", flex: 1, width: 150 },
     {
@@ -127,25 +142,48 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
     }
   ];
 
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>({
+    id: false,
+    userId: false,
+    carId: false
+  });
+
+  const JobsPanelToolbar = () => (
+    <Toolbar>
+      <Tooltip title="Columns">
+        <ColumnsPanelTrigger>
+          <ToolbarButton>
+            <ViewColumnIcon fontSize="small" />
+          </ToolbarButton>
+        </ColumnsPanelTrigger>
+      </Tooltip>
+      <Tooltip title="Filters">
+        <FilterPanelTrigger
+          render={(props, state) => (
+            <ToolbarButton {...props} color="default">
+              <Badge badgeContent={state.filterCount} color="primary" variant="dot">
+                <FilterListIcon fontSize="small" />
+              </Badge>
+            </ToolbarButton>
+          )}
+        />
+      </Tooltip>
+      <Tooltip title="Export">
+        <ToolbarButton           
+          disabled={data.length === 0}
+          onClick={() => setIsExportOpen(true)}
+        >
+          <FileDownloadIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
+    </Toolbar>
+  )
+
   return (
     <Paper sx={{ p: 3, mt: 2 }} variant="outlined">
       <Typography variant="h5" gutterBottom>
         Jobs
       </Typography>
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <Button variant="outlined" color="primary" onClick={() => setIsFilterOpen(true)}>
-          Filter
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={data.length === 0}
-          onClick={() => setIsExportOpen(true)}
-        >
-          Export
-        </Button>
-      </Stack>
-      {isFilterOpen && <Filter onClose={() => setIsFilterOpen(false)} />}
       {isExportOpen && (
         <ExportJobsModal
           onClose={() => setIsExportOpen(false)}
@@ -156,6 +194,10 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
         <DataGrid
           rows={data}
           columns={columns}
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={(newModel) =>
+            setColumnVisibilityModel(newModel)
+          }
           pagination
           pageSizeOptions={pageSizeOptions}
           paginationMode="server"
@@ -169,6 +211,8 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
           loading={loading}
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick
+          showToolbar
+          slots={{toolbar: JobsPanelToolbar}}
         />
       </Box>
       {data.length === 0 && (
