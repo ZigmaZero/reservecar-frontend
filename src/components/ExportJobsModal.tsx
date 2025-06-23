@@ -41,6 +41,7 @@ const ExportJobsModal: React.FC<ExportJobsModalProps> = ({ onClose, onExport }) 
                     <Stack direction={"row"} spacing={2}>
                         <DateTimePicker
                             label="Start Time"
+                            views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
                             value={formData.startTime}
                             onChange={value => setFormData(prev => ({ ...prev, startTime: value }))}
                             slotProps={{
@@ -52,6 +53,7 @@ const ExportJobsModal: React.FC<ExportJobsModalProps> = ({ onClose, onExport }) 
                         />
                         <DateTimePicker
                             label="End Time"
+                            views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
                             value={formData.endTime}
                             onChange={value => setFormData(prev => ({ ...prev, endTime: value }))}
                             slotProps={{

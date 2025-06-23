@@ -9,7 +9,7 @@ import {
   Stack
 } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 interface EditModalProps {
   item: ReservationExternal;
@@ -45,7 +45,8 @@ const EditJobsModal: React.FC<EditModalProps> = ({ item, onClose, onEdit }) => {
           <Stack spacing={2}>
             <DateTimePicker
               label="Check-in Time"
-              value={formData.checkinTime ? new Dayjs(formData.checkinTime) : null}
+              views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
+              value={formData.checkinTime ? dayjs(formData.checkinTime) : null}
               onChange={date => handleDateChange("checkinTime", date)}
               slotProps={{
                 textField: {
@@ -56,7 +57,8 @@ const EditJobsModal: React.FC<EditModalProps> = ({ item, onClose, onEdit }) => {
             />
             <DateTimePicker
               label="Check-out Time"
-              value={formData.checkoutTime ? new Dayjs(formData.checkoutTime) : null}
+              views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
+              value={formData.checkoutTime ? dayjs(formData.checkoutTime) : null}
               onChange={date => handleDateChange("checkoutTime", date)}
               slotProps={{
                 textField: {

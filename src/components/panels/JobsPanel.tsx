@@ -277,6 +277,8 @@ const JobsPanel: FC<JobsPanelProps> = ({ token }) => {
           paginationModel={paginationModel}
           sortingMode="server"
           sortModel={sortModel}
+          filterMode="server"
+          filterModel={filterModel}
           rowCount={rowCount}
           onPaginationModelChange={setPaginationModel}
           onSortModelChange={setSortModel}
