@@ -11,18 +11,20 @@ import {
   Box,
   Tooltip
 } from "@mui/material";
-import { 
-  ColumnsPanelTrigger, 
+import {
+  ColumnsPanelTrigger,
   DataGrid,
-  FilterPanelTrigger, 
-  GridActionsCellItem, 
-  Toolbar, 
-  ToolbarButton, 
-  type GridColDef, 
+  FilterPanelTrigger,
+  getGridNumericOperators,
+  getGridStringOperators,
+  GridActionsCellItem,
+  Toolbar,
+  ToolbarButton,
+  type GridColDef,
   type GridColumnVisibilityModel,
-  type GridFilterModel, 
-  type GridPaginationModel, 
-  type GridSortModel 
+  type GridFilterModel,
+  type GridPaginationModel,
+  type GridSortModel
 } from "@mui/x-data-grid";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -42,7 +44,7 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
     pageSize: 10
   });
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
   const [loading, setLoading] = useState(false);
 
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -74,11 +76,27 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
   }, [fetchData]);
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90, type: "number" },
-    { field: "name", headerName: "Name", flex: 1, minWidth: 120 },
-    { 
-      field: "verified", 
-      headerName: "Verified", 
+    {
+      field: "id",
+      headerName: "ID",
+      width: 90,
+      type: "number",
+      filterOperators: getGridNumericOperators().filter(
+        (operator) => operator.value === "="
+      )
+    },
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 1,
+      minWidth: 120,
+      filterOperators: getGridStringOperators().filter(
+        (operator) => operator.value === "contains"
+      )
+    },
+    {
+      field: "verified",
+      headerName: "Verified",
       type: "boolean",
       width: 100
     },
@@ -86,9 +104,20 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
       field: "teamId",
       headerName: "Team ID",
       type: "number",
-      width: 90
+      width: 90,
+      filterOperators: getGridNumericOperators().filter(
+        (operator) => operator.value === "="
+      )
     },
-    { field: "teamName", headerName: "Team", flex: 1, minWidth: 120 },
+    {
+      field: "teamName",
+      headerName: "Team",
+      flex: 1,
+      width: 120,
+      filterOperators: getGridStringOperators().filter(
+        (operator) => operator.value === "contains"
+      )
+    },
     {
       field: "actions",
       type: "actions",
@@ -191,7 +220,7 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick
           showToolbar
-          slots={{toolbar: EmployeesPanelToolbar}}
+          slots={{ toolbar: EmployeesPanelToolbar }}
         />
       </Box>
       {isEditOpen && editItem && (

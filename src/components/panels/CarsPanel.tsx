@@ -11,18 +11,20 @@ import {
   Box,
   Tooltip
 } from "@mui/material";
-import { 
-  DataGrid, 
-  GridActionsCellItem, 
-  type GridColumnVisibilityModel, 
-  type GridColDef, 
-  type GridFilterModel, 
-  type GridPaginationModel, 
-  type GridSortModel, 
-  Toolbar, 
-  ColumnsPanelTrigger, 
-  FilterPanelTrigger, 
-  ToolbarButton 
+import {
+  DataGrid,
+  GridActionsCellItem,
+  type GridColumnVisibilityModel,
+  type GridColDef,
+  type GridFilterModel,
+  type GridPaginationModel,
+  type GridSortModel,
+  Toolbar,
+  ColumnsPanelTrigger,
+  FilterPanelTrigger,
+  ToolbarButton,
+  getGridNumericOperators,
+  getGridStringOperators
 } from "@mui/x-data-grid";
 import AddCarsModal from "../addModals/AddCarsModal";
 import addCar from "../../api/cars/addCar";
@@ -46,7 +48,7 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
     pageSize: 10
   });
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
   const [loading, setLoading] = useState(false);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -78,19 +80,41 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
   }, [fetchData]);
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90, type: "number" },
-    { field: "plateNumber", headerName: "Plate No.", flex: 1, minWidth: 120 },
+    {
+      field: "id",
+      headerName: "ID",
+      width: 90,
+      type: "number",
+      filterOperators: getGridNumericOperators().filter(
+        (operator) => operator.value === "="
+      )
+    },
+    {
+      field: "plateNumber",
+      headerName: "Plate No.",
+      flex: 1,
+      minWidth: 120,
+      filterOperators: getGridStringOperators().filter(
+        (operator) => operator.value === "contains"
+      )
+    },
     {
       field: "teamId",
       headerName: "Team ID",
       type: "number",
-      width: 90
+      width: 90,
+      filterOperators: getGridNumericOperators().filter(
+        (operator) => operator.value === "="
+      )
     },
     {
       field: "teamName",
       headerName: "Team",
       flex: 1,
-      width: 120
+      width: 120,
+      filterOperators: getGridStringOperators().filter(
+        (operator) => operator.value === "contains"
+      )
     },
     {
       field: "actions",
@@ -207,7 +231,7 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick
           showToolbar
-          slots={{toolbar: CarsPanelToolbar}}
+          slots={{ toolbar: CarsPanelToolbar }}
         />
       </Box>
       {isEditOpen && editItem && (

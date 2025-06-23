@@ -12,18 +12,20 @@ import {
   Box,
   Tooltip
 } from "@mui/material";
-import { 
-  DataGrid, 
-  GridActionsCellItem, 
-  type GridColDef, 
-  type GridSortModel, 
-  type GridPaginationModel, 
-  type GridFilterModel, 
-  type GridColumnVisibilityModel, 
+import {
+  DataGrid,
+  GridActionsCellItem,
+  type GridColDef,
+  type GridSortModel,
+  type GridPaginationModel,
+  type GridFilterModel,
+  type GridColumnVisibilityModel,
   ColumnsPanelTrigger,
   FilterPanelTrigger,
   ToolbarButton,
   Toolbar,
+  getGridNumericOperators,
+  getGridStringOperators,
 } from "@mui/x-data-grid";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -44,7 +46,7 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
     pageSize: 10
   });
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
   const [loading, setLoading] = useState(false);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -53,7 +55,7 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
 
   // Data fetching function
   const fetchData = useCallback(async () => {
-    console.log({paginationModel, sortModel, filterModel});
+    console.log({ paginationModel, sortModel, filterModel });
     setLoading(true);
     try {
       const res = await listTeams(paginationModel, sortModel, filterModel, token);
@@ -72,8 +74,24 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
   }, [fetchData]);
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90, type: "number" },
-    { field: "name", headerName: "Name", flex: 1, minWidth: 120 },
+    {
+      field: "id",
+      headerName: "ID",
+      width: 90,
+      type: "number",
+      filterOperators: getGridNumericOperators().filter(
+        (operator) => operator.value === "="
+      )
+    },
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 1,
+      minWidth: 120,
+      filterOperators: getGridStringOperators().filter(
+        (operator) => operator.value === "contains"
+      )
+    },
     {
       field: "actions",
       type: "actions",
@@ -128,31 +146,31 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
   };
 
   const TeamsPanelToolbar = () => (
-      <Toolbar>
-        <Tooltip title="Add">
-          <ToolbarButton onClick={() => setIsAddOpen(true)}>
-            <AddIcon fontSize="small" />
+    <Toolbar>
+      <Tooltip title="Add">
+        <ToolbarButton onClick={() => setIsAddOpen(true)}>
+          <AddIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
+      <Tooltip title="Columns">
+        <ColumnsPanelTrigger>
+          <ToolbarButton>
+            <ViewColumnIcon fontSize="small" />
           </ToolbarButton>
-        </Tooltip>
-        <Tooltip title="Columns">
-          <ColumnsPanelTrigger>
-            <ToolbarButton>
-              <ViewColumnIcon fontSize="small" />
+        </ColumnsPanelTrigger>
+      </Tooltip>
+      <Tooltip title="Filters">
+        <FilterPanelTrigger
+          render={(props, state) => (
+            <ToolbarButton {...props} color="default">
+              <Badge badgeContent={state.filterCount} color="primary" variant="dot">
+                <FilterListIcon fontSize="small" />
+              </Badge>
             </ToolbarButton>
-          </ColumnsPanelTrigger>
-        </Tooltip>
-        <Tooltip title="Filters">
-          <FilterPanelTrigger
-            render={(props, state) => (
-              <ToolbarButton {...props} color="default">
-                <Badge badgeContent={state.filterCount} color="primary" variant="dot">
-                  <FilterListIcon fontSize="small" />
-                </Badge>
-              </ToolbarButton>
-            )}
-          />
-        </Tooltip>
-      </Toolbar>
+          )}
+        />
+      </Tooltip>
+    </Toolbar>
   )
 
   return (
@@ -188,7 +206,7 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick
           showToolbar
-          slots={{toolbar: TeamsPanelToolbar}}
+          slots={{ toolbar: TeamsPanelToolbar }}
         />
       </Box>
       {isEditOpen && editItem && (

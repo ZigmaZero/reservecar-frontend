@@ -9,17 +9,20 @@ import {
   Paper,
   Tooltip
 } from "@mui/material";
-import { 
-  DataGrid, 
-  type GridColumnVisibilityModel, 
-  type GridColDef, 
-  type GridFilterModel, 
-  type GridPaginationModel, 
-  type GridSortModel, 
-  ToolbarButton, 
-  ColumnsPanelTrigger, 
-  FilterPanelTrigger, 
-  Toolbar 
+import {
+  DataGrid,
+  type GridColumnVisibilityModel,
+  type GridColDef,
+  type GridFilterModel,
+  type GridPaginationModel,
+  type GridSortModel,
+  ToolbarButton,
+  ColumnsPanelTrigger,
+  FilterPanelTrigger,
+  Toolbar,
+  getGridNumericOperators,
+  getGridStringOperators,
+  getGridDateOperators
 } from "@mui/x-data-grid";
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -42,7 +45,7 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
     pageSize: 10
   });
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
   const [loading, setLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
@@ -112,18 +115,51 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
   };
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 50, type: "number" },
-    { field: "userId", headerName: "User ID", width: 50, type: "number"},
-    { field: "user", headerName: "User", flex: 1, width: 120 },
-    { field: "carId", headerName: "Car ID", width: 50, type: "number"},
-    { field: "car", headerName: "Car", flex: 1, width: 90 },
-    { field: "description", headerName: "Description", flex: 1, width: 150 },
+    {
+      field: "id", headerName: "ID", width: 50, type: "number",
+      filterOperators: getGridNumericOperators().filter(
+        (operator) => operator.value === "="
+      )
+    },
+    {
+      field: "userId", headerName: "User ID", width: 50, type: "number",
+      filterOperators: getGridNumericOperators().filter(
+        (operator) => operator.value === "="
+      )
+    },
+    {
+      field: "user", headerName: "User", flex: 1, width: 120,
+      filterOperators: getGridStringOperators().filter(
+        (operator) => operator.value === "contains"
+      )
+    },
+    {
+      field: "carId", headerName: "Car ID", width: 50, type: "number",
+      filterOperators: getGridNumericOperators().filter(
+        (operator) => operator.value === "="
+      )
+    },
+    {
+      field: "car", headerName: "Car", flex: 1, width: 90,
+      filterOperators: getGridStringOperators().filter(
+        (operator) => operator.value === "contains"
+      )
+    },
+    {
+      field: "description", headerName: "Description", flex: 1, width: 150,
+      filterOperators: getGridStringOperators().filter(
+        (operator) => operator.value === "contains"
+      )
+    },
     {
       field: "checkinTime",
       headerName: "Check-in",
       flex: 1,
       width: 220,
       type: "dateTime",
+      filterOperators: getGridDateOperators(true).filter(
+        (operator) => operator.value === "onOrBefore" || operator.value === "onOrAfter"
+      ),
       valueGetter: (value) =>
         value ? new Date(value) : null,
       valueFormatter: (value) =>
@@ -135,6 +171,12 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
       flex: 1,
       width: 220,
       type: "dateTime",
+      filterOperators: getGridDateOperators(true).filter(
+        (operator) => operator.value === "onOrBefore" 
+        || operator.value === "onOrAfter"
+        || operator.value === "isEmpty"
+        || operator.value === "isNotEmpty"
+      ),
       valueGetter: (value) =>
         value ? new Date(value) : null,
       valueFormatter: (value) =>
@@ -150,8 +192,8 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
 
   const JobsPanelToolbar = () => (
     <Toolbar>
-        <Tooltip title="Export">
-        <ToolbarButton           
+      <Tooltip title="Export">
+        <ToolbarButton
           disabled={data.length === 0}
           onClick={() => setIsExportOpen(true)}
         >
@@ -212,7 +254,7 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
           getRowId={(row) => row.id ?? Math.random()}
           disableRowSelectionOnClick
           showToolbar
-          slots={{toolbar: JobsPanelToolbar}}
+          slots={{ toolbar: JobsPanelToolbar }}
         />
       </Box>
       {data.length === 0 && (
