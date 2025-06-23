@@ -1,61 +1,46 @@
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
-import Checkin from './pages/Checkin';
-import Checkout from './pages/Checkout';
-import AdminLogin from './pages/AdminLogin';
-import Dashboard from './pages/Dashboard';
-import CheckinSuccess from './pages/CheckinSuccess';
-import CheckoutSuccess from './pages/CheckoutSuccess';
-import WaitForVerify from './pages/WaitForVerify';
-import Menu from './pages/Menu';
+import { Suspense, lazy } from "react";
+import { Route, Routes } from "react-router-dom";
 import { UserProvider } from './contexts/UserContext';
 import { AdminProvider } from './contexts/AdminContext';
 import NotFound from './pages/errors/NotFound';
-import Forbidden from './pages/errors/Forbidden';
-import LineLogin from './pages/LineLogin';
-import LineLoginBegin from './pages/LineLoginBegin';
-import LineLoginCallback from './pages/LineLoginCallback';
+import { Container, Box, Typography } from "@mui/material";
+import Navbar from "./widgets/Navbar";
 
-// Layouts for providers
+// Lazy load route modules
+const UserRoutes = lazy(() => import("./UserRoutes"));
+const AdminRoutes = lazy(() => import("./AdminRoutes"));
+
 const UserLayout = () => (
   <UserProvider>
-    <Outlet />
+    <UserRoutes />
   </UserProvider>
 );
 
 const AdminLayout = () => (
   <AdminProvider>
-    <Outlet />
+    <AdminRoutes />
   </AdminProvider>
 );
 
 const AppRoutes = () => (
-  <Routes>
-    {/* User routes */}
-    <Route element={<UserLayout />}>
-      <Route path="/" element={<Navigate to="/line/access" replace />} />
-      <Route path="/register" element={<Navigate to="/line/access" replace />} />
-      <Route path="/login" element={<Navigate to="/line/access" replace />} />
-      <Route path="/line/access" element={<LineLogin/>} />
-      <Route path="/line/begin" element={<LineLoginBegin />}/>
-      <Route path="/line/callback" element={<LineLoginCallback />}/>
-      <Route path="/verify" element={<WaitForVerify />} />
-      <Route path="/menu" element={<Menu />} />
-      <Route path="/checkin" element={<Checkin />} />
-      <Route path="/checkin-success" element={<CheckinSuccess />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/checkout-success" element={<CheckoutSuccess />} />
-    </Route>
-
-    {/* Admin routes */}
-    <Route element={<AdminLayout />}>
-      <Route path="/admin" element={<AdminLogin />} />
-      <Route path="/admin/dashboard" element={<Dashboard />} />
-      <Route path="/admin/*" element={<Forbidden />} />
-    </Route>
-
-    {/* Not found */}
-    <Route path="*" element={<NotFound />} />
-  </Routes>
+  <Suspense fallback={        
+    <>
+      <Navbar showButtons={false} />
+      <Container maxWidth="sm" sx={{ mt: 8 }}>
+          <Box textAlign="center">
+              <Typography variant="body1">
+                  Loading...
+              </Typography>
+          </Box>
+      </Container>
+    </>
+  }>
+    <Routes>
+      <Route path="/*" element={<UserLayout />} />
+      <Route path="/admin/*" element={<AdminLayout />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </Suspense>
 );
 
 export default AppRoutes;

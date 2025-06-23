@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useCallback, type FC, useEffect, useState } from "react";
 import type { EmployeeExternal } from "../../api/externalTypes";
 import listEmployees from "../../api/employees/listEmployees";
 import EditEmployeesModal from "../editModals/EditEmployeesModal";
 import deleteEmployee from "../../api/employees/deleteEmployee";
 import editEmployee from "../../api/employees/editEmployees";
 import verifyEmployee from "../../api/employees/verifyEmployee";
-import {
-  Typography,
-  Paper,
-  Box,
-  Tooltip,
-  debounce
-} from "@mui/material";
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import {
   ColumnsPanelTrigger,
   DataGrid,
@@ -37,7 +34,7 @@ interface EmployeesPanelProps {
   token: string;
 }
 
-const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
+const EmployeesPanel: FC<EmployeesPanelProps> = ({ token }) => {
   const [data, setData] = useState<EmployeeExternal[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -51,17 +48,8 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editItem, setEditItem] = useState<EmployeeExternal | null>(null);
 
-  const [debouncedFilterModel, setDebouncedFilterModel] = useState<GridFilterModel>(filterModel);
-  const debouncedSetFilterModel = React.useMemo(
-    () => debounce((model: GridFilterModel) => setDebouncedFilterModel(model), 1000),
-    []
-  );
-  useEffect(() => {
-    debouncedSetFilterModel(filterModel);
-  }, [filterModel, debouncedSetFilterModel]);
-
   // Data fetching function
-  const fetchData = React.useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const res = await listEmployees(paginationModel, sortModel, filterModel, token);
@@ -79,7 +67,7 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, sortModel, debouncedFilterModel, token]);
+  }, [paginationModel, sortModel, filterModel, token]);
 
   useEffect(() => {
     fetchData();
@@ -222,6 +210,8 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
           paginationModel={paginationModel}
           sortingMode="server"
           sortModel={sortModel}
+          filterMode="server"
+          filterModel={filterModel}
           rowCount={rowCount}
           onPaginationModelChange={setPaginationModel}
           onSortModelChange={setSortModel}

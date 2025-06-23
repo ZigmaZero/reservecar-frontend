@@ -1,15 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, type FC } from "react";
 import listReservations from "../../api/reservations/listReservations";
 import type { ReservationExternal } from "../../api/externalTypes";
 import exportReservations from "../../api/reservations/exportReservations";
 import ExportJobsModal from "../ExportJobsModal";
-import {
-  Box,
-  Typography,
-  Paper,
-  Tooltip,
-  debounce
-} from "@mui/material";
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import {
   DataGrid,
   type GridColumnVisibilityModel,
@@ -23,13 +20,16 @@ import {
   Toolbar,
   getGridNumericOperators,
   getGridStringOperators,
-  getGridDateOperators
+  getGridDateOperators,
+  GridActionsCellItem
 } from "@mui/x-data-grid";
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Badge from '@mui/material/Badge';
-import React from "react";
+import EditIcon from '@mui/icons-material/Edit';
+import EditJobsModal from "../editModals/EditJobsModal";
+import editReservation from "../../api/reservations/editReservation";
 
 interface JobsPanelProps {
   token: string;
@@ -37,7 +37,7 @@ interface JobsPanelProps {
 
 const pageSizeOptions = [10, 25, 50];
 
-const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
+const JobsPanel: FC<JobsPanelProps> = ({ token }) => {
 
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [data, setData] = useState<ReservationExternal[]>([]);
@@ -50,14 +50,8 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
   const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
   const [loading, setLoading] = useState(false);
 
-  const [debouncedFilterModel, setDebouncedFilterModel] = useState<GridFilterModel>(filterModel);
-  const debouncedSetFilterModel = React.useMemo(
-    () => debounce((model: GridFilterModel) => setDebouncedFilterModel(model), 1000),
-    []
-  );
-  useEffect(() => {
-    debouncedSetFilterModel(filterModel);
-  }, [filterModel, debouncedSetFilterModel]);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editItem, setEditItem] = useState<ReservationExternal | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -76,11 +70,23 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, sortModel, debouncedFilterModel, token]);
+  }, [paginationModel, sortModel, filterModel, token]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const handleEdit = (row: any) => {
+    setEditItem(row as ReservationExternal);
+    setIsEditOpen(true);
+  };
+
+  const resolveEdit = async (item: ReservationExternal, updatedItem: ReservationExternal) => {
+    await editReservation(item, updatedItem, token);
+    await fetchData();
+    setIsEditOpen(false);
+    setEditItem(null);
+  };
 
   const handleExport = async (startTime: string, endTime: string) => {
     const exportData = await exportReservations(startTime, endTime, token);
@@ -192,6 +198,20 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
         value ? new Date(value) : null,
       valueFormatter: (value) =>
         value ? new Date(value).toLocaleString() : "Not checked out"
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 100,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Edit"
+          onClick={() => handleEdit(params.row)}
+          showInMenu={false}
+        />,
+      ]
     }
   ];
 
@@ -268,10 +288,12 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
           slots={{ toolbar: JobsPanelToolbar }}
         />
       </Box>
-      {data.length === 0 && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-          No data available
-        </Typography>
+      {isEditOpen && editItem && (
+        <EditJobsModal
+          item={editItem}
+          onClose={() => setIsEditOpen(false)}
+          onEdit={resolveEdit}
+        />
       )}
     </Paper>
   );

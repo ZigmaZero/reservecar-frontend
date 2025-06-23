@@ -104,13 +104,6 @@ const EditEmployeesModal: React.FC<EditEmployeesModalProps> = ({ item, onClose, 
               required
               fullWidth
             />
-            <TextField
-              label="Line ID"
-              name="lineId"
-              value={formData.lineId}
-              disabled
-              fullWidth
-            />
             <FormControlLabel
               control={
                 <Checkbox

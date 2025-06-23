@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, type FC } from "react";
 import type { TeamExternal } from "../../api/externalTypes";
 import listTeams from "../../api/teams/listTeams";
 import AddTeamsModal from "../addModals/AddTeamsModal";
@@ -6,13 +6,12 @@ import EditTeamsModal from "../editModals/EditTeamsModal";
 import addTeam from "../../api/teams/addTeam";
 import deleteTeam from "../../api/teams/deleteTeam";
 import editTeam from "../../api/teams/editTeam";
-import {
-  Typography,
-  Paper,
-  Box,
-  Tooltip,
-  debounce
-} from "@mui/material";
+
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+
 import {
   DataGrid,
   GridActionsCellItem,
@@ -39,7 +38,7 @@ interface TeamsPanelProps {
   token: string;
 }
 
-const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
+const TeamsPanel: FC<TeamsPanelProps> = ({ token }) => {
   const [data, setData] = useState<TeamExternal[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -53,15 +52,6 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editItem, setEditItem] = useState<TeamExternal | null>(null);
-
-  const [debouncedFilterModel, setDebouncedFilterModel] = useState<GridFilterModel>(filterModel);
-  const debouncedSetFilterModel = React.useMemo(
-    () => debounce((model: GridFilterModel) => setDebouncedFilterModel(model), 1000),
-    []
-  );
-  useEffect(() => {
-    debouncedSetFilterModel(filterModel);
-  }, [filterModel, debouncedSetFilterModel]);
 
   // Data fetching function
   const fetchData = useCallback(async () => {
@@ -77,7 +67,7 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, sortModel, debouncedFilterModel, token]);
+  }, [paginationModel, sortModel, filterModel, token]);
 
   useEffect(() => {
     fetchData();
@@ -208,6 +198,8 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
           paginationModel={paginationModel}
           sortingMode="server"
           sortModel={sortModel}
+          filterMode="server"
+          filterModel={filterModel}
           rowCount={rowCount}
           onPaginationModelChange={setPaginationModel}
           onSortModelChange={setSortModel}

@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, type FC } from "react";
 import listCars from "../../api/cars/listCars";
 import type { CarExternal } from "../../api/externalTypes";
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-
-import {
-  Typography,
-  Paper,
-  Box,
-  Tooltip,
-  debounce
-} from "@mui/material";
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import {
   DataGrid,
   GridActionsCellItem,
@@ -41,7 +37,7 @@ interface CarsPanelProps {
   token: string;
 }
 
-const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
+const CarsPanel: FC<CarsPanelProps> = ({ token }) => {
   const [data, setData] = useState<CarExternal[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -57,17 +53,8 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editItem, setEditItem] = useState<CarExternal | null>(null);
 
-  const [debouncedFilterModel, setDebouncedFilterModel] = useState<GridFilterModel>(filterModel);
-  const debouncedSetFilterModel = React.useMemo(
-    () => debounce((model: GridFilterModel) => setDebouncedFilterModel(model), 1000),
-    []
-  );
-  useEffect(() => {
-    debouncedSetFilterModel(filterModel);
-  }, [filterModel, debouncedSetFilterModel]);
-
   // Data fetching function
-  const fetchData = React.useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const res = await listCars(paginationModel, sortModel, filterModel, token);
@@ -84,7 +71,7 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, sortModel, debouncedFilterModel, token]);
+  }, [paginationModel, sortModel, filterModel, token]);
 
   useEffect(() => {
     fetchData();
