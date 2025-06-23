@@ -9,7 +9,8 @@ import {
   Typography,
   Paper,
   Box,
-  Tooltip
+  Tooltip,
+  debounce
 } from "@mui/material";
 import {
   DataGrid,
@@ -49,11 +50,21 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
   });
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
+  
   const [loading, setLoading] = useState(false);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editItem, setEditItem] = useState<CarExternal | null>(null);
+
+  const [debouncedFilterModel, setDebouncedFilterModel] = useState<GridFilterModel>(filterModel);
+  const debouncedSetFilterModel = React.useMemo(
+    () => debounce((model: GridFilterModel) => setDebouncedFilterModel(model), 1000),
+    []
+  );
+  useEffect(() => {
+    debouncedSetFilterModel(filterModel);
+  }, [filterModel, debouncedSetFilterModel]);
 
   // Data fetching function
   const fetchData = React.useCallback(async () => {
@@ -73,7 +84,7 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, sortModel, filterModel, token]);
+  }, [paginationModel, sortModel, debouncedFilterModel, token]);
 
   useEffect(() => {
     fetchData();
@@ -223,6 +234,8 @@ const CarsPanel: React.FC<CarsPanelProps> = ({ token }) => {
           paginationModel={paginationModel}
           sortingMode="server"
           sortModel={sortModel}
+          filterMode="server"
+          filterModel={filterModel}
           rowCount={rowCount}
           onPaginationModelChange={setPaginationModel}
           onSortModelChange={setSortModel}

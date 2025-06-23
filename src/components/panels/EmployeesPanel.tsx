@@ -9,7 +9,8 @@ import {
   Typography,
   Paper,
   Box,
-  Tooltip
+  Tooltip,
+  debounce
 } from "@mui/material";
 import {
   ColumnsPanelTrigger,
@@ -50,6 +51,15 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editItem, setEditItem] = useState<EmployeeExternal | null>(null);
 
+  const [debouncedFilterModel, setDebouncedFilterModel] = useState<GridFilterModel>(filterModel);
+  const debouncedSetFilterModel = React.useMemo(
+    () => debounce((model: GridFilterModel) => setDebouncedFilterModel(model), 1000),
+    []
+  );
+  useEffect(() => {
+    debouncedSetFilterModel(filterModel);
+  }, [filterModel, debouncedSetFilterModel]);
+
   // Data fetching function
   const fetchData = React.useCallback(async () => {
     setLoading(true);
@@ -69,7 +79,7 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, sortModel, filterModel, token]);
+  }, [paginationModel, sortModel, debouncedFilterModel, token]);
 
   useEffect(() => {
     fetchData();

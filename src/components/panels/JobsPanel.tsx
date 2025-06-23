@@ -7,7 +7,8 @@ import {
   Box,
   Typography,
   Paper,
-  Tooltip
+  Tooltip,
+  debounce
 } from "@mui/material";
 import {
   DataGrid,
@@ -28,6 +29,7 @@ import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Badge from '@mui/material/Badge';
+import React from "react";
 
 interface JobsPanelProps {
   token: string;
@@ -48,6 +50,15 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
   const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
   const [loading, setLoading] = useState(false);
 
+  const [debouncedFilterModel, setDebouncedFilterModel] = useState<GridFilterModel>(filterModel);
+  const debouncedSetFilterModel = React.useMemo(
+    () => debounce((model: GridFilterModel) => setDebouncedFilterModel(model), 1000),
+    []
+  );
+  useEffect(() => {
+    debouncedSetFilterModel(filterModel);
+  }, [filterModel, debouncedSetFilterModel]);
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
@@ -65,7 +76,7 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, sortModel, filterModel, token]);
+  }, [paginationModel, sortModel, debouncedFilterModel, token]);
 
   useEffect(() => {
     fetchData();

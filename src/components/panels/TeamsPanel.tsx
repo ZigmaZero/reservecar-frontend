@@ -10,7 +10,8 @@ import {
   Typography,
   Paper,
   Box,
-  Tooltip
+  Tooltip,
+  debounce
 } from "@mui/material";
 import {
   DataGrid,
@@ -53,6 +54,15 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editItem, setEditItem] = useState<TeamExternal | null>(null);
 
+  const [debouncedFilterModel, setDebouncedFilterModel] = useState<GridFilterModel>(filterModel);
+  const debouncedSetFilterModel = React.useMemo(
+    () => debounce((model: GridFilterModel) => setDebouncedFilterModel(model), 1000),
+    []
+  );
+  useEffect(() => {
+    debouncedSetFilterModel(filterModel);
+  }, [filterModel, debouncedSetFilterModel]);
+
   // Data fetching function
   const fetchData = useCallback(async () => {
     console.log({ paginationModel, sortModel, filterModel });
@@ -67,7 +77,7 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, sortModel, filterModel, token]);
+  }, [paginationModel, sortModel, debouncedFilterModel, token]);
 
   useEffect(() => {
     fetchData();
