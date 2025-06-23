@@ -28,7 +28,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Badge from '@mui/material/Badge';
 
 interface EmployeesPanelProps {
@@ -161,11 +160,6 @@ const EmployeesPanel: React.FC<EmployeesPanelProps> = ({ token }) => {
             </ToolbarButton>
           )}
         />
-      </Tooltip>
-      <Tooltip title="Export">
-        <ToolbarButton>
-          <FileDownloadIcon fontSize="small" />
-        </ToolbarButton>
       </Tooltip>
     </Toolbar>
   );

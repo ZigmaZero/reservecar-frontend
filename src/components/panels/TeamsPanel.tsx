@@ -30,7 +30,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Badge from '@mui/material/Badge';
 
 interface TeamsPanelProps {
@@ -152,11 +151,6 @@ const TeamsPanel: React.FC<TeamsPanelProps> = ({ token }) => {
               </ToolbarButton>
             )}
           />
-        </Tooltip>
-        <Tooltip title="Export">
-          <ToolbarButton>
-            <FileDownloadIcon fontSize="small" />
-          </ToolbarButton>
         </Tooltip>
       </Toolbar>
   )

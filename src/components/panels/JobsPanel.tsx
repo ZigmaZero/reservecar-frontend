@@ -150,6 +150,14 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
 
   const JobsPanelToolbar = () => (
     <Toolbar>
+        <Tooltip title="Export">
+        <ToolbarButton           
+          disabled={data.length === 0}
+          onClick={() => setIsExportOpen(true)}
+        >
+          <FileDownloadIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
       <Tooltip title="Columns">
         <ColumnsPanelTrigger>
           <ToolbarButton>
@@ -167,14 +175,6 @@ const JobsPanel: React.FC<JobsPanelProps> = ({ token }) => {
             </ToolbarButton>
           )}
         />
-      </Tooltip>
-      <Tooltip title="Export">
-        <ToolbarButton           
-          disabled={data.length === 0}
-          onClick={() => setIsExportOpen(true)}
-        >
-          <FileDownloadIcon fontSize="small" />
-        </ToolbarButton>
       </Tooltip>
     </Toolbar>
   )
