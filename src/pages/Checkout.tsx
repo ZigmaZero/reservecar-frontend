@@ -68,7 +68,11 @@ const Checkout = () => {
                 onChange={(e) => setJobId(Number(e.target.value))}
               >
                 {jobs.map((j) => (
-                  <MenuItem key={j.id} value={j.id}>
+                  <MenuItem key={j.id} value={j.id} sx={{
+                    whiteSpace: 'normal',
+                    wordWrap: 'break-word',
+                    maxWidth: 200
+                  }}>
                     [{j.car} @{" "}
                     {new Date(j.checkinTime).toLocaleString("en-GB", {
                       day: "2-digit",

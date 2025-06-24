@@ -158,10 +158,10 @@ const EmployeesPanel: FC<EmployeesPanelProps> = ({ token }) => {
     if (!updatedItem) {
       await deleteEmployee(item, token);
     } else {
-      await editEmployee(item, updatedItem, token);
       if (!item.verified && updatedItem.verified) {
         await verifyEmployee(updatedItem, token);
       }
+      await editEmployee(item, updatedItem, token);
     }
     await fetchData();
     setIsEditOpen(false);
