@@ -70,8 +70,7 @@ const Checkout = () => {
                 {jobs.map((j) => (
                   <MenuItem key={j.id} value={j.id} sx={{
                     whiteSpace: 'normal',
-                    wordWrap: 'break-word',
-                    maxWidth: 200
+                    wordWrap: 'break-word'
                   }}>
                     [{j.car} @{" "}
                     {new Date(j.checkinTime).toLocaleString("en-GB", {
