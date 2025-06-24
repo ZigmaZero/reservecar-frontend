@@ -6,7 +6,6 @@ import CheckoutSuccess from './pages/CheckoutSuccess';
 import WaitForVerify from './pages/WaitForVerify';
 import Menu from './pages/Menu';
 import LineLogin from './pages/LineLogin';
-import LineLoginBegin from './pages/LineLoginBegin';
 import LineLoginCallback from './pages/LineLoginCallback';
 
 const UserRoutes = () => (
@@ -15,7 +14,6 @@ const UserRoutes = () => (
     <Route path="/register" element={<Navigate to="/line/access" replace />} />
     <Route path="/login" element={<Navigate to="/line/access" replace />} />
     <Route path="/line/access" element={<LineLogin />} />
-    <Route path="/line/begin" element={<LineLoginBegin />} />
     <Route path="/line/callback" element={<LineLoginCallback />} />
     <Route path="/verify" element={<WaitForVerify />} />
     <Route path="/menu" element={<Menu />} />

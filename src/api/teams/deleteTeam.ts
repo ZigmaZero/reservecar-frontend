@@ -17,7 +17,8 @@ export default function deleteTeam(item: TeamExternal, token: string): Promise<n
             console.error("Unexpected error status:", error.response.status, error.response.data);
             throw new Error("An unexpected error occurred. Please try again later.");
         } else {
-            throw error;
+            alert(error.response.data.error);
+            return null;
         }
     });
 }

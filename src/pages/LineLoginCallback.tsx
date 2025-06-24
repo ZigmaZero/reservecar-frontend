@@ -120,9 +120,6 @@ const LineLoginCallback: React.FC = () => {
                     </Paper>
                 ) : (
                     <Paper elevation={3} sx={{ p: 4 }}>
-                        <Typography variant="body2" color="textSecondary" gutterBottom>
-                            Line ID: {lineId}
-                        </Typography>
                         <Typography variant="h5" gutterBottom>
                             Register Page
                         </Typography>
