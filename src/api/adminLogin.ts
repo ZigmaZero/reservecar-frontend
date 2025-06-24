@@ -5,11 +5,6 @@ export default function adminLogin(name: string, password: string): Promise<{
     admin: AdminExternal;
     token: string;
 }> {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    if (!backendUrl) 
-    {
-        throw new Error("Backend URL not found in environment variables");
-    }
 
     return axios.post(`/admin/login`, {
         name,
