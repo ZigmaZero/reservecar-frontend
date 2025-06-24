@@ -31,14 +31,14 @@ const Menu = () => {
                 <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 3 }}>
                     <Button
                         variant="contained"
-                        color="primary"
+                        color="success"
                         onClick={() => navigate("/checkin")}
                     >
                         Checkin
                     </Button>
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="error"
                         onClick={() => navigate("/checkout")}
                     >
                         Checkout
