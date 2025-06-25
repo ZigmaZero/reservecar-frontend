@@ -22,7 +22,7 @@ export type CarExternal = {
 }
 
 export type AdminExternal = {
-    id?: number,
+    id: number,
     name: string
 }
 

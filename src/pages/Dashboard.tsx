@@ -16,11 +16,57 @@ import {
   AppBar,
   Toolbar
 } from "@mui/material";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import type { AdminExternal } from "../api/externalTypes";
+import EditAdminModal from "../components/editModals/EditAdminModal";
+import adminUpdate from "../api/adminUpdate";
 
 const Dashboard: React.FC = () => {
-  const { admin, token } = useAdmin();
+  const {admin, setAdmin, token, setToken} = useAdmin();
   const [activePanel, setActivePanel] = useState<"Teams" | "Employees" | "Cars" | "Jobs" | null>(null);
   const navigate = useNavigate();
+
+  const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
+  const [editItem, setEditItem] = useState<AdminExternal | null>(null);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  
+  const handleEditProfile = () => {
+    handleClose();
+    setIsEditOpen(true);
+  }
+
+  const resolveEdit = (newAdmin: {name: string, password: string} | null) => {
+    if (!admin || !token) {
+      navigate("/admin");
+      return;
+    }
+    if(newAdmin == null) return;
+    adminUpdate(admin.id, newAdmin.name, newAdmin.password, token).then((result) => {
+      setAdmin(result.admin);
+      setToken(result.token);
+    }).catch(() => {
+      alert("Authentication failed. Please login again.");
+      navigate("/admin");
+    });
+
+  }
+
+  const handleLogout = () => {
+    setAdmin(null);
+    setToken(null);
+    handleClose();
+    navigate("/admin");
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     if (!admin || !token) {
@@ -35,6 +81,29 @@ const Dashboard: React.FC = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Dashboard
           </Typography>
+          <Button
+            id="basic-button"
+            aria-controls={open ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={handleClick}
+          >
+            {admin?.name}
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            slotProps={{
+              list: {
+                'aria-labelledby': 'basic-button',
+              },
+            }}
+          >
+            <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
       <Container maxWidth="md" sx={{ mt: 6 }}>
@@ -86,6 +155,14 @@ const Dashboard: React.FC = () => {
               {activePanel === "Teams" && <TeamsPanel token={token!} />}
             </Suspense>
           </Box>
+          {isEditOpen && editItem && 
+            <EditAdminModal
+              item={editItem.name}
+              onClose={() => {setEditItem(null); setIsEditOpen(false);}}
+              onEdit={resolveEdit}
+              >
+            </EditAdminModal>
+          }
         </Paper>
       </Container>
     </>
