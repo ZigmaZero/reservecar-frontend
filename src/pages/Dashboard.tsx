@@ -90,6 +90,7 @@ const Dashboard: React.FC = () => {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
             onClick={handleClick}
+            variant="outlined"
           >
             {admin?.name}
           </Button>
