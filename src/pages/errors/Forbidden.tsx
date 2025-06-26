@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useAdmin } from "../../contexts/AdminContext";
 import { useNavigate } from "react-router-dom";
 import { Container, Box, Typography } from "@mui/material";
-import Navbar from "../../widgets/Navbar";
+import Navbar from "../../components/Navbar";
 
 const Forbidden = () => {
     const { admin } = useAdmin();

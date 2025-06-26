@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Button, Container, Box, Typography } from "@mui/material";
-import Navbar from "../widgets/Navbar";
+import Navbar from "../components/Navbar";
 import getState from "../api/line/getState";
 
 const LineLogin: React.FC = () => {

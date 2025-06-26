@@ -1,5 +1,5 @@
 import { Container, Box, Typography } from "@mui/material";
-import Navbar from "../../widgets/Navbar";
+import Navbar from "../../components/Navbar";
 
 const NotFound = () => {
     return (

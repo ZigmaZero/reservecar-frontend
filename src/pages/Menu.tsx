@@ -1,5 +1,5 @@
 import { Container, Box, Typography, Button, Stack } from "@mui/material";
-import Navbar from "../widgets/Navbar";
+import Navbar from "../components/Navbar";
 import { useUser } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";

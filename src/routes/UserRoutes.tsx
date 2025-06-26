@@ -1,12 +1,12 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Checkin from './pages/Checkin';
-import Checkout from './pages/Checkout';
-import CheckinSuccess from './pages/CheckinSuccess';
-import CheckoutSuccess from './pages/CheckoutSuccess';
-import WaitForVerify from './pages/WaitForVerify';
-import Menu from './pages/Menu';
-import LineLogin from './pages/LineLogin';
-import LineLoginCallback from './pages/LineLoginCallback';
+import Checkin from '../pages/Checkin';
+import Checkout from '../pages/Checkout';
+import CheckinSuccess from '../pages/CheckinSuccess';
+import CheckoutSuccess from '../pages/CheckoutSuccess';
+import WaitForVerify from '../pages/WaitForVerify';
+import Menu from '../pages/Menu';
+import LineLogin from '../pages/LineLogin';
+import LineLoginCallback from '../pages/LineLoginCallback';
 
 const UserRoutes = () => (
   <Routes>

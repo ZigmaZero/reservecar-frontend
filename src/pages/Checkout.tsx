@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../widgets/Navbar";
+import Navbar from "../components/Navbar";
 import { useUser } from "../contexts/UserContext";
 import getJobsOfUser from "../api/reservations/getJobsOfUser";
 import type { ReservationExternal } from "../api/externalTypes";

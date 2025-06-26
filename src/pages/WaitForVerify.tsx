@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 import { useEffect } from "react";
-import Navbar from "../widgets/Navbar";
+import Navbar from "../components/Navbar";
 import { Container, Typography, Box } from "@mui/material";
 
 const WaitForVerify = () => {

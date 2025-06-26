@@ -5,7 +5,7 @@ import authToProfile from "../api/line/exchangeAccessToken";
 import userRegister from "../api/user/userRegister";
 import { useUser } from "../contexts/UserContext";
 import userLogin from "../api/user/userLogin";
-import Navbar from "../widgets/Navbar";
+import Navbar from "../components/Navbar";
 import {
     Container,
     Typography,

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 import { useEffect } from "react";
 import { Box, Container, Typography, Button } from "@mui/material";
-import Navbar from "../widgets/Navbar";
+import Navbar from "../components/Navbar";
 
 const CheckinSuccess = () => {
     const { user, token } = useUser();
