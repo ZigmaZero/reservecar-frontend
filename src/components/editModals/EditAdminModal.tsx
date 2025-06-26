@@ -35,11 +35,6 @@ const EditAdminModal: React.FC<EditModalProps> = ({ item, onClose, onEdit }) => 
     onClose();
   };
 
-  const handleDelete = () => {
-    onEdit(null);
-    onClose();
-  };
-
   return (
     <Dialog open onClose={onClose}>
       <DialogTitle>Edit Admin</DialogTitle>
@@ -72,9 +67,6 @@ const EditAdminModal: React.FC<EditModalProps> = ({ item, onClose, onEdit }) => 
           </Button>
           <Button onClick={onClose} color="secondary">
             Cancel
-          </Button>
-          <Button onClick={handleDelete} color="error">
-            Delete
           </Button>
         </DialogActions>
       </form>
