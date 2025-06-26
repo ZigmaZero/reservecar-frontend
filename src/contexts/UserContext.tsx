@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import type { EmployeeExternal } from "../api/externalTypes";
+import type { EmployeeExternal } from "../types/externalTypes";
 
 interface UserContextType {
     user: EmployeeExternal | null;

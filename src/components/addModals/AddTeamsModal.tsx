@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { TeamExternal } from "../../api/externalTypes";
+import type { TeamExternal } from "../../types/externalTypes";
 import {
   Dialog,
   DialogTitle,

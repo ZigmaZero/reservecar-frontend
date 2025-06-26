@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useUser } from "../contexts/UserContext";
 import getJobsOfUser from "../api/reservations/getJobsOfUser";
-import type { ReservationExternal } from "../api/externalTypes";
+import type { ReservationExternal } from "../types/externalTypes";
 import userCheckout from "../api/user/userCheckout";
 import {
   Container,

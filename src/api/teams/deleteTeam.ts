@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { TeamExternal } from "../externalTypes";
+import type { TeamExternal } from "../../types/externalTypes";
 
 export default function deleteTeam(item: TeamExternal, token: string): Promise<null> {
     return axios.delete(`/teams/${item.id}`, {

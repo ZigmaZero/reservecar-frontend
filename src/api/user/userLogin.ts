@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { EmployeeExternal } from "../externalTypes";
+import type { EmployeeExternal } from "../../types/externalTypes";
 
 export default function userLogin(lineId: string): Promise<{
     user: EmployeeExternal;

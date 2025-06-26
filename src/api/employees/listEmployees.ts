@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { EmployeeExternal } from '../externalTypes';
+import type { EmployeeExternal } from '../../types/externalTypes';
 import type { GridFilterModel, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
 
 export default function listEmployees(

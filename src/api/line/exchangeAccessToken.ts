@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { LineProfile } from "../internalTypes";
+import type { LineProfile } from "../../types/internalTypes";
 
 export default async function authToProfile(code: string, redirect_uri: string): Promise<LineProfile | undefined> {
     return axios.post(`/line/auth`, {code, redirect_uri}).then((response) => {

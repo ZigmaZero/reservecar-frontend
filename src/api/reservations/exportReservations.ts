@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { ReservationExternal } from '../externalTypes';
+import type { ReservationExternal } from '../../types/externalTypes';
 
 export default function exportReservations(startTime: string, endTime: string, token: string): Promise<ReservationExternal[]> {
     return axios.get(`/reservations/export`, {

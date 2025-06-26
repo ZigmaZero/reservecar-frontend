@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import type { AdminExternal } from "../api/externalTypes";
+import type { AdminExternal } from "../types/externalTypes";
 
 interface AdminContextType {
     admin: AdminExternal | null;

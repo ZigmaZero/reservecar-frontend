@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { ReservationExternal } from "../../api/externalTypes";
+import type { ReservationExternal } from "../../types/externalTypes";
 import {
   Dialog,
   DialogTitle,

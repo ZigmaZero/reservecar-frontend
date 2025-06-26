@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, type FC } from "react";
-import type { TeamExternal } from "../../api/externalTypes";
+import type { TeamExternal } from "../../types/externalTypes";
 import listTeams from "../../api/teams/listTeams";
 import AddTeamsModal from "../addModals/AddTeamsModal";
 import EditTeamsModal from "../editModals/EditTeamsModal";

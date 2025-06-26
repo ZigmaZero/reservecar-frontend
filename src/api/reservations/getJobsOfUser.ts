@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { ReservationExternal } from '../externalTypes';
+import type { ReservationExternal } from '../../types/externalTypes';
 
 export default function getJobsOfUser(token: string): Promise<ReservationExternal[]> {
     return axios.get(`/user/reservations`, {

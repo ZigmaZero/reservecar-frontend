@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { CarExternal } from '../externalTypes';
+import type { CarExternal } from '../../types/externalTypes';
 import type { GridFilterModel, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
 
 export default function listCars(

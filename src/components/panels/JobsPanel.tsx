@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, type FC } from "react";
 import listReservations from "../../api/reservations/listReservations";
-import type { ReservationExternal } from "../../api/externalTypes";
+import type { ReservationExternal } from "../../types/externalTypes";
 import exportReservations from "../../api/reservations/exportReservations";
 import ExportJobsModal from "../ExportJobsModal";
 import Paper from '@mui/material/Paper';

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { ReservationExternal } from "../externalTypes";
+import type { ReservationExternal } from "../../types/externalTypes";
 
 export default function editReservation(item: ReservationExternal, updatedItem: ReservationExternal, token: string): Promise<null> {
     return axios.put(`/reservations/${item.id}`, updatedItem, {

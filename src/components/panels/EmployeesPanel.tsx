@@ -1,5 +1,5 @@
 import { useCallback, type FC, useEffect, useState } from "react";
-import type { EmployeeExternal } from "../../api/externalTypes";
+import type { EmployeeExternal } from "../../types/externalTypes";
 import listEmployees from "../../api/employees/listEmployees";
 import EditEmployeesModal from "../editModals/EditEmployeesModal";
 import deleteEmployee from "../../api/employees/deleteEmployee";

@@ -18,9 +18,9 @@ import {
 } from "@mui/material";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import type { AdminExternal } from "../api/externalTypes";
+import type { AdminExternal } from "../types/externalTypes";
 import EditAdminModal from "../components/editModals/EditAdminModal";
-import adminUpdate from "../api/adminUpdate";
+import adminUpdate from "../api/admin/adminUpdate";
 
 const Dashboard: React.FC = () => {
   const {admin, setAdmin, token, setToken} = useAdmin();

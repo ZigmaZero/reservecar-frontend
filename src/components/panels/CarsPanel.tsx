@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, type FC } from "react";
 import listCars from "../../api/cars/listCars";
-import type { CarExternal } from "../../api/externalTypes";
+import type { CarExternal } from "../../types/externalTypes";
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';

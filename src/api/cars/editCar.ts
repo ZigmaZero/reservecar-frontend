@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { CarExternal } from "../externalTypes";
+import type { CarExternal } from "../../types/externalTypes";
 
 export default function editCar(item: CarExternal, updatedItem: CarExternal, token: string): Promise<null> {
     return axios.put(`/cars/${item.id}`, updatedItem, {

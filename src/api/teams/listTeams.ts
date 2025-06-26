@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { TeamExternal } from '../externalTypes';
+import type { TeamExternal } from '../../types/externalTypes';
 import type { GridFilterModel, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
 
 export default function listTeams(

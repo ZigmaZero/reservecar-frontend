@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { CarExternal } from "../externalTypes";
+import type { CarExternal } from "../../types/externalTypes";
 
 export default function getCarsOfTeam(teamId: number, token: string): Promise<CarExternal[]> {
     return axios.get(`/user/cars`, {

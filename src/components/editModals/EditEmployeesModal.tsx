@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import type { EmployeeExternal, TeamExternal } from "../../api/externalTypes";
+import type { EmployeeExternal, TeamExternal } from "../../types/externalTypes";
 import getTeams from "../../api/teams/getTeams";
 import { useAdmin } from "../../contexts/AdminContext";
 import {

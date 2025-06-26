@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { TeamExternal } from "../externalTypes";
+import type { TeamExternal } from "../../types/externalTypes";
 
 export default function addTeam(item: TeamExternal, token: string): Promise<null> {
     return axios.post("/teams", item, {
