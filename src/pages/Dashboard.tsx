@@ -38,8 +38,11 @@ const Dashboard: React.FC = () => {
   
   const handleEditProfile = () => {
     handleClose();
-    setIsEditOpen(true);
-  }
+    if (admin) {
+      setEditItem(admin);
+      setIsEditOpen(true);
+    }
+  };
 
   const resolveEdit = (newAdmin: {name: string, password: string} | null) => {
     if (!admin || !token) {
